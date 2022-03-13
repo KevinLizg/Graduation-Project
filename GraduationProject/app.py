@@ -1,3 +1,6 @@
+import base64
+import os
+
 from flask import Flask, render_template, url_for,jsonify, redirect, flash, session,request
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from flask_mail import Message, Mail
@@ -14,13 +17,21 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 
 
+# app name
+@app.errorhandler(404)
+# inbuilt function which takes error as parameter
+def not_found(e):
+    # defining function
+    return render_template("404.html")
+
+
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     email = session.get('EMAIL')
-    name = session.get('NAME')
+    student = Student.query.filter(Student.student_email == email).first()
     x = 'a'
-    return render_template('index.html', email=email, name=name, x=x)
+    return render_template('index.html', email=email, name=student.student_firstname, x=x)
 
 app.config["MAIL_SERVER"] = 'smtp.qq.com'
 app.config["MAIL_PORT"] = 465
@@ -164,6 +175,30 @@ def logout():
 @app.route('/test', methods=['GET','POST'])
 def test():
     return render_template('test.html')
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    email = session.get('EMAIL')
+    student = Student.query.filter(Student.student_email == email).first()
+    # if student.agent_photo != None:
+    #     image = open(os.path.join(app.config['UPLOAD_PATH'], student.agent_photo), 'rb')
+    #     img_stream = image.read()
+    #     img_stream = base64.b64encode(img_stream).decode('ascii')
+    # else:
+    name = student.student_lastname
+    image = open('static/images/icon/' + name[0] + ".png", 'rb')
+    img_stream = image.read()
+    img_stream = base64.b64encode(img_stream).decode('ascii')
+    student_info = {
+        'email': email,
+        'first_name': student.student_firstname,
+        'last_name': student.student_lastname,
+        'profile_pic': img_stream,
+        'phone': student.student_phone,
+        'address': student.student_address,
+        'occupation': 'Student'
+    }
+    return render_template('profile.html', student=student_info)
 
 
 if __name__ == '__main__':
