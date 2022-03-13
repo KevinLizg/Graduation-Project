@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends "base.html" %}
+
+{% block mainContent %}
+
+    <section id="page-breadcrumb">
+        <div class="vertical-center sun">
+             <div class="container">
+                <div class="row">
+                    <div class="action">
+                        <div class="col-sm-12">
+                            <h1 class="title">Contact US</h1>
+                            <p>Stay close</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   </section>
+    <!--/#action-->
+
+    <section id="map-section">
+        <div class="col-md-5"></div>
+        <div class="col-md-5 col-sm-12">
+                    <div class="contact-form bottom">
+                        <h2>Enter your email</h2>
+                        {% for message in get_flashed_messages() %}
+                        <p class="text-success">{{ message }}</p>
+                        {% endfor %}
+                            <form id="main-contact-form" name="contact-form" action="" method="post" novalidate>
+                                {{ form.hidden_tag() }}
+                                {% for error in form.email.errors %}
+                                <p class="text-success">{{ error }}</p>
+                                {% endfor %}
+                                <div class="form-group">
+                                    {{ form.email(size=32, class="form-control") }}
+                                </div>
+                                <div class="form-group">{{ form.submit(class="btn btn-submit") }}</div>
+                            </form>
+                    </div>
+                </div>
+    </section> <!--/#map-section-->
+
+
+</html>
+
+{% endblock %}

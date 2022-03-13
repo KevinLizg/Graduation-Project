@@ -19,8 +19,8 @@ db = SQLAlchemy(app)
 def index():
     email = session.get('EMAIL')
     name = session.get('NAME')
-    return render_template('index.html', email=email, name=name)
-
+    x = 'a'
+    return render_template('index.html', email=email, name=name, x=x)
 
 app.config["MAIL_SERVER"] = 'smtp.qq.com'
 app.config["MAIL_PORT"] = 465
@@ -35,13 +35,13 @@ mail = Mail(app)
 
 import requests
 
+
 @app.route('/email_verification', methods=['GET', 'POST'])
 def email_varification():
     form = EmailVeriForm()
     if form.validate_on_submit():
         email = form.email.data
         user_in_db = Student.query.filter(Student.student_email == email).first()
-        print('hello')
         if not user_in_db:
             token = s.dumps(email, salt='email-confirm')
             # Access API to verify your email address
@@ -50,17 +50,64 @@ def email_varification():
             # print(r.json())
             # if r.json()['smtp_check'] == True:
             if True:
-                msg = Message('Confirm Email', sender='1575631865@qq.com', recipients=[email])
+                msg = Message('Just Math it - Sign up Email', sender='1575631865@qq.com', recipients=[email])
                 link = url_for('signup', token=token, _external=True)
-                msg.body = 'Click to finish your registeration: {}'.format(link)
+                msg.body = 'Click to finish your sign up: {}'.format(link)
                 mail.send(msg)
-                flash('Please check your Email, and follow the email link')
+                flash('Please check your Email, and follow the email link to finish your sign up')
             else:
                 flash('This is not a valid email')
         else:
-            flash('This Email Has Been Registered')
+            flash('This Email has been registered')
         session['EMAIL'] = email
     return render_template('email_verification.html',form=form)
+
+
+@app.route('/change_pass_verification', methods=['GET', 'POST'])
+def change_pass_verification():
+    form = EmailVeriForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        user_in_db = Student.query.filter(Student.student_email == email).first()
+        if user_in_db:
+            token = s.dumps(email, salt='email-confirm')
+            # Access API to verify your email address
+            # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
+            # r = requests.get(url)
+            # print(r.json())
+            # if r.json()['smtp_check'] == True:
+            if True:
+                token = s.dumps(email, salt='email-confirm')
+                msg = Message('Just Math it - Modify your password', sender='1575631865@qq.com', recipients=[email])
+                link = url_for('change_password', token=token, _external=True)
+                msg.body = 'Click to change your password: {}'.format(link)
+                mail.send(msg)
+                flash('Please check your Email, and follow the email link to modify your password')
+            else:
+                flash('This is not a valid email')
+        else:
+            flash('Sorry! Your have not got an account, please sign up a new one!')
+        session['EMAIL'] = email
+    return render_template('change_pass_verification.html',form=form)
+
+
+@app.route('/change_password/<token>', methods=['GET', 'POST'])
+def change_password(token):
+    from models import db
+    form = ChangePassword()
+    try:
+        email = s.loads(token, salt='email-confirm', max_age=180)
+        student = Student.query.filter(Student.student_email == session.get('EMAIL')).first()
+        if form.validate_on_submit():
+            student.student_password = generate_password_hash(form.password.data)
+            db.session.add(student)
+            db.session.commit()
+            session.clear()
+            flash("Change successfully")
+            return redirect(url_for('signin'))
+    except SignatureExpired:
+        flash('Token is expired, please resend an email to sign up')
+    return render_template('change_password.html', form=form)
 
 
 @app.route('/signup/<token>', methods=['GET', 'POST'])
@@ -112,6 +159,11 @@ def signin():
 def logout():
     session.clear()
     return render_template('index.html')
+
+
+@app.route('/test', methods=['GET','POST'])
+def test():
+    return render_template('test.html')
 
 
 if __name__ == '__main__':

@@ -27,8 +27,8 @@ class SignupForm(FlaskForm):
     lastname = StringField('Last Name', validators=[DataRequired(message='Please enter your last name')], render_kw={"placeholder": "Last Name"})
     password = PasswordField('Password', validators=[DataRequired(message='Please enter your password'), Length(min=6,max=15)], render_kw={"placeholder": "Password"})
     password2 = PasswordField('Repeat Password', validators=[EqualTo('password', 'Not the same password')], render_kw={"placeholder": "Repeat Your Password"})
-    phone = StringField('Phone Number', validators=[DataRequired(message='Please enter your phone number'), ], render_kw={"placeholder": "Phone Number"})
-    address = StringField('Your Address', validators=[ validators.Regexp('^(\d{10}|\d{11}|\d{12})$', message="Please enter a valid phone number"),DataRequired(message='Please enter your address')], render_kw={"placeholder": "Address"})
+    phone = StringField('Phone Number', validators=[validators.Regexp('^(\d{10}|\d{11}|\d{12})$', message="Please enter a valid phone number"), DataRequired(message='Please enter your phone number'), ], render_kw={"placeholder": "Phone Number"})
+    address = StringField('Your Address', validators=[ DataRequired(message='Please enter your address')], render_kw={"placeholder": "Address"})
     dob = DateField('Date of Birth', validators=[DataRequired(message='Please Select the date of birth')], render_kw={"placeholder": "Date of Birth"})
     gender = SelectField('Your Gender',
                           choices=[('Male', "Male"), ('Female', 'Female')],
@@ -44,3 +44,12 @@ class SigninForm(FlaskForm):
                         render_kw={"placeholder": "Your Email"})
     password = PasswordField('Password', validators=[DataRequired(message='Please enter your password')], render_kw={"placeholder": "Password"})
     submit = SubmitField('Sign In')
+
+
+class ChangePassword(FlaskForm):
+    password = PasswordField('Password',
+                             validators=[DataRequired(message='Please enter your password'), Length(min=6, max=15)],
+                             render_kw={"placeholder": "Password"})
+    password2 = PasswordField('Repeat Password', validators=[EqualTo('password', 'Not the same password')],
+                              render_kw={"placeholder": "Repeat Your Password"})
+    submit = SubmitField('Change Password')
