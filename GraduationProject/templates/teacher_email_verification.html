@@ -11,8 +11,8 @@
                 <div class="row">
                     <div class="action">
                         <div class="col-sm-12">
-                            <h1 class="title">Change Your Password</h1>
-                            <p>Forget It? Don't worry</p>
+                            <h1 class="title">Email Verification</h1>
+                            <p>Keep Your Privacy</p>
                         </div>
                     </div>
                 </div>
@@ -37,6 +37,14 @@
                                 <div class="form-group">
                                     {{ form.email(size=32, class="form-control") }}
                                 </div>
+
+                                {% for error in form.token.errors %}
+                                <p class="text-success">{{ error }}</p>
+                                {% endfor %}
+                                <div class="form-group">
+                                    {{ form.token(size=32, class="form-control") }}
+                                </div>
+                                <p class="text-success"><a href="{{ url_for("email_varification") }}">Sign up as a Student<i class="fa-search-plus"></i></a></p>
                                 <div class="form-group">{{ form.submit(class="btn btn-submit") }}</div>
                             </form>
                     </div>

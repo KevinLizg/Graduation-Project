@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends "base.html" %}
+
+{% block mainContent %}
+
+    <section id="page-breadcrumb">
+        <div class="vertical-center sun">
+             <div class="container">
+                <div class="row">
+                    <div class="action">
+                        <div class="col-sm-12">
+                            <h1 class="title">{{ topic }}
+                            </h1>
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   </section>
+    <!--/#page-breadcrumb-->
+
+    <section id="blog" class="padding-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-sm-7">
+                    <div class="row">
+                        {% for i in range(skills|length) %}
+                         <div class="col-sm-12 col-md-12">
+                            <div class="single-blog single-column">
+                                <div class="post-thumb">
+                                    <a href="blogdetails.html"><img src="images/blog/7.jpg" class="img-responsive" alt=""></a>
+                                    <div class="post-overlay">
+                                       <span class="uppercase"><a href="#">14<br><small>Feb</small></a></span>
+                                   </div>
+                                </div>
+                                <div class="post-content overflow">
+                                    <h2 class="post-title bold"><a href="#">{{ skills[i].skill_name }}</a></h2>
+                                    <h3 class="post-author"><a href="#">Introduction</a></h3>
+                                    <p>{{ skills[i].skill_introduction }}</p>
+                                    <a href="#" class="read-more">View More</a>
+                                    <div class="post-bottom overflow">
+                                        <ul class="nav navbar-nav post-nav">
+                                            <li><a href="#"><i class="fa fa-tag"></i>Creative</a></li>
+                                            <li><a href="#"><i class="fa fa-heart"></i>{{ skills[i].like }} Love</a></li>
+                                            <li><a href="#"><i class="fa fa-comments"></i>{{ comments[i] }} Comments</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="blog-pagination">
+                        <ul class="pagination">
+                            <li class="page-item ">
+                                    <a href="{{ url_for('topics',topic = topic, page=paginate.prev_num)}}">left</a>
+                            </li>
+                            {% for i in paginate.iter_pages() %}
+                                {% if i == paginate.page %}
+                                    <li class="active">
+                                        <a href="{{ url_for('topics',topic = topic, page=i)}}">{{ i }}</a>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a href="{{ url_for('topics',topic = topic, page=i) }}">{{ i }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            <li>
+                                <a href="{{ url_for('topics',topic = topic, page=paginate.next_num)}}">right</a>
+                            </li>
+{#                          <li><a href="#">left</a></li>#}
+{#                          <li><a href="#">1</a></li>#}
+{#                          <li><a href="#">2</a></li>#}
+{#                          <li class="active"><a href="#">3</a></li>#}
+{#                          <li><a href="#">4</a></li>#}
+{#                          <li><a href="#">5</a></li>#}
+{#                          <li><a href="#">6</a></li>#}
+{#                          <li><a href="#">7</a></li>#}
+{#                          <li><a href="#">8</a></li>#}
+{#                          <li><a href="#">9</a></li>#}
+{#                          <li><a href="#">right</a></li>#}
+                        </ul>
+                    </div>
+                 </div>
+                <div class="col-md-3 col-sm-5">
+                    <div class="sidebar blog-sidebar">
+                        <div class="sidebar-item  recent">
+                            <h3>Comments</h3>
+                            <div class="media">
+                                <div class="pull-left">
+                                    <a href="#"><img src="images/portfolio/project1.jpg" alt=""></a>
+                                </div>
+                                <div class="media-body">
+                                    <h4><a href="#">Lorem ipsum dolor sit amet consectetur adipisicing elit,</a></h4>
+                                    <p>posted on  07 March 2014</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sidebar-item categories">
+                            <h3>Skills</h3>
+                            <ul class="nav navbar-stacked">
+                                <li class="active"><a href="#">Lorem ipsum<span class="pull-right">(1)</span></a></li>
+{#                                <li><a href="#">Dolor sit amet<span class="pull-right">(8)</span></a></li>#}
+{#                                <li><a href="#">Adipisicing elit<span class="pull-right">(4)</span></a></li>#}
+{#                                <li><a href="#">Sed do<span class="pull-right">(9)</span></a></li>#}
+{#                                <li><a href="#">Eiusmod<span class="pull-right">(3)</span></a></li>#}
+{#                                <li><a href="#">Mockup<span class="pull-right">(4)</span></a></li>#}
+{#                                <li><a href="#">Ut enim ad minim <span class="pull-right">(2)</span></a></li>#}
+{#                                <li><a href="#">Veniam, quis nostrud <span class="pull-right">(8)</span></a></li>#}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</html>
+
+{% endblock %}

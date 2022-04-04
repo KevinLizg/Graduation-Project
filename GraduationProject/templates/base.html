@@ -16,7 +16,7 @@
     <!--[if lt IE 9]>
 	    <script src="{{ url_for('static',filename='js/html5shiv.js') }}"></script>
 	    <script src="{{ url_for('static',filename='js/respond.min.js') }}"></script>
-    <![endif]-->
+<![endif]-->
     <link rel="shortcut icon" href="{{ url_for('static',filename='images/ico/favicon.ico') }}">
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{{ url_for('static',filename='images/ico/144.png') }}">
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{{ url_for('static',filename='images/ico/114.png') }}">
@@ -68,21 +68,15 @@
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="active"><a href="{{ url_for("index") }}">Home</a></li>
-{#                        <li class="dropdown"><a href="#">Pages <i class="fa fa-angle-down"></i></a>#}
-{#                            <ul role="menu" class="sub-menu">#}
-{#                                <li><a href="aboutus.html">About</a></li>#}
-{#                            </ul>#}
-{#                        </li>#}
-{#                        <li class="dropdown"><a href="blog.html">Blog <i class="fa fa-angle-down"></i></a>#}
-{#                            <ul role="menu" class="sub-menu">#}
-{#                                <li><a href="blog.html">Blog Default</a></li>#}
-{#                            </ul>#}
-{#                        </li>#}
-{#                        <li class="dropdown"><a href="portfolio.html">Portfolio <i class="fa fa-angle-down"></i></a>#}
-{#                            <ul role="menu" class="sub-menu">#}
-{#                                <li><a href="portfolio.html">Portfolio Default</a></li>#}
-{#                            </ul>#}
-{#                        </li>#}
+                        <li class="dropdown"><a href="#">Learning<i class="fa fa-angle-down"></i></a>
+                            <ul role="menu" class="sub-menu">
+                                <li><a href="{{ url_for('topics',topic='Basic Math') }}">Basic Math</a></li>
+                                <li><a href="{{ url_for('topics',topic='Algebra') }}">Algebra</a></li>
+                                <li><a href="{{ url_for('topics',topic='Geometry') }}">Geometry</a></li>
+                                <li><a href="{{ url_for('topics',topic='Statistic') }}">Statistic</a></li>
+                                <li><a href="{{ url_for('topics',topic='Misc') }}">Misc</a></li>
+                            </ul>
+                        </li>
 
                         {% if name %}
                         <li class="dropdown"><a href="{{ url_for("index") }}">Dear {{ name }}<i class="fa fa-angle-down"></i></a>
