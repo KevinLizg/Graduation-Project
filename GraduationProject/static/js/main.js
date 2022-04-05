@@ -112,3 +112,12 @@ jQuery(function($) {'use strict';
 	}
 
 });
+
+function showReply() {
+	if ($('#reply').css('display') === 'none') {
+    // Do something..
+		document.getElementById('reply').style.display = "block";
+  	}else{
+		document.getElementById('reply').style.display = "none";
+	}
+}

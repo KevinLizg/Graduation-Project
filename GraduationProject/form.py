@@ -90,3 +90,13 @@ class ChangePassword(FlaskForm):
     password2 = PasswordField('Repeat Password', validators=[EqualTo('password', 'Not the same password')],
                               render_kw={"placeholder": "Repeat Your Password"})
     submit = SubmitField('Change Password')
+
+
+class CommentForm(FlaskForm):
+    comment = TextAreaField('Comment', validators=[DataRequired(message='Please leave your comments or questions here')], render_kw={"placeholder": "Leave your comment or question here"})
+    submit = SubmitField('Sumbit')
+
+
+class ReplyForm(FlaskForm):
+    reply = StringField('Reply', validators=[DataRequired(message='Please enter your reply')], render_kw={"placeholder": "Leave your reply"})
+    submit = SubmitField('Reply')

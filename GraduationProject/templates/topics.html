@@ -33,17 +33,17 @@
                                 <div class="post-thumb">
                                     <a href="#"><img src="{{ url_for('static',filename='images/skills/'+info[i].image) }}" class="img-responsive" style="width: 500px"></a>
                                     <div class="post-overlay">
-                                       <span class="uppercase"><a href="#">14<br><small>Feb</small></a></span>
+                                       <span class="uppercase"><a href="#">St<br><small>art</small></a></span>
                                    </div>
                                 </div>
                                 <div class="post-content overflow">
                                     <h2 class="post-title bold"><a href="#">{{ skills[i].skill_name }}</a></h2>
-                                    <h3 class="post-author"><a href="#">Introduction</a></h3>
+                                    <h3 class="post-author"><a href="{{ url_for('skill_details',skill_ = skills[i].skill_name)}}">Introduction</a></h3>
                                     <p>{{ skills[i].skill_introduction }}</p>
                                     <a href="#" class="read-more">View More</a>
                                     <div class="post-bottom overflow">
                                         <ul class="nav navbar-nav post-nav">
-                                            <li><a href="#"><i class="fa fa-tag"></i>Creative</a></li>
+{#                                            <li><a href="#"><i class="fa fa-tag"></i>Creative</a></li>#}
                                             <li><a href="#"><i class="fa fa-heart"></i>{{ skills[i].like }} Love</a></li>
                                             <li><a href="#"><i class="fa fa-comments"></i>{{ info[i].comment }} Comments</a></li>
                                         </ul>

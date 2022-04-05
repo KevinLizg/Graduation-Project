@@ -298,6 +298,19 @@ def topics(topic):
     return render_template('topics.html', name = name, topic=topic, skills=paginate.items, paginate=paginate, info = info)
 
 
+@app.route('/skill_details/<skill_>', methods=['GET', 'POST'])
+def skill_details(skill_):
+    replyForm = ReplyForm()
+    commentForm = CommentForm()
+    skill = Skills.query.filter(Skills.skill_name == skill_).first()
+    comments = Comments.query.filter(Comments.skill_id == skill.skill_id).all()
+    if replyForm.validate_on_submit() == False:
+        print('Shit!')
+    if commentForm.validate_on_submit() == False:
+        print('Fuck')
+    return render_template('skill_details.html',skill=skill, comments=comments, replyForm=replyForm, commentForm=commentForm)
+
+
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.clear()
