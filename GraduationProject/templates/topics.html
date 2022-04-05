@@ -31,7 +31,7 @@
                          <div class="col-sm-12 col-md-12">
                             <div class="single-blog single-column">
                                 <div class="post-thumb">
-                                    <a href="blogdetails.html"><img src="images/blog/7.jpg" class="img-responsive" alt=""></a>
+                                    <a href="#"><img src="{{ url_for('static',filename='images/skills/'+info[i].image) }}" class="img-responsive" style="width: 500px"></a>
                                     <div class="post-overlay">
                                        <span class="uppercase"><a href="#">14<br><small>Feb</small></a></span>
                                    </div>
@@ -45,7 +45,7 @@
                                         <ul class="nav navbar-nav post-nav">
                                             <li><a href="#"><i class="fa fa-tag"></i>Creative</a></li>
                                             <li><a href="#"><i class="fa fa-heart"></i>{{ skills[i].like }} Love</a></li>
-                                            <li><a href="#"><i class="fa fa-comments"></i>{{ comments[i] }} Comments</a></li>
+                                            <li><a href="#"><i class="fa fa-comments"></i>{{ info[i].comment }} Comments</a></li>
                                         </ul>
                                     </div>
                                 </div>

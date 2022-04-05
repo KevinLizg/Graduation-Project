@@ -278,10 +278,12 @@ def topics(topic):
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 3))
     paginate = Skills.query.filter(Skills.topic_id == topic_.topic_id).paginate(page, per_page, error_out=False)
-    comments = []
+    info = []
     skills = paginate.items
     for skill in skills:
-        comments.append(Comments.query.filter(Comments.skill_id == skill.skill_id).count())
+        info.append({'comment':Comments.query.filter(Comments.skill_id == skill.skill_id).count(),
+                     'image': skill.skill_name+'.png'
+                     })
     # app_id = 'XQAUEU-WR3AY23332'
     # client = wolframalpha.Client(app_id)
     # problem, solution = mathgen.genById(4)
@@ -293,7 +295,7 @@ def topics(topic):
     #     for sub in pod.subpods:
     #         print(sub.plaintext)
             # img_list.append(sub.img['@src'])
-    return render_template('topics.html', name = name, topic=topic, skills=paginate.items, paginate=paginate, comments = comments)
+    return render_template('topics.html', name = name, topic=topic, skills=paginate.items, paginate=paginate, info = info)
 
 
 @app.route('/logout', methods=['GET', 'POST'])
