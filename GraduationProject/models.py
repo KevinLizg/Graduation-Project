@@ -8,27 +8,27 @@ db = SQLAlchemy(app)
 
 
 class Student(db.Model):
-    student_id = db.Column(db.Integer, primary_key=True)
-    student_email = db.Column(db.String(128), index=True, unique=True)
-    student_firstname = db.Column(db.String(128))
-    student_lastname = db.Column(db.String(128))
-    student_dob = db.Column(db.String(128))
-    student_password = db.Column(db.String(128))
-    student_gender = db.Column(db.String(128))
-    student_phone = db.Column(db.String(128))
-    student_address = db.Column(db.String(128))
-    student_school = db.Column(db.String(128))
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(128), index=True, unique=True)
+    firstname = db.Column(db.String(128))
+    lastname = db.Column(db.String(128))
+    dob = db.Column(db.String(128))
+    password = db.Column(db.String(128))
+    gender = db.Column(db.String(128))
+    phone = db.Column(db.String(128))
+    address = db.Column(db.String(128))
+    school = db.Column(db.String(128))
     # student_level = db.Column(db.String(128))
 
 
 class Teacher(db.Model):
-    teacher_id = db.Column(db.Integer, primary_key=True)
-    teacher_email = db.Column(db.String(128), index=True, unique=True)
-    teacher_firstname = db.Column(db.String(128))
-    teacher_lastname = db.Column(db.String(128))
-    teacher_password = db.Column(db.String(128))
-    teacher_phone = db.Column(db.String(128), index=True, unique=True)
-    teacher_school = db.Column(db.String(128), index=True, unique=True)
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(128), index=True, unique=True)
+    firstname = db.Column(db.String(128))
+    lastname = db.Column(db.String(128))
+    password = db.Column(db.String(128))
+    phone = db.Column(db.String(128), index=True, unique=True)
+    school = db.Column(db.String(128), index=True, unique=True)
 
 
 class Topics(db.Model):
@@ -48,5 +48,16 @@ class Comments(db.Model):
     comment_id = db.Column(db.Integer, primary_key=True)
     comment = db.Column(db.String(128), nullable=False)
     skill_id = db.Column(db.Integer, db.ForeignKey('skills.skill_id'))
+    topic_id = db.Column(db.Integer, db.ForeignKey('skills.topic_id'))
     user_id = db.Column(db.Integer, nullable=True)
     user_type = db.Column(db.Boolean, nullable=True)
+    comment_time = db.Column(db.String(128), nullable=True)
+
+
+class Reply(db.Model):
+    reply_id = db.Column(db.Integer, primary_key=True)
+    reply_content = db.Column(db.String(128), nullable=True)
+    comment_id = db.Column(db.Integer, db.ForeignKey('comments.comment_id'))
+    user_id = db.Column(db.Integer, nullable=True)
+    user_type = db.Column(db.Boolean, nullable=True)
+    reply_time = db.Column(db.String(128), nullable=True)

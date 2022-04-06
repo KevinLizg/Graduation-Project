@@ -3,7 +3,7 @@ import os
 import wolframalpha
 from mathgenerator import mathgen
 
-from flask import Flask, render_template, url_for,jsonify, redirect, flash, session,request
+from flask import Flask, render_template, url_for, jsonify, redirect, flash, session, request
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from flask_mail import Message, Mail
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -17,6 +17,20 @@ from models import *
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+
+################# Wolfram Query ###################
+# app_id = 'XQAUEU-WR3AY23332'
+# client = wolframalpha.Client(app_id)
+# problem, solution = mathgen.genById(4)
+# if (len(problem.split("Equation")) > 1):
+#     problem = problem.split("Equation")[1]
+# res = client.query('Convert 21421 from base 10 to base 7.')
+# # img_list = []
+# for pod in res.pods:
+#     for sub in pod.subpods:
+#         print(sub.plaintext)
+# img_list.append(sub.img['@src'])
+####################################################
 
 
 # app name
@@ -35,7 +49,7 @@ def index():
     # name = ''
     # if email and user_type == 'Student':
     #     student = Student.query.filter(Student.student_email == email).first()
-    #     name = student.student_firstname
+    #     name = student.firstname
     name = session.get('NAME')
     print(name)
     # session['NAME'] = name
@@ -62,26 +76,30 @@ def email_varification():
     form = EmailVeriForm()
     if form.validate_on_submit():
         email = form.email.data
-        user_in_db = Student.query.filter(Student.student_email == email).first()
+        user_in_db = Student.query.filter(Student.email == email).first()
+        teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
         if not user_in_db:
-            token = s.dumps(email, salt='email-confirm')
-            # Access API to verify your email address
-            # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
-            # r = requests.get(url)
-            # print(r.json())
-            # if r.json()['smtp_check'] == True:
-            if True:
-                msg = Message('Just Math it - Sign up Email', sender='1575631865@qq.com', recipients=[email])
-                link = url_for('signup', token=token, _external=True)
-                msg.body = 'Click to finish your sign up: {}'.format(link)
-                mail.send(msg)
-                flash('Please check your Email, and follow the email link to finish your sign up')
+            if teacher_in_db:
+                flash('This email has been signed up as a teacher account!')
             else:
-                flash('This is not a valid email')
+                token = s.dumps(email, salt='email-confirm')
+                # Access API to verify your email address
+                # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
+                # r = requests.get(url)
+                # print(r.json())
+                # if r.json()['smtp_check'] == True:
+                if True:
+                    msg = Message('Just Math it - Sign up Email', sender='1575631865@qq.com', recipients=[email])
+                    link = url_for('signup', token=token, _external=True)
+                    msg.body = 'Click to finish your sign up: {}'.format(link)
+                    mail.send(msg)
+                    flash('Please check your Email, and follow the email link to finish your sign up')
+                else:
+                    flash('This is not a valid email')
         else:
             flash('This Email has been registered')
         session['EMAIL'] = email
-    return render_template('email_verification.html',form=form)
+    return render_template('email_verification.html', form=form)
 
 
 @app.route('/teacher_email_verification', methods=['GET', 'POST'])
@@ -89,28 +107,32 @@ def teacher_email_verification():
     form = TeacherEmailVeriForm()
     if form.validate_on_submit() and form.token.data == '123':
         email = form.email.data
-        user_in_db = Teacher.query.filter(Teacher.teacher_email == email).first()
+        user_in_db = Teacher.query.filter(Teacher.email == email).first()
+        student_in_db = Student.query.filter(Student.email == email).first()
         if not user_in_db:
-            token = s.dumps(email, salt='email-confirm')
-            # Access API to verify your email address
-            # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
-            # r = requests.get(url)
-            # print(r.json())
-            # if r.json()['smtp_check'] == True:
-            if True:
-                msg = Message('Just Math it - Sign up Email', sender='1575631865@qq.com', recipients=[email])
-                link = url_for('signup_teacher', token=token, _external=True)
-                msg.body = 'Click to finish your sign up: {}'.format(link)
-                mail.send(msg)
-                flash('Please check your Email, and follow the email link to finish your sign up as a teacher')
+            if student_in_db:
+                flash('This email has been signed up as a student account!')
             else:
-                flash('This is not a valid email')
+                token = s.dumps(email, salt='email-confirm')
+                # Access API to verify your email address
+                # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
+                # r = requests.get(url)
+                # print(r.json())
+                # if r.json()['smtp_check'] == True:
+                if True:
+                    msg = Message('Just Math it - Sign up Email', sender='1575631865@qq.com', recipients=[email])
+                    link = url_for('signup_teacher', token=token, _external=True)
+                    msg.body = 'Click to finish your sign up: {}'.format(link)
+                    mail.send(msg)
+                    flash('Please check your Email, and follow the email link to finish your sign up as a teacher')
+                else:
+                    flash('This is not a valid email')
         else:
             flash('This Email has been registered')
         session['EMAIL'] = email
     elif form.token.data != '123':
         flash('The token is not correct')
-    return render_template('teacher_email_verification.html',form=form)
+    return render_template('teacher_email_verification.html', form=form)
 
 
 @app.route('/change_pass_verification', methods=['GET', 'POST'])
@@ -118,8 +140,8 @@ def change_pass_verification():
     form = EmailVeriForm()
     if form.validate_on_submit():
         email = form.email.data
-        student_in_db = Student.query.filter(Student.student_email == email).first()
-        teacher_in_db = Teacher.query.filter(Teacher.teacher_email == email).first()
+        student_in_db = Student.query.filter(Student.email == email).first()
+        teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
         if student_in_db:
             token = s.dumps(email, salt='email-confirm')
             # Access API to verify your email address
@@ -157,7 +179,7 @@ def change_pass_verification():
         else:
             flash('Sorry! Your have not got an account, please sign up a new one!')
         session['EMAIL'] = email
-    return render_template('change_pass_verification.html',form=form)
+    return render_template('change_pass_verification.html', form=form)
 
 
 @app.route('/change_password/<token>', methods=['GET', 'POST'])
@@ -169,7 +191,7 @@ def change_password(token):
     try:
         email = s.loads(token, salt='email-confirm', max_age=180)
         if form.validate_on_submit() and user_type == 'Student':
-            student = Student.query.filter(Student.student_email == session.get('EMAIL')).first()
+            student = Student.query.filter(Student.email == session.get('EMAIL')).first()
             student.student_password = generate_password_hash(form.password.data)
             db.session.add(student)
             db.session.commit()
@@ -177,7 +199,7 @@ def change_password(token):
             flash("Change successfully")
             return redirect(url_for('signin'))
         elif form.validate_on_submit() and user_type == 'Teacher':
-            teacher = Teacher.query.filter(Teacher.teacher_email == session.get('EMAIL')).first()
+            teacher = Teacher.query.filter(Teacher.email == session.get('EMAIL')).first()
             teacher.teacher_password = generate_password_hash(form.password.data)
             db.session.add(teacher)
             db.session.commit()
@@ -200,9 +222,9 @@ def signup(token):
         if form.validate_on_submit():
             if form.firstname.data.isalpha() and form.lastname.data.isalpha():
                 passw_hash = generate_password_hash(form.password.data)
-                student = Student(student_email=email, student_firstname=form.firstname.data, student_lastname=form.lastname.data,
-                                   student_password=passw_hash,student_gender=form.gender.data,student_phone=form.phone.data,
-                                   student_school=form.school.data,student_dob=form.dob.data,student_address=form.address.data)
+                student = Student(email=email, firstname=form.firstname.data, lastname=form.lastname.data,
+                                  password=passw_hash, gender=form.gender.data, phone=form.phone.data,
+                                  school=form.school.data, dob=form.dob.data, address=form.address.data)
                 db.session.add(student)
                 db.session.commit()
                 session.clear()
@@ -223,9 +245,9 @@ def signup_teacher(token):
         if form.validate_on_submit():
             if form.firstname.data.isalpha() and form.lastname.data.isalpha():
                 passw_hash = generate_password_hash(form.password.data)
-                teacher = Teacher(teacher_email=email, teacher_firstname=form.firstname.data, teacher_lastname=form.lastname.data,
-                                   teacher_password=passw_hash,teacher_phone=form.phone.data,
-                                   teacher_school=form.school.data)
+                teacher = Teacher(email=email, firstname=form.firstname.data, lastname=form.lastname.data,
+                                  password=passw_hash, phone=form.phone.data,
+                                  school=form.school.data)
                 db.session.add(teacher)
                 db.session.commit()
                 session.clear()
@@ -243,23 +265,23 @@ def signin():
     form = SigninForm()
     if form.validate_on_submit():
         psw = form.password.data
-        student_in_db = Student.query.filter(Student.student_email == form.email.data).first()
-        teacher_in_db = Teacher.query.filter(Teacher.teacher_email == form.email.data).first()
+        student_in_db = Student.query.filter(Student.email == form.email.data).first()
+        teacher_in_db = Teacher.query.filter(Teacher.email == form.email.data).first()
         if student_in_db:
-            if check_password_hash(student_in_db.student_password, psw):
+            if check_password_hash(student_in_db.password, psw):
                 print('Login Success')
-                session['NAME'] = student_in_db.student_firstname
-                session['EMAIL'] = student_in_db.student_email
+                session['NAME'] = student_in_db.firstname
+                session['EMAIL'] = student_in_db.email
                 session['ACTOR'] = 'Student'
                 return redirect(url_for("index"))
             else:
                 flash('Incorrect password')
                 return redirect(url_for("signin"))
         elif teacher_in_db:
-            if check_password_hash(teacher_in_db.teacher_password, psw):
+            if check_password_hash(teacher_in_db.password, psw):
                 print('Login Success')
-                session['NAME'] = teacher_in_db.teacher_firstname
-                session['EMAIL'] = teacher_in_db.teacher_email
+                session['NAME'] = teacher_in_db.firstname
+                session['EMAIL'] = teacher_in_db.email
                 session['ACTOR'] = 'Teacher'
                 return redirect(url_for("index"))
             else:
@@ -274,6 +296,7 @@ def signin():
 @app.route('/topics/<topic>/', methods=['GET', 'POST'])
 def topics(topic):
     name = session.get('NAME')
+    email = session.get('EMAIL')
     topic_ = Topics.query.filter(Topics.topic_name == topic).first()
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 3))
@@ -281,34 +304,110 @@ def topics(topic):
     info = []
     skills = paginate.items
     for skill in skills:
-        info.append({'comment':Comments.query.filter(Comments.skill_id == skill.skill_id).count(),
-                     'image': skill.skill_name+'.png'
-                     })
-    # app_id = 'XQAUEU-WR3AY23332'
-    # client = wolframalpha.Client(app_id)
-    # problem, solution = mathgen.genById(4)
-    # if (len(problem.split("Equation")) > 1):
-    #     problem = problem.split("Equation")[1]
-    # res = client.query('Convert 21421 from base 10 to base 7.')
-    # # img_list = []
-    # for pod in res.pods:
-    #     for sub in pod.subpods:
-    #         print(sub.plaintext)
-            # img_list.append(sub.img['@src'])
-    return render_template('topics.html', name = name, topic=topic, skills=paginate.items, paginate=paginate, info = info)
+        info.append({
+            'comment': Comments.query.filter(Comments.skill_id == skill.skill_id).count(),
+            'image': skill.skill_name + '.png'
+        })
+    comment_info = []
+    comment_detail = Comments.query.filter(Comments.topic_id == topic_.topic_id).order_by(
+        Comments.comment_time.desc()).all()
+    for comment in comment_detail[:3]:
+        skill_name = Skills.query.filter(Skills.skill_id == comment.skill_id).first().skill_name
+        comment_info.append({
+            'comment': comment,
+            'skill_name': skill_name
+        })
+    topic_info = []
+    all_topic = Topics.query.all()
+    for topic_ in all_topic:
+        topic_info.append({
+            'skill_count': Skills.query.filter(Skills.topic_id == topic_.topic_id).count(),
+            'topic_name': topic_.topic_name
+        })
+    return render_template('topics.html', name=name, topic=topic, skills=paginate.items, paginate=paginate, info=info,
+                           comment_info=comment_info, all_topic=topic_info)
 
 
 @app.route('/skill_details/<skill_>', methods=['GET', 'POST'])
 def skill_details(skill_):
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    session['NAME'] = name
+    session['EMAIL'] = email
     replyForm = ReplyForm()
     commentForm = CommentForm()
     skill = Skills.query.filter(Skills.skill_name == skill_).first()
-    comments = Comments.query.filter(Comments.skill_id == skill.skill_id).all()
-    if replyForm.validate_on_submit() == False:
-        print('Shit!')
-    if commentForm.validate_on_submit() == False:
-        print('Fuck')
-    return render_template('skill_details.html',skill=skill, comments=comments, replyForm=replyForm, commentForm=commentForm)
+    all_skill = [skill.skill_name for skill in Skills.query.filter(Skills.topic_id == skill.topic_id).all()]
+    comments_in_db = Comments.query.filter(Comments.skill_id == skill.skill_id).order_by(
+        Comments.comment_time.desc()).all()
+    comments = []
+    user_in_db = ''
+    student_in_db = Student.query.filter(Student.email == email).first()
+    teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+    if student_in_db:
+        user_in_db = student_in_db
+        user_type = 1
+    elif teacher_in_db:
+        user_in_db = teacher_in_db
+        user_type = 0
+    for comment in comments_in_db:
+        user = ''
+        if comment.user_type == True:
+            user = Student.query.filter(Student.id == comment.user_id).first()
+        elif comment.user_type == False:
+            user = Teacher.query.filter(Teacher.id == comment.user_id).first()
+        reply_list = []
+        replies = Reply.query.filter(Reply.comment_id == comment.comment_id).all()
+        for reply in replies:
+            if reply.user_type == True:
+                reply_user = Student.query.filter(Student.id == comment.user_id).first()
+            elif reply.user_type == False:
+                reply_user = Teacher.query.filter(Teacher.id == comment.user_id).first()
+            image = open('static/images/icon/' + reply_user.lastname[0] + ".png", 'rb')
+            img_stream = image.read()
+            img_stream = base64.b64encode(img_stream).decode('ascii')
+            reply_list.append({
+                'reply_content': reply.reply_content,
+                'reply_user_name': reply_user.firstname + ', ' + reply_user.lastname,
+                'reply_time': reply.reply_time,
+                'reply_img': img_stream
+            })
+        image = open('static/images/icon/' + user.lastname[0] + ".png", 'rb')
+        img_stream = image.read()
+        img_stream = base64.b64encode(img_stream).decode('ascii')
+        comments.append({
+            'comment_id': comment.comment_id,
+            'comment': comment.comment,
+            'user_name': user.firstname + ', ' + user.lastname,
+            'comment_time': comment.comment_time,
+            'replies': reply_list,
+            'user_img': img_stream
+        })
+    if replyForm.validate_on_submit():
+        reply_add = Reply(reply_content=replyForm.reply.data, comment_id=replyForm.comment_id.data,
+                          user_id=user_in_db.id,
+                          user_type=user_type,
+                          reply_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        db.session.add(reply_add)
+        db.session.commit()
+        session['NAME'] = name
+        session['EMAIL'] = email
+        return redirect(url_for('skill_details', skill_=skill_))
+    if commentForm.validate_on_submit():
+        topic_id = Skills.query.filter(Skills.skill_id == skill.skill_id).first().topic_id
+        comment_add = Comments(comment=commentForm.comment.data, skill_id=skill.skill_id,
+                               user_id=user_in_db.id, user_type=user_type, topic_id=topic_id,
+                               comment_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        db.session.add(comment_add)
+        db.session.commit()
+        session.clear()
+        session['NAME'] = name
+        session['EMAIL'] = email
+        return redirect(url_for('skill_details', skill_=skill_))
+    return render_template('skill_details.html', skill=skill, comments=comments, replyForm=replyForm,
+                           commentForm=commentForm,
+                           name=name, email=email, all_skill=all_skill
+                           )
 
 
 @app.route('/logout', methods=['GET', 'POST'])
@@ -317,47 +416,48 @@ def logout():
     return render_template('index.html')
 
 
-@app.route('/test', methods=['GET','POST'])
+@app.route('/test', methods=['GET', 'POST'])
 def test():
     return render_template('test.html')
+
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     from models import db
     email = session.get('EMAIL')
-    student = Student.query.filter(Student.student_email == email).first()
-    teacher = Teacher.query.filter(Teacher.teacher_email == email).first()
+    student = Student.query.filter(Student.email == email).first()
+    teacher = Teacher.query.filter(Teacher.email == email).first()
     if student:
         form = UpdateInfo()
-    # if student.agent_photo != None:
-    #     image = open(os.path.join(app.config['UPLOAD_PATH'], student.agent_photo), 'rb')
-    #     img_stream = image.read()
-    #     img_stream = base64.b64encode(img_stream).decode('ascii')
-    # else:
-        name = student.student_lastname
+        # if student.agent_photo != None:
+        #     image = open(os.path.join(app.config['UPLOAD_PATH'], student.agent_photo), 'rb')
+        #     img_stream = image.read()
+        #     img_stream = base64.b64encode(img_stream).decode('ascii')
+        # else:
+        name = student.lastname
         image = open('static/images/icon/' + name[0] + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
         user_info = {
             'email': email,
-            'first_name': student.student_firstname,
-            'last_name': student.student_lastname,
+            'first_name': student.firstname,
+            'last_name': student.lastname,
             'profile_pic': img_stream,
-            'phone': student.student_phone,
-            'school': student.student_school,
-            'address': student.student_address,
-            'age': datetime.now().date().year - int(student.student_dob.split("-")[0]),
-            'gender': student.student_gender,
-            'password':student.student_password,
+            'phone': student.phone,
+            'school': student.school,
+            'address': student.address,
+            'age': datetime.now().date().year - int(student.dob.split("-")[0]),
+            'gender': student.gender,
+            'password': student.password,
             'occupation': 'Student'
         }
         if form.validate_on_submit():
-            student_in_db = Student.query.filter(Student.student_email == email).first()
-            student_in_db.student_firstname = form.firstname.data
-            student_in_db.student_lastname = form.lastname.data
-            student_in_db.student_phone = form.phone.data
-            student_in_db.student_address = form.address.data
-            student_in_db.student_school = form.school.data
+            student_in_db = Student.query.filter(Student.email == email).first()
+            student_in_db.firstname = form.firstname.data
+            student_in_db.lastname = form.lastname.data
+            student_in_db.phone = form.phone.data
+            student_in_db.address = form.address.data
+            student_in_db.school = form.school.data
             db.session.add(student_in_db)
             db.session.commit()
             session.clear()
@@ -365,33 +465,34 @@ def profile():
             return redirect(url_for('signin'))
     elif teacher:
         form = TeacherUpdateInfo()
-        name = teacher.teacher_lastname
+        name = teacher.lastname
         image = open('static/images/icon/' + name[0] + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
         user_info = {
             'email': email,
-            'first_name': teacher.teacher_firstname,
-            'last_name': teacher.teacher_lastname,
+            'first_name': teacher.firstname,
+            'last_name': teacher.lastname,
             'profile_pic': img_stream,
-            'phone': teacher.teacher_phone,
-            'school': teacher.teacher_school,
-            'password': teacher.teacher_password,
+            'phone': teacher.phone,
+            'school': teacher.school,
+            'password': teacher.password,
             'occupation': 'Teacher'
         }
         if form.validate_on_submit():
-            teacher_in_db = Teacher.query.filter(Teacher.teacher_email == email).first()
-            teacher_in_db.teacher_firstname = form.firstname.data
-            teacher_in_db.teacher_lastname = form.lastname.data
-            teacher_in_db.teacher_phone = form.phone.data
-            teacher_in_db.teacher_school = form.school.data
+            teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+            teacher_in_db.firstname = form.firstname.data
+            teacher_in_db.lastname = form.lastname.data
+            teacher_in_db.phone = form.phone.data
+            teacher_in_db.school = form.school.data
             db.session.add(teacher_in_db)
             db.session.commit()
             session.clear()
             flash('Information has been updated')
             return redirect(url_for('signin'))
+    session['EMAIL'] = email
     return render_template('profile.html', user=user_info, form=form)
 
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run(debug=True)

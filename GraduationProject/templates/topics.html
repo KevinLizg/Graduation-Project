@@ -38,9 +38,9 @@
                                 </div>
                                 <div class="post-content overflow">
                                     <h2 class="post-title bold"><a href="#">{{ skills[i].skill_name }}</a></h2>
-                                    <h3 class="post-author"><a href="{{ url_for('skill_details',skill_ = skills[i].skill_name)}}">Introduction</a></h3>
+                                    <h3 class="post-author"><a onclick="false">Introduction</a></h3>
                                     <p>{{ skills[i].skill_introduction }}</p>
-                                    <a href="#" class="read-more">View More</a>
+                                    <a href="{{ url_for('skill_details',skill_ = skills[i].skill_name)}}" class="read-more">View More</a>
                                     <div class="post-bottom overflow">
                                         <ul class="nav navbar-nav post-nav">
 {#                                            <li><a href="#"><i class="fa fa-tag"></i>Creative</a></li>#}
@@ -89,28 +89,32 @@
                 <div class="col-md-3 col-sm-5">
                     <div class="sidebar blog-sidebar">
                         <div class="sidebar-item  recent">
-                            <h3>Comments</h3>
+                            <h3>Comments or Questions</h3>
+                        {% if comment_info|length == 0  %}
                             <div class="media">
-                                <div class="pull-left">
-                                    <a href="#"><img src="images/portfolio/project1.jpg" alt=""></a>
-                                </div>
                                 <div class="media-body">
-                                    <h4><a href="#">Lorem ipsum dolor sit amet consectetur adipisicing elit,</a></h4>
-                                    <p>posted on  07 March 2014</p>
+                                    <h4><a onclick="false">No comments yet</a></h4>
                                 </div>
                             </div>
+                        {% else %}
+                            {% for comment in comment_info %}
+                            <div class="media">
+                                <div class="media-body">
+                                    <h4><a href="{{ url_for('skill_details',skill_=comment.skill_name) }}">{{ comment.comment.comment }}</a></h4>
+                                    <p>posted on {{ comment.comment.comment_time }}</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
                         </div>
                         <div class="sidebar-item categories">
-                            <h3>Skills</h3>
+                            <h3>Topics</h3>
                             <ul class="nav navbar-stacked">
-                                <li class="active"><a href="#">Lorem ipsum<span class="pull-right">(1)</span></a></li>
-{#                                <li><a href="#">Dolor sit amet<span class="pull-right">(8)</span></a></li>#}
-{#                                <li><a href="#">Adipisicing elit<span class="pull-right">(4)</span></a></li>#}
-{#                                <li><a href="#">Sed do<span class="pull-right">(9)</span></a></li>#}
-{#                                <li><a href="#">Eiusmod<span class="pull-right">(3)</span></a></li>#}
-{#                                <li><a href="#">Mockup<span class="pull-right">(4)</span></a></li>#}
-{#                                <li><a href="#">Ut enim ad minim <span class="pull-right">(2)</span></a></li>#}
-{#                                <li><a href="#">Veniam, quis nostrud <span class="pull-right">(8)</span></a></li>#}
+                                <ul class="nav navbar-stacked">
+                                    {% for tp in all_topic %}
+                                    <li><a href="{{ url_for('topics',topic=tp.topic_name) }}">{{ tp.topic_name }}<span class="pull-right">({{ tp.skill_count }})</span></a></li>
+                                    {% endfor %}
+                                </ul>
                             </ul>
                         </div>
                     </div>

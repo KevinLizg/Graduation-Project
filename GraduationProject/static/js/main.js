@@ -113,11 +113,12 @@ jQuery(function($) {'use strict';
 
 });
 
-function showReply() {
-	if ($('#reply').css('display') === 'none') {
+function showReply(i) {
+	if ($('#reply'+i).css('display') === 'none') {
+		console.log('#reply'+i)
     // Do something..
-		document.getElementById('reply').style.display = "block";
+		document.getElementById('reply'+i).style.display = "block";
   	}else{
-		document.getElementById('reply').style.display = "none";
+		document.getElementById('reply'+i).style.display = "none";
 	}
 }
