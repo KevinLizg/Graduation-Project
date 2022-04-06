@@ -350,7 +350,12 @@ def skill_details(skill_):
     elif teacher_in_db:
         user_in_db = teacher_in_db
         user_type = 0
-    for comment in comments_in_db:
+    page = int(request.args.get('page', 1))
+    per_page = int(request.args.get('per_page', 3))
+    paginate = Comments.query.filter(Comments.skill_id == skill.skill_id).order_by(
+        Comments.comment_time.desc()).paginate(page, per_page, error_out=False)
+    comment_count = Comments.query.filter(Comments.skill_id == skill.skill_id).count()
+    for comment in paginate.items:
         user = ''
         if comment.user_type == True:
             user = Student.query.filter(Student.id == comment.user_id).first()
@@ -404,9 +409,11 @@ def skill_details(skill_):
         session['NAME'] = name
         session['EMAIL'] = email
         return redirect(url_for('skill_details', skill_=skill_))
+    print(comment_count)
     return render_template('skill_details.html', skill=skill, comments=comments, replyForm=replyForm,
                            commentForm=commentForm,
-                           name=name, email=email, all_skill=all_skill
+                           name=name, email=email, all_skill=all_skill,
+                           paginate=paginate, comment_count=comment_count
                            )
 
 

@@ -43,7 +43,9 @@
                                         <ul class="nav navbar-nav post-nav">
 {#                                            <li><a href="#"><i class="fa fa-tag"></i>Creative</a></li>#}
                                             <li><a href="#"><i class="fa fa-heart"></i>{{ skill.like }} Love</a></li>
-                                            <li><a href="#"><i class="fa fa-comments"></i>{{ comments|length }} Comments</a></li>
+                                            <li><a href="#"><i class="fa fa-comments"></i>
+                                                {{ comment_count }} Comments
+                                            </a></li>
                                         </ul>
                                     </div>
 
@@ -68,8 +70,8 @@
                                     </div>
                                     <div class="response-area">
                                     <h2 class="bold">Comments</h2>
+                                    {% for i in range(comments|length) %}
                                     <ul class="media-list">
-                                        {% for i in range(comments|length) %}
                                         <li class="media">
                                             <div class="post-comment">
                                                 <a class="pull-left" href="#">
@@ -120,24 +122,36 @@
                                             {% endfor %}
                                         </li>
                                         {% endfor %}
-{#                                        <li class="media">#}
-{#                                            <div class="post-comment">#}
-{#                                                <a class="pull-left" href="#">#}
-{#                                                    <img class="media-object" src="images/blogdetails/4.png" alt="">#}
-{#                                                </a>#}
-{#                                                <div class="media-body">#}
-{#                                                    <span><i class="fa fa-user"></i>Posted by <a href="#">Endure</a></span>#}
-{#                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliq Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi.</p>#}
-{#                                                    <ul class="nav navbar-nav post-nav">#}
-{#                                                        <li><a href="#"><i class="fa fa-clock-o"></i>February 11,2014</a></li>#}
-{#                                                        <li><a href="#"><i class="fa fa-reply"></i>Reply</a></li>#}
-{#                                                    </ul>#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                        </li>#}
-
                                     </ul>
                                 </div><!--/Response-area-->
+                                    <div class="pagination_page">
+                                        <ul class="pagination">
+                                            <li class="page-item ">
+                                                    <a href="{{ url_for('skill_details',skill_ = skill.skill_name, page=paginate.prev_num)}}">left</a>
+                                            </li>
+                                            {% for i in paginate.iter_pages() %}
+{#                                                {% if i == paginate.page %}#}
+                                                {% if i %}
+                                                    {% if i == paginate.page %}
+                                                    <li class="active">
+                                                        <a class="page-link" href="{{ url_for('skill_details',skill_ = skill.skill_name, page=i)}}">{{ i }}</a>
+                                                    </li>
+                                                    {% else %}
+                                                        <li class="page-item">
+                                                            <a class="page-link" href="{{ url_for('skill_details',skill_ = skill.skill_name, page=i)}}">{{ i }}</a>
+                                                        </li>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <li class='page-item'>
+                                                        <a class="page-link" href="{{ url_for('skill_details',skill_ = skill.skill_name, page=paginate.next_num) }}">&hellip;</a>
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                            <li>
+                                                <a href="{{ url_for('skill_details',skill_ = skill.skill_name, page=paginate.next_num)}}">right</a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -181,6 +195,7 @@
                                 <li><a href="{{ url_for('skill_details',skill_=skill) }}">{{ skill }}<span class="pull-right">(?)</span></a></li>
                                 {% endfor %}
                             </ul>
+                        </div>
                         </div>
 {#                        <div class="sidebar-item tag-cloud">#}
 {#                            <h3>Tag Cloud</h3>#}

@@ -53,7 +53,7 @@
                         </div>
                         {% endfor %}
                     </div>
-                    <div class="blog-pagination">
+                    <div class="pagination_page">
                         <ul class="pagination">
                             <li class="page-item ">
                                     <a href="{{ url_for('topics',topic = topic, page=paginate.prev_num)}}">left</a>
@@ -72,17 +72,6 @@
                             <li>
                                 <a href="{{ url_for('topics',topic = topic, page=paginate.next_num)}}">right</a>
                             </li>
-{#                          <li><a href="#">left</a></li>#}
-{#                          <li><a href="#">1</a></li>#}
-{#                          <li><a href="#">2</a></li>#}
-{#                          <li class="active"><a href="#">3</a></li>#}
-{#                          <li><a href="#">4</a></li>#}
-{#                          <li><a href="#">5</a></li>#}
-{#                          <li><a href="#">6</a></li>#}
-{#                          <li><a href="#">7</a></li>#}
-{#                          <li><a href="#">8</a></li>#}
-{#                          <li><a href="#">9</a></li>#}
-{#                          <li><a href="#">right</a></li>#}
                         </ul>
                     </div>
                  </div>
