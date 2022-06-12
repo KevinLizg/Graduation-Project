@@ -332,89 +332,104 @@ def topics(topic):
 def skill_details(skill_):
     name = session.get('NAME')
     email = session.get('EMAIL')
-    session['NAME'] = name
-    session['EMAIL'] = email
-    replyForm = ReplyForm()
-    commentForm = CommentForm()
-    skill = Skills.query.filter(Skills.skill_name == skill_).first()
-    all_skill = [skill.skill_name for skill in Skills.query.filter(Skills.topic_id == skill.topic_id).all()]
-    comments_in_db = Comments.query.filter(Comments.skill_id == skill.skill_id).order_by(
-        Comments.comment_time.desc()).all()
-    comments = []
-    user_in_db = ''
-    student_in_db = Student.query.filter(Student.email == email).first()
-    teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
-    if student_in_db:
-        user_in_db = student_in_db
-        user_type = 1
-    elif teacher_in_db:
-        user_in_db = teacher_in_db
-        user_type = 0
-    page = int(request.args.get('page', 1))
-    per_page = int(request.args.get('per_page', 3))
-    paginate = Comments.query.filter(Comments.skill_id == skill.skill_id).order_by(
-        Comments.comment_time.desc()).paginate(page, per_page, error_out=False)
-    comment_count = Comments.query.filter(Comments.skill_id == skill.skill_id).count()
-    for comment in paginate.items:
-        user = ''
-        if comment.user_type == True:
-            user = Student.query.filter(Student.id == comment.user_id).first()
-        elif comment.user_type == False:
-            user = Teacher.query.filter(Teacher.id == comment.user_id).first()
-        reply_list = []
-        replies = Reply.query.filter(Reply.comment_id == comment.comment_id).all()
-        for reply in replies:
-            if reply.user_type == True:
-                reply_user = Student.query.filter(Student.id == comment.user_id).first()
-            elif reply.user_type == False:
-                reply_user = Teacher.query.filter(Teacher.id == comment.user_id).first()
-            image = open('static/images/icon/' + reply_user.lastname[0] + ".png", 'rb')
+    if(name):
+        session['NAME'] = name
+        session['EMAIL'] = email
+        replyForm = ReplyForm()
+        commentForm = CommentForm()
+        skill = Skills.query.filter(Skills.skill_name == skill_).first()
+        all_skill = [skill.skill_name for skill in Skills.query.filter(Skills.topic_id == skill.topic_id).all()]
+        comments_in_db = Comments.query.filter(Comments.skill_id == skill.skill_id).order_by(
+            Comments.comment_time.desc()).all()
+        comments = []
+        user_in_db = ''
+        student_in_db = Student.query.filter(Student.email == email).first()
+        teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+        if student_in_db:
+            user_in_db = student_in_db
+            user_type = 1
+        elif teacher_in_db:
+            user_in_db = teacher_in_db
+            user_type = 0
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 3))
+        paginate = Comments.query.filter(Comments.skill_id == skill.skill_id).order_by(
+            Comments.comment_time.desc()).paginate(page, per_page, error_out=False)
+        comment_count = Comments.query.filter(Comments.skill_id == skill.skill_id).count()
+        for comment in paginate.items:
+            user = ''
+            if comment.user_type == True:
+                user = Student.query.filter(Student.id == comment.user_id).first()
+            elif comment.user_type == False:
+                user = Teacher.query.filter(Teacher.id == comment.user_id).first()
+            reply_list = []
+            replies = Reply.query.filter(Reply.comment_id == comment.comment_id).all()
+            for reply in replies:
+                if reply.user_type == True:
+                    reply_user = Student.query.filter(Student.id == comment.user_id).first()
+                elif reply.user_type == False:
+                    reply_user = Teacher.query.filter(Teacher.id == comment.user_id).first()
+                image = open('static/images/icon/' + reply_user.lastname[0] + ".png", 'rb')
+                img_stream = image.read()
+                img_stream = base64.b64encode(img_stream).decode('ascii')
+                reply_list.append({
+                    'reply_content': reply.reply_content,
+                    'reply_user_name': reply_user.firstname + ', ' + reply_user.lastname,
+                    'reply_time': reply.reply_time,
+                    'reply_img': img_stream
+                })
+            image = open('static/images/icon/' + user.lastname[0] + ".png", 'rb')
             img_stream = image.read()
             img_stream = base64.b64encode(img_stream).decode('ascii')
-            reply_list.append({
-                'reply_content': reply.reply_content,
-                'reply_user_name': reply_user.firstname + ', ' + reply_user.lastname,
-                'reply_time': reply.reply_time,
-                'reply_img': img_stream
+            comments.append({
+                'comment_id': comment.comment_id,
+                'comment': comment.comment,
+                'user_name': user.firstname + ', ' + user.lastname,
+                'comment_time': comment.comment_time,
+                'replies': reply_list,
+                'user_img': img_stream
             })
-        image = open('static/images/icon/' + user.lastname[0] + ".png", 'rb')
-        img_stream = image.read()
-        img_stream = base64.b64encode(img_stream).decode('ascii')
-        comments.append({
-            'comment_id': comment.comment_id,
-            'comment': comment.comment,
-            'user_name': user.firstname + ', ' + user.lastname,
-            'comment_time': comment.comment_time,
-            'replies': reply_list,
-            'user_img': img_stream
-        })
-    if replyForm.validate_on_submit():
-        reply_add = Reply(reply_content=replyForm.reply.data, comment_id=replyForm.comment_id.data,
-                          user_id=user_in_db.id,
-                          user_type=user_type,
-                          reply_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        db.session.add(reply_add)
-        db.session.commit()
-        session['NAME'] = name
-        session['EMAIL'] = email
-        return redirect(url_for('skill_details', skill_=skill_))
-    if commentForm.validate_on_submit():
-        topic_id = Skills.query.filter(Skills.skill_id == skill.skill_id).first().topic_id
-        comment_add = Comments(comment=commentForm.comment.data, skill_id=skill.skill_id,
-                               user_id=user_in_db.id, user_type=user_type, topic_id=topic_id,
-                               comment_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        db.session.add(comment_add)
-        db.session.commit()
-        session.clear()
-        session['NAME'] = name
-        session['EMAIL'] = email
-        return redirect(url_for('skill_details', skill_=skill_))
-    print(comment_count)
+        if replyForm.validate_on_submit():
+            reply_add = Reply(reply_content=replyForm.reply.data, comment_id=replyForm.comment_id.data,
+                              user_id=user_in_db.id,
+                              user_type=user_type,
+                              reply_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            db.session.add(reply_add)
+            db.session.commit()
+            session['NAME'] = name
+            session['EMAIL'] = email
+            return redirect(url_for('skill_details', skill_=skill_))
+        if commentForm.validate_on_submit():
+            topic_id = Skills.query.filter(Skills.skill_id == skill.skill_id).first().topic_id
+            comment_add = Comments(comment=commentForm.comment.data, skill_id=skill.skill_id,
+                                   user_id=user_in_db.id, user_type=user_type, topic_id=topic_id,
+                                   comment_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            db.session.add(comment_add)
+            db.session.commit()
+            session.clear()
+            session['NAME'] = name
+            session['EMAIL'] = email
+            return redirect(url_for('skill_details', skill_=skill_))
+        print(comment_count)
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
     return render_template('skill_details.html', skill=skill, comments=comments, replyForm=replyForm,
                            commentForm=commentForm,
                            name=name, email=email, all_skill=all_skill,
                            paginate=paginate, comment_count=comment_count
                            )
+
+@app.route('/quiz')
+def quiz():
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    if (name):
+        print("hello")
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('quiz.html', num=1 * 12)
 
 
 @app.route('/logout', methods=['GET', 'POST'])
