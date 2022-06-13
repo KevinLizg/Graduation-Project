@@ -453,7 +453,6 @@ def quiz():
         #     app_id = 'XQAUEU-WR3AY23332'
         #     client = wolframalpha.Client(app_id)
         #     res = client.query(problem)
-        #     print(problem)
         #     img_list = []
         #     solution_list = []
         #     for pod in res.pods:
@@ -484,8 +483,16 @@ def quiz():
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('quiz.html', num=1 * 5,name=name, email=email, type="shit")
+    return render_template('quiz.html', num=1 * 2,name=name, email=email)
 
+
+@app.route('/quizResult/')
+def quizResult():
+    if request.method == 'GET':
+        val = request.args.get('json')
+        print(val)
+        data = {'msg': 'ok'}
+    return render_template('quizResult.html', j = j)
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():

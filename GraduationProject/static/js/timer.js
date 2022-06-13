@@ -14,9 +14,10 @@ $(document).ready(function() {
             $("title").html(output);
 
             if (--timer < 0) {
-                // document.getElementById("time").style.color = "red";
+                // document.getElementById("submit").click();
                 display.text("Time's Up!");
                 clearInterval(refresh);  // exit refresh loop
+                document.getElementById("submit").click();
             }
         }, 1000);
 
@@ -28,34 +29,4 @@ $(document).ready(function() {
         startTimer(Seconds, display);
     });
 
-
-    function addNum(duration, display) {
-        var timer = duration, minutes, seconds;
-        var refresh = setInterval(function () {
-            minutes = parseInt(timer / 60, 10)
-            seconds = parseInt(timer % 60, 10);
-
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-
-            var output = minutes + " : " + seconds;
-            display.text(output);
-            $("title").html(output);
-
-            if (--timer < 0) {
-                document.getElementById("time").style.color = "red";
-                display.text("Time's Up!");
-                clearInterval(refresh);  // exit refresh loop
-            }
-        }, 1000);
-
-    }
-
-    // start timer
-    jQuery(function ($) {
-        var add = $('#add');
-        function f() {
-            
-        }
-    });
 })
