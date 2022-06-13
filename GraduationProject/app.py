@@ -1,5 +1,7 @@
 import base64
 import os
+import random
+
 import wolframalpha
 from mathgenerator import mathgen
 
@@ -11,7 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from form import *
 
 from config import Config
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy import SQLAlchemy, Pagination
 from models import *
 
 app = Flask(__name__)
@@ -420,16 +422,35 @@ def skill_details(skill_):
                            paginate=paginate, comment_count=comment_count
                            )
 
-@app.route('/quiz')
-def quiz():
+
+
+@app.route('/quiz/<skill>')
+def quiz(skill):
     name = session.get('NAME')
     email = session.get('EMAIL')
     if (name):
-        print("hello")
+        session['NAME'] = name
+        session['EMAIL'] = email
+        skill = Skills.query.filter(Skills.skill_name == skill).first()
+        list = []
+        if(skill.skill_id == 1):
+            for i in range(0,5):
+                ran_num = random.randint(0,1)
+                if(ran_num == 0):
+                    problem, solution = mathgen.genById(0)
+                else:
+                    problem, solution = mathgen.genById(1)
+                list.append(problem)
+        # page = request.args.get('page', 1, type=int)
+        # start = (page - 1) * 1
+        # end = start + 1
+        # items = list[start:end]
+        # print(items)
+        # pagination = Pagination(None, page, 1, len(items), items)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('quiz.html', num=1 * 12)
+    return render_template('quiz.html', num=1 * 5, skill=skill, name=name, email=email, list = list)
 
 
 @app.route('/logout', methods=['GET', 'POST'])

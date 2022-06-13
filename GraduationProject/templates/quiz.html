@@ -10,7 +10,10 @@
              <div class="container">
                 <div class="row">
                     <div class="action">
-                        <div class="col-sm-12">
+                        <div class="col-sm-6">
+                           <h1 class="title">{{ skill.skill_name }}</h1>
+                        </div>
+                        <div class="col-sm-6">
                            <h1 id="time" class="title"></h1>
                         </div>
                     </div>
@@ -19,8 +22,45 @@
         </div>
     </section>
 
+    <section id="blog-details" class="padding-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9 col-sm-7">
+                    <div class="row">
+                         <div class="col-md-12 col-sm-12">
+                             <p id="num">0</p>
+                             {{ list[test] }}
+                             <input type="button" id="btn" value="click +1" onclick="numPlus()" />
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{#    {% for item in pagination.items %}#}
+{#        <div>{{ item }}</div>#}
+{#    {% endfor %}#}
+
+{#    <div class="pagination_page">#}
+{#        <ul class="pagination">#}
+{#            <li class="page-item ">#}
+{#                    <a href="{{ url_for('quiz',skill = skill.skill_name, page=pagination.prev_num)}}">left</a>#}
+{#            </li>#}
+{#            <li>#}
+{#                <a href="{{ url_for('quiz',skill = skill.skill_name, page=pagination.next_num)}}">right</a>#}
+{#            </li>#}
+{#        </ul>#}
+{#    </div>#}
+
     <script>
       var Seconds = {{ num }};
+    </script>
+
+    <script>
+       function numPlus() {
+            console.log("hello")
+       }
     </script>
 
     <script>

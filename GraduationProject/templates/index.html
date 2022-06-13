@@ -15,7 +15,11 @@
                     <div class="slide-text">
                         <h1>Here Can Help You Study Math</h1>
                         <p>This website could provide you a wonderful journey on studying Math on different fields.</p>
-                        <a href="{{ url_for('signin') }}" class="btn btn-common">SIGN UP</a>
+                        {% if name %}
+                            <a href="{{ url_for('topics',topic='Basic Math') }}" class="btn btn-common">START</a>
+                        {% else %}
+                            <a href="{{ url_for('signin') }}" class="btn btn-common">SIGN UP</a>
+                        {% endif %}
                     </div>
                     <img src="{{ url_for('static',filename='images/home/slider/book1.png') }}" class="slider-book1" alt="slider image" style="width: 200px" >
                     <img src="{{ url_for('static',filename='images/home/slider/book2.png') }}" class="slider-book2" alt="slider image" style="width: 250px">
