@@ -1,6 +1,6 @@
 import base64
 import os
-import random
+import random, json
 
 import wolframalpha
 from mathgenerator import mathgen
@@ -423,34 +423,68 @@ def skill_details(skill_):
                            )
 
 
-
-@app.route('/quiz/<skill>')
-def quiz(skill):
+@app.route('/ready', methods=["GET", "POST"])
+def ready():
     name = session.get('NAME')
     email = session.get('EMAIL')
     if (name):
         session['NAME'] = name
         session['EMAIL'] = email
-        skill = Skills.query.filter(Skills.skill_name == skill).first()
-        list = []
-        if(skill.skill_id == 1):
-            for i in range(0,5):
-                ran_num = random.randint(0,1)
-                if(ran_num == 0):
-                    problem, solution = mathgen.genById(0)
-                else:
-                    problem, solution = mathgen.genById(1)
-                list.append(problem)
-        # page = request.args.get('page', 1, type=int)
-        # start = (page - 1) * 1
-        # end = start + 1
-        # items = list[start:end]
-        # print(items)
-        # pagination = Pagination(None, page, 1, len(items), items)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('quiz.html', num=1 * 5, skill=skill, name=name, email=email, list = list)
+    return render_template("ready.html", filename=email+".json")
+
+
+@app.route('/quiz')
+def quiz():
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    if (name):
+        session['NAME'] = name
+        session['EMAIL'] = email
+        list = []
+        for i in range(0, 5):
+            ran_num = random.randint(0, 1)
+            if (ran_num == 0):
+                problem, solution = mathgen.genById(0)
+            else:
+                problem, solution = mathgen.genById(1)
+        #     app_id = 'XQAUEU-WR3AY23332'
+        #     client = wolframalpha.Client(app_id)
+        #     res = client.query(problem)
+        #     print(problem)
+        #     img_list = []
+        #     solution_list = []
+        #     for pod in res.pods:
+        #         for sub in pod.subpods:
+        #             img_list.append(sub.img['@src'])
+        #             solution_list.append(sub.plaintext)
+        #     option_list = []
+        #     option_list.append(str(random.randint(int(solution)-10,int(solution)-1)))
+        #     option_list.append(str(random.randint(int(solution)+1,int(solution)+10)))
+        #     option_list.append(str(random.randint(int(solution)+5,int(solution)+20)))
+        #     option_list.append(solution)
+        #     random.shuffle(option_list)
+        #     answer = ["A", "B", "C", "D"]
+        #     idx = 0
+        #     for op in option_list:
+        #         if op == solution:
+        #             an = answer[idx]
+        #         idx += 1
+        #     list.append({
+        #         'id': i,
+        #         'title': problem,
+        #         'option': option_list,
+        #         'answer': an,
+        #         'analysis': img_list
+        #     })
+        # with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
+        #     json.dump(list, f, ensure_ascii=False, indent=4)
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('quiz.html', num=1 * 5,name=name, email=email, type="shit")
 
 
 @app.route('/logout', methods=['GET', 'POST'])
