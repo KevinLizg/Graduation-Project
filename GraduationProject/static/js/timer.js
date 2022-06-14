@@ -14,10 +14,9 @@ $(document).ready(function() {
             $("title").html(output);
 
             if (--timer < 0) {
-                // document.getElementById("submit").click();
                 display.text("Time's Up!");
                 clearInterval(refresh);  // exit refresh loop
-                document.getElementById("submit").click();
+                // document.getElementById("submit").click();
             }
         }, 1000);
 

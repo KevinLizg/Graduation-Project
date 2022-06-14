@@ -90,8 +90,8 @@
                     ^*zidian[k]*^.^*i*^
                 </div>
             </div>
-            <div type="success" v-if='checkList[page]===2 || (answer&&result===1)' class='result success'>Great! The answer is correct!</div>
-            <div type="warning" v-if='checkList[page]===1 || (answer&&result===0)' class='result warning'>Sorry! Your answer is wrong</div>
+            <div type="success" v-if='checkList[page]===2 || answer&&result===1' class='result success'>Great! The answer is correct!</div>
+            <div type="warning" v-if='checkList[page]===1 || answer&&result===0' class='result warning'>Sorry! Your answer is wrong</div>
 
             <div v-if='checkList[page]!==0' class="answer">Answer is：^*timu.answer*^</div>
 {#            <div v-if='answer&&result===0'>#}
@@ -102,8 +102,8 @@
 {#            </div>#}
 
         </Card>
-        <i-button class="huida" type="primary" :disabled='daan.length===0' @click='huida' size="large" small>Check</i-button>
-        <i-button class="huida" size="large" onclick="getResult()" small id="submit">Finish</i-button>
+        <i-button class="huida" type="primary" :disabled='daan.length===0 || checkList[page]!==0' @click='huida' size="large" small>Check</i-button>
+        <i-button class="huida" size="large" @click="submit" onclick="getResult()" small id="submit">Finish</i-button>
 {#     onclick="window.location.href='{{ url_for('quizResult') }}'" #}
     </div>
 
@@ -148,10 +148,17 @@
                     this.checkList[this.page] = this.result+1;
                     if (this.result) {
                         this.score += 20;
-                        {#console.log("score"+this.score)#}
-                    }else{
-                        {#console.log("score"+this.score)#}
                     }
+                },
+                checkAnswer(n){
+                    let answer = this.zidian[this.map[n]];
+                    if(this.data[n].answer === answer){
+                        this.result = 1;
+                    }else{
+                        this.result = 0;
+                    }
+                    this.answer = true;
+                    this.checkList[n] = this.result+1;
                 },
                 next() {
                     this.map[this.page] = this.daan[0];
@@ -168,6 +175,11 @@
                     this.answer = false;
                     this.timu = this.data[this.page];
                 },
+                submit(){
+                    for(let i in this.data){
+                        this.checkAnswer(i);
+                    }
+                }
             },
             created() {
                 this.fileName = sessionStorage.file
@@ -189,7 +201,22 @@
 
     <script>
         function getResult() {
-            console.log(vue.score);
+            const question = vue.data;
+            const answer = vue.map;
+            const dict_values = {question, answer};
+            const jsonfile = JSON.stringify(dict_values);
+            alert(jsonfile)
+            $.ajax({
+                url: '{{ url_for('quiz_result') }}',
+                type: 'POST',
+                data: {
+                    jsonfile: jsonfile
+                },
+                success: function (response) {
+                },
+                error: function (response) {
+                }
+            });
         }
     </script>
 </body>

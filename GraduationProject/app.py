@@ -486,13 +486,11 @@ def quiz():
     return render_template('quiz.html', num=1 * 2,name=name, email=email)
 
 
-@app.route('/quizResult/')
-def quizResult():
-    if request.method == 'GET':
-        val = request.args.get('json')
-        print(val)
-        data = {'msg': 'ok'}
-    return render_template('quizResult.html', j = j)
+@app.route('/quiz_result/', methods=['GET', 'POST'])
+def quiz_result():
+    j = json.loads(request.form.get('jsonfile'))
+    return render_template('quiz_result.html')
+
 
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
