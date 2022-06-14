@@ -39,7 +39,7 @@
           };
           </script>
           <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script>
       var Seconds = {{ num }};
     </script>
@@ -55,10 +55,7 @@
              <div class="container">
                 <div class="row">
                     <div class="action">
-                        <div class="col-sm-12">
-                            <h2 class="title" id="time"></h2>
-                            <p>Left</p>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -68,13 +65,46 @@
     <div id="el">
         <div class="clients text-center wow fadeInUp" data-wow-duration="500ms" data-wow-delay="300ms">
             <h1 class="title">Just Math It</h1>
+            <h1 v-if="finish&&score>=80">
+                <div class="feature-inner">
+                    <div class="icon-wrapper" style="background-color: gold; color: white;">
+                        <i class="fa fa-2x fa-star-o"></i>
+                    </div>
+                </div>
+                Great! You are wonderful!<br>
+                Your score is: <b>^*score*^</b>
+            </h1>
+
+            <h2 v-if="finish&&score>=60&&score<80">
+                <div class="feature-inner">
+                    <div class="icon-wrapper" style="background-color: silver; color: white;">
+                        <i class="fa fa-2x fa-star-o"></i>
+                    </div>
+                </div>
+                You could do better next time!<br>
+                Your score is: <b>^*score*^</b>
+            </h2>
+
+            <h1 v-if="finish&&score<60">
+                <div class="feature-inner">
+                    <div class="icon-wrapper" style="background-color: #cd7f32; color: white;">
+                        <i class="fa fa-2x fa-star-o"></i>
+                    </div>
+                </div>
+                Do worry! Practice makes perfect!<br>
+                Your score is: <b>^*score*^</b>
+            </h1>
+
+            <i class="fa fa-pencil fa-2x" title="Edit"></i>
+            <button class="btn btn-lg btn-default" id="time" disabled></button>
+            <hr>
             <p>Question ^*page+1*^，^*data.length*^ questions in total</p>
         </div>
          <ButtonGroup class="pageControl">
-            <i-button type="primary" @click="prev" v-if='page>0'>
+            <i-button type="primary" @click="prev" v-if='page>0' large>
                 Prev
             </i-button>
-            <i-button type="primary" @click="next" v-if='page<data.length-1'>
+            <i-button type="primary" @click="next" v-if='page<data.length-1' large>
                 Next
             </i-button>
         </ButtonGroup>
@@ -94,17 +124,22 @@
             <div type="warning" v-if='checkList[page]===1 || answer&&result===0' class='result warning'>Sorry! Your answer is wrong</div>
 
             <div v-if='checkList[page]!==0' class="answer">Answer is：^*timu.answer*^</div>
-{#            <div v-if='answer&&result===0'>#}
-{#            <div class="analysis">Solution：</div><br>#}
-{#                <Card class="timu" v-for="i in timu.analysis">#}
-{#                     <img :src="i">#}
-{#                </Card>#}
-{#            </div>#}
+            <hr>
+            <div class="bs-example" v-if='checkList[page]!==0'>
+                <button type="button" class="btn btn-success"><i class="fa fa-cog"></i> Check solution</button>
+            </div>
+
+            <div class="analysis">
+                <div class="analysis">Solution：</div><br>
+                <Card class="timu" v-for="i in timu.analysis">
+                     <img :src="i">
+                </Card>
+            </div>
 
         </Card>
         <i-button class="huida" type="primary" :disabled='daan.length===0 || checkList[page]!==0' @click='huida' size="large" small>Check</i-button>
         <i-button class="huida" size="large" @click="submit" onclick="getResult()" small id="submit">Finish</i-button>
-{#     onclick="window.location.href='{{ url_for('quizResult') }}'" #}
+
     </div>
 
     <script>
@@ -124,6 +159,8 @@
                 map: {},
                 checkList: [0,0,0,0,0],
                 score: 0,
+                finish: false,
+                coins: {{ coins }}
             },
             methods: {
                 select(k) {
@@ -146,11 +183,12 @@
                     }
                     this.answer = true;
                     this.checkList[this.page] = this.result+1;
-                    if (this.result) {
-                        this.score += 20;
-                    }
                 },
                 checkAnswer(n){
+                    if(this.page === this.data.length-1){
+                        this.prev();
+                        this.next();
+                    }
                     let answer = this.zidian[this.map[n]];
                     if(this.data[n].answer === answer){
                         this.result = 1;
@@ -159,6 +197,9 @@
                     }
                     this.answer = true;
                     this.checkList[n] = this.result+1;
+                    if(this.result){
+                        this.score+=100/this.data.length;
+                    }
                 },
                 next() {
                     this.map[this.page] = this.daan[0];
@@ -179,6 +220,8 @@
                     for(let i in this.data){
                         this.checkAnswer(i);
                     }
+                    console.log(this.score);
+                    this.finish = true;
                 }
             },
             created() {
@@ -199,26 +242,27 @@
         })
     </script>
 
-    <script>
-        function getResult() {
-            const question = vue.data;
-            const answer = vue.map;
-            const dict_values = {question, answer};
-            const jsonfile = JSON.stringify(dict_values);
-            alert(jsonfile)
-            $.ajax({
-                url: '{{ url_for('quiz_result') }}',
-                type: 'POST',
-                data: {
-                    jsonfile: jsonfile
-                },
-                success: function (response) {
-                },
-                error: function (response) {
-                }
-            });
-        }
-    </script>
+{#    <script>#}
+{#        function getResult() {#}
+{#            const question = vue.data;#}
+{#            const answer = vue.map;#}
+{#            const dict_values = {question, answer};#}
+{#            const jsfile = JSON.stringify(dict_values);#}
+{#            $.ajax({#}
+{#                url: '{{ url_for('quiz_result') }}',#}
+{#                type: 'POST',#}
+{#                data: {#}
+{#                    jsonfile: jsfile#}
+{#                },#}
+{#                success: function (response) {#}
+{#                    window.location.href = '/quiz_result';#}
+{#                    console.log(response);#}
+{#                },#}
+{#                error: function (response) {#}
+{#                }#}
+{#            });#}
+{#        }#}
+{#    </script>#}
 </body>
 
 {% endblock %}

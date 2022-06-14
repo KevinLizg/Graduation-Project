@@ -436,14 +436,15 @@ def ready():
     return render_template("ready.html", filename=email+".json")
 
 
-@app.route('/quiz')
-def quiz():
+@app.route('/pratice')
+def practice():
     name = session.get('NAME')
     email = session.get('EMAIL')
     if (name):
         session['NAME'] = name
         session['EMAIL'] = email
         list = []
+        coins = 50
         for i in range(0, 5):
             ran_num = random.randint(0, 1)
             if (ran_num == 0):
@@ -483,13 +484,13 @@ def quiz():
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('quiz.html', num=1 * 2,name=name, email=email)
+    return render_template('practice.html', num=1 * 2,name=name, email=email, coins=coins)
 
 
-@app.route('/quiz_result/', methods=['GET', 'POST'])
+@app.route('/quiz_result', methods=['GET', 'POST'])
 def quiz_result():
-    j = json.loads(request.form.get('jsonfile'))
-    return render_template('quiz_result.html')
+    j = request.form.get('jsfile')
+    return render_template('quiz_result.html', jsfile=j)
 
 
 @app.route('/logout', methods=['GET', 'POST'])

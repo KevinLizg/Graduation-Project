@@ -74,7 +74,11 @@
                 jsonList: JSONList,
                 typeList: [
                 {
-                    id: 'order',
+                    id: 'practice',
+                    name: "Start your pratice!"
+                },
+                {
+                    id: 'quiz',
                     name: "Start your quiz!"
                 }
                 ]
@@ -83,7 +87,7 @@
                 goNext(id) {
                     sessionStorage.type = id;
                     sessionStorage.file = document.getElementById("filename").innerText;
-                    window.location.href = "/quiz"
+                    window.location.href = "/pratice"
                 }
             }
         })

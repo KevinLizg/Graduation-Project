@@ -16,6 +16,8 @@ $(document).ready(function() {
             if (--timer < 0) {
                 display.text("Time's Up!");
                 clearInterval(refresh);  // exit refresh loop
+                document.getElementById("time").style.color = "red";
+                // alert("Time is up!")
                 // document.getElementById("submit").click();
             }
         }, 1000);
