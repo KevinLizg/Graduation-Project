@@ -126,15 +126,29 @@
             <div v-if='checkList[page]!==0' class="answer">Answer is：^*timu.answer*^</div>
             <hr>
             <div class="bs-example" v-if='checkList[page]!==0'>
-                <button type="button" class="btn btn-success"><i class="fa fa-cog"></i> Check solution</button>
+                <button type="button" class="btn btn-success" onclick="showSolution()"><i class="fa fa-cog"></i> Check solution</button>
             </div>
 
-            <div class="analysis">
-                <div class="analysis">Solution：</div><br>
-                <Card class="timu" v-for="i in timu.analysis">
+            <div class="analysis" id="solution" style="display: none">
+                <div>Solution：</div><br>
+                <Card class="timu" v-for="i in timu.analysis.slice(0,2)" id="solution" >
                      <img :src="i">
                 </Card>
+                <button type="button" class="btn btn-info">More details</button>
             </div>
+
+{#            <div class="analysis">#}
+{#                <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length-1)">#}
+{#                     <img :src="i">#}
+{#                </Card>#}
+{#            </div>#}
+
+{#            <div class="analysis">#}
+{#                <div>Solution：</div><br>#}
+{#                <Card class="timu" v-for="i in timu.analysis">#}
+{#                     <img :src="i">#}
+{#                </Card>#}
+{#            </div>#}
 
         </Card>
         <i-button class="huida" type="primary" :disabled='daan.length===0 || checkList[page]!==0' @click='huida' size="large" small>Check</i-button>
@@ -240,6 +254,16 @@
                     });
             }
         })
+    </script>
+    <script>
+        function showSolution() {
+            var s = document.getElementById("solution");
+            if(s.style.display=="block"){
+                s.style.display="none";
+            }else {
+                s.style.display="block";
+            }
+        }
     </script>
 
 {#    <script>#}
