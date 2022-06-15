@@ -55,16 +55,16 @@
              <div class="container">
                 <div class="row">
                     <div class="action">
-
+                        <div id="email" style="display: none">{{ email }}</div>
                     </div>
                 </div>
             </div>
         </div>
    </section>
-
+    <h1 class="title" style="text-align: center">Just Math It</h1>
+    <center><i class="fa fa-pencil fa-2x" title="Edit" ></i>&nbsp;<h2 id="time" style="display: inline;"></h2></center>
     <div id="el">
         <div class="clients text-center wow fadeInUp" data-wow-duration="500ms" data-wow-delay="300ms">
-            <h1 class="title">Just Math It</h1>
             <h1 v-if="finish&&score>=80">
                 <div class="feature-inner">
                     <div class="icon-wrapper" style="background-color: gold; color: white;">
@@ -94,9 +94,6 @@
                 Do worry! Practice makes perfect!<br>
                 Your score is: <b>^*score*^</b>
             </h1>
-
-            <i class="fa fa-pencil fa-2x" title="Edit"></i>
-            <button class="btn btn-lg btn-default" id="time" disabled></button>
             <hr>
             <p>Question ^*page+1*^，^*data.length*^ questions in total</p>
         </div>
@@ -120,27 +117,30 @@
                     ^*zidian[k]*^.^*i*^
                 </div>
             </div>
+
             <div type="success" v-if='checkList[page]===2 || answer&&result===1' class='result success'>Great! The answer is correct!</div>
             <div type="warning" v-if='checkList[page]===1 || answer&&result===0' class='result warning'>Sorry! Your answer is wrong</div>
 
             <div v-if='checkList[page]!==0' class="answer">Answer is：^*timu.answer*^</div>
             <hr>
             <div class="bs-example" v-if='checkList[page]!==0'>
-                <button type="button" class="btn btn-success" onclick="showSolution()"><i class="fa fa-cog"></i> Check solution</button>
+                <button type="button" class="btn btn-success" onclick="showSolution()"><i class="fa fa-cog"></i>Check solution</button>
             </div>
 
-            <div class="analysis" id="solution" style="display: none">
+            <div class="analysis" style="display: none">
                 <div>Solution：</div><br>
-                <Card class="timu" v-for="i in timu.analysis.slice(0,2)" id="solution" >
+                <Card class="timu" v-for="i in timu.analysis.slice(0,2)" >
                      <img :src="i">
                 </Card>
-                <button type="button" class="btn btn-info">More details</button>
             </div>
 
-{#            <div class="analysis">#}
-{#                <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length-1)">#}
-{#                     <img :src="i">#}
-{#                </Card>#}
+{#                <button type="button" class="btn btn-info" onclick="showDetails()">More details</button>#}
+{##}
+{#                <div class="analysis" :id="page" style="filter: blur(5px)">#}
+{#                    <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length-1)">#}
+{#                         <img :src="i">#}
+{#                    </Card>#}
+{#                </div>#}
 {#            </div>#}
 
 {#            <div class="analysis">#}
@@ -152,8 +152,7 @@
 
         </Card>
         <i-button class="huida" type="primary" :disabled='daan.length===0 || checkList[page]!==0' @click='huida' size="large" small>Check</i-button>
-        <i-button class="huida" size="large" @click="submit" onclick="getResult()" small id="submit">Finish</i-button>
-
+        <i-button class="huida" size="large" @click="submit" onclick="returnResult()" small id="submit">Finish</i-button>
     </div>
 
     <script>
@@ -234,7 +233,6 @@
                     for(let i in this.data){
                         this.checkAnswer(i);
                     }
-                    console.log(this.score);
                     this.finish = true;
                 }
             },
@@ -257,17 +255,48 @@
     </script>
     <script>
         function showSolution() {
-            var s = document.getElementById("solution");
+            var s = document.getElementById(vue.page);
+            {#console.log(s);#}
             if(s.style.display=="block"){
                 s.style.display="none";
             }else {
                 s.style.display="block";
             }
         }
+
+        {#function showDetails() {#}
+        {#    if(vue.coins >= 5){#}
+                {#vue.coins -= 5;#}
+        {#        document.getElementById(vue.page).style.filter = "blur(0px)";#}
+                {#this.returnResult();#}
+        {#    }else{#}
+        {#        console.log("shit!");#}
+        {#    }#}
+        //}
+    </script>
+
+    <script>
+        function returnResult() {
+            const coins = vue.coins;
+            const email = document.getElementById("email").innerText;
+            $.ajax({
+                url: '{{ url_for('return_result') }}',
+                type: 'POST',
+                data: {
+                    coins: coins,
+                    email: email
+                },
+                success: function (response) {
+
+                },
+                error: function (response) {
+                }
+            });
+        }
     </script>
 
 {#    <script>#}
-{#        function getResult() {#}
+{#        function returnResult() {#}
 {#            const question = vue.data;#}
 {#            const answer = vue.map;#}
 {#            const dict_values = {question, answer};#}

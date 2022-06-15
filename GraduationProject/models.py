@@ -18,7 +18,7 @@ class Student(db.Model):
     phone = db.Column(db.String(128))
     address = db.Column(db.String(128))
     school = db.Column(db.String(128))
-    # student_level = db.Column(db.String(128))
+    coins = db.Column(db.Integer())
 
 
 class Teacher(db.Model):

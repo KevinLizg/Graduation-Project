@@ -443,6 +443,7 @@ def practice():
     if (name):
         session['NAME'] = name
         session['EMAIL'] = email
+        user = Student.query.filter(Student.email == email).first()
         list = []
         coins = 50
         for i in range(0, 5):
@@ -484,13 +485,19 @@ def practice():
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('practice.html', num=1 * 2,name=name, email=email, coins=coins)
+    return render_template('practice.html', num=1*5, name=name, email=email, coins=user.coins)
 
 
-@app.route('/quiz_result', methods=['GET', 'POST'])
-def quiz_result():
-    j = request.form.get('jsfile')
-    return render_template('quiz_result.html', jsfile=j)
+@app.route('/return_result', methods=['GET', 'POST'])
+def return_result():
+    from models import db
+    coins = request.form.get("coins")
+    email = request.form.get("email")
+    user = Student.query.filter(Student.email == email).first()
+    user.coins = int(coins)
+    db.session.add(user)
+    db.session.commit()
+    return 'hello'
 
 
 @app.route('/logout', methods=['GET', 'POST'])
