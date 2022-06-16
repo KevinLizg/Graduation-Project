@@ -35,6 +35,22 @@ db = SQLAlchemy(app)
 ####################################################
 
 
+################# Clear Cached ###################
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
+
+
 # app name
 @app.errorhandler(404)
 # inbuilt function which takes error as parameter
@@ -433,7 +449,7 @@ def ready():
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template("ready.html", filename=email+".json")
+    return render_template("ready.html", filename=email+".json", name=name, email=email)
 
 
 @app.route('/pratice')
@@ -452,40 +468,40 @@ def practice():
                 problem, solution = mathgen.genById(0)
             else:
                 problem, solution = mathgen.genById(1)
-        #     app_id = 'XQAUEU-WR3AY23332'
-        #     client = wolframalpha.Client(app_id)
-        #     res = client.query(problem)
-        #     img_list = []
-        #     solution_list = []
-        #     for pod in res.pods:
-        #         for sub in pod.subpods:
-        #             img_list.append(sub.img['@src'])
-        #             solution_list.append(sub.plaintext)
-        #     option_list = []
-        #     option_list.append(str(random.randint(int(solution)-10,int(solution)-1)))
-        #     option_list.append(str(random.randint(int(solution)+1,int(solution)+10)))
-        #     option_list.append(str(random.randint(int(solution)+5,int(solution)+20)))
-        #     option_list.append(solution)
-        #     random.shuffle(option_list)
-        #     answer = ["A", "B", "C", "D"]
-        #     idx = 0
-        #     for op in option_list:
-        #         if op == solution:
-        #             an = answer[idx]
-        #         idx += 1
-        #     list.append({
-        #         'id': i,
-        #         'title': problem,
-        #         'option': option_list,
-        #         'answer': an,
-        #         'analysis': img_list
-        #     })
+            # app_id = 'XQAUEU-WR3AY23332'
+            # client = wolframalpha.Client(app_id)
+            # res = client.query(problem)
+            # img_list = []
+            # solution_list = []
+            # for pod in res.pods:
+            #     for sub in pod.subpods:
+            #         img_list.append(sub.img['@src'])
+            #         solution_list.append(sub.plaintext)
+            # option_list = []
+            # option_list.append(str(random.randint(int(solution)-10,int(solution)-1)))
+            # option_list.append(str(random.randint(int(solution)+1,int(solution)+10)))
+            # option_list.append(str(random.randint(int(solution)+5,int(solution)+20)))
+            # option_list.append(solution)
+            # random.shuffle(option_list)
+            # answer = ["A", "B", "C", "D"]
+            # idx = 0
+            # for op in option_list:
+            #     if op == solution:
+            #         an = answer[idx]
+            #     idx += 1
+            # list.append({
+            #     'id': i,
+            #     'title': problem,
+            #     'option': option_list,
+            #     'answer': an,
+            #     'analysis': img_list
+            # })
         # with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
         #     json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('practice.html', num=1*5, name=name, email=email, coins=user.coins)
+    return render_template('practice.html', num=1*120, name=name, email=email, coins=user.coins)
 
 
 @app.route('/return_result', methods=['GET', 'POST'])

@@ -55,7 +55,7 @@
 {#             <div class="container">#}
 {#                <div class="row">#}
 {#                    <div class="action">#}
-{#                        <div id="email" style="display: none">{{ email }}</div>#}
+                        <div id="email" style="display: none">{{ email }}</div>
 {#                    </div>#}
 {#                </div>#}
 {#            </div>#}
@@ -139,7 +139,7 @@
                     <hr><button type="button" class="btn btn-warning" id="coinsAlert" style="display: none">You do not have enough coins! Do some quizzes to earn some coins!</button>
                     <div class="analysis" id="detail" style="filter: blur(5px)">
                         <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length-1)">
-                             <img :src="i">
+                        <img :src="i">
                         </Card>
                     </div>
                 </div>
@@ -155,7 +155,7 @@
 
         </Card>
         <i-button class="huida" type="primary" :disabled='daan.length===0 || checkList[page]!==0' @click='huida' size="large" small>Check</i-button>
-        <i-button class="huida" size="large" @click="submit" onclick="returnResult()" small id="submit">Finish</i-button>
+        <i-button class="huida" size="large" @click="submit" onclick="returnResult()" small>Finish</i-button>
     </div>
 
     <script>
@@ -278,8 +278,9 @@
         function showDetails() {
             if(vue.coins < 5){
                 this.showAlert();
-            }else{
-                vue.coins -= 5;
+            }
+            else{
+                vue.coins = vue.coins - 5;
                 vue.checkDetail[vue.page] = true;
                 document.getElementById("detail").style.filter = "blur(0px)";
                 vue.next();
@@ -297,6 +298,7 @@
         function returnResult() {
             const coins = vue.coins;
             const email = document.getElementById("email").innerText;
+            console.log(coins);
             $.ajax({
                 url: '{{ url_for('return_result') }}',
                 type: 'POST',
