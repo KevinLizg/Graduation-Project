@@ -31,9 +31,9 @@
                          <div class="col-sm-12 col-md-12">
                             <div class="single-blog single-column">
                                 <div class="post-thumb">
-                                    <a href="{{ url_for('ready') }}"><img src="{{ url_for('static',filename='images/skills/'+info[i].image) }}" class="img-responsive" style="width: 500px"></a>
+                                    <a href="{{ url_for('ready',skill_=skills[i].skill_name) }}"><img src="{{ url_for('static',filename='images/skills/'+info[i].image) }}" class="img-responsive" style="width: 500px"></a>
                                     <div class="post-overlay">
-                                       <span class="uppercase"><a href="{{ url_for('ready') }}">St<br><small>art</small></a></span>
+                                       <span class="uppercase"><a href="{{ url_for('ready',skill_=skills[i].skill_name) }}">St<br><small>art</small></a></span>
                                    </div>
                                 </div>
                                 <div class="post-content overflow">

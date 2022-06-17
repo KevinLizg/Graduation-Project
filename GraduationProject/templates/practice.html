@@ -62,6 +62,7 @@
 {#        </div>#}
 {#   </section>#}
     <h1 class="title" style="text-align: center">Just Math It</h1><hr>
+    <p id="skill_" hidden>{{ skill_ }}</p>
     <center><i class="fa fa-pencil fa-2x" title="Edit" ></i>&nbsp;<h2 id="time" style="display: inline;"></h2></center>
     <div id="el">
         <div class="clients text-center wow fadeInUp" data-wow-duration="500ms" data-wow-delay="300ms">
@@ -203,10 +204,8 @@
                     this.checkList[this.page] = this.result+1;
                 },
                 checkAnswer(n){
-                    if(this.page === this.data.length-1){
-                        this.prev();
-                        this.next();
-                    }
+                    this.prev();
+                    this.next();
                     let answer = this.zidian[this.map[n]];
                     if(this.data[n].answer === answer){
                         this.result = 1;
@@ -215,11 +214,12 @@
                     }
                     this.answer = true;
                     this.checkList[n] = this.result+1;
-                    if(this.result){
+                    if(this.result===1){
                         this.score+=100/this.data.length;
                     }
                 },
                 next() {
+                    console.log(this.fileId)
                     this.map[this.page] = this.daan[0];
                     this.page += 1;
                     this.initTimu();
@@ -298,13 +298,16 @@
         function returnResult() {
             const coins = vue.coins;
             const email = document.getElementById("email").innerText;
-            console.log(coins);
+            const score = vue.score;
+            const skill = document.getElementById("skill_").innerText;
             $.ajax({
                 url: '{{ url_for('return_result') }}',
                 type: 'POST',
                 data: {
                     coins: coins,
-                    email: email
+                    email: email,
+                    score: score,
+                    skill: skill
                 },
                 success: function (response) {
 

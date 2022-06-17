@@ -61,3 +61,11 @@ class Reply(db.Model):
     user_id = db.Column(db.Integer, nullable=True)
     user_type = db.Column(db.Boolean, nullable=True)
     reply_time = db.Column(db.String(128), nullable=True)
+
+
+class Score(db.Model):
+    score_id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    skill_id = db.Column(db.Integer, db.ForeignKey('skills.skill_id'))
+    total_score = db.Column(db.Integer)
+    number_times = db.Column(db.Integer)

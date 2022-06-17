@@ -53,6 +53,7 @@
    </section>
 
     <p id="filename" hidden>{{ filename }}</p>
+    <p id="skill_" hidden>{{ skill_ }}</p>
     <div id="el">
         <div class="typeList">
             <div v-for="i in typeList" @click='goNext(i.id)'>
@@ -71,23 +72,29 @@
             el: "#el",
             delimiters: ['^*', '*^'],
             data: {
-                jsonList: JSONList,
+                {#jsonList: JSONList,#}
                 typeList: [
                 {
-                    id: 'practice',
+                    id: "practice",
                     name: "Start your pratice!"
                 },
                 {
-                    id: 'quiz',
+                    id: "/quiz/",
                     name: "Start your quiz!"
                 }
                 ]
             },
             methods: {
                 goNext(id) {
-                    sessionStorage.type = id;
-                    sessionStorage.file = document.getElementById("filename").innerText;
-                    window.location.href = "/pratice"
+                    if(id === "practice"){
+                        sessionStorage.type = id;
+                        sessionStorage.file = document.getElementById("filename").innerText;
+                        window.location.href = "/practice/"+document.getElementById("skill_").innerText;
+                    }else{
+                        sessionStorage.type = id;
+                        sessionStorage.file = document.getElementById("filename").innerText;
+                        window.location.href = "/quiz/"+document.getElementById("skill_").innerText;
+                    }
                 }
             }
         })

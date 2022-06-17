@@ -439,80 +439,114 @@ def skill_details(skill_):
                            )
 
 
-@app.route('/ready', methods=["GET", "POST"])
-def ready():
+@app.route('/ready/<skill_>', methods=["GET", "POST"])
+def ready(skill_):
     name = session.get('NAME')
     email = session.get('EMAIL')
+    print(skill_)
     if (name):
         session['NAME'] = name
         session['EMAIL'] = email
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template("ready.html", filename=email+".json", name=name, email=email)
+    return render_template("ready.html", filename=email+".json", name=name, email=email, skill_=skill_)
 
 
-@app.route('/pratice')
-def practice():
+@app.route('/practice/<skill_>')
+def practice(skill_):
     name = session.get('NAME')
     email = session.get('EMAIL')
     if (name):
         session['NAME'] = name
         session['EMAIL'] = email
         user = Student.query.filter(Student.email == email).first()
+        skill = Skills.query.filter(Skills.skill_name == skill_).first()
         list = []
         coins = 50
         for i in range(0, 5):
-            ran_num = random.randint(0, 1)
-            if (ran_num == 0):
-                problem, solution = mathgen.genById(0)
-            else:
-                problem, solution = mathgen.genById(1)
-            # app_id = 'XQAUEU-WR3AY23332'
-            # client = wolframalpha.Client(app_id)
-            # res = client.query(problem)
-            # img_list = []
-            # solution_list = []
-            # for pod in res.pods:
-            #     for sub in pod.subpods:
-            #         img_list.append(sub.img['@src'])
-            #         solution_list.append(sub.plaintext)
-            # option_list = []
-            # option_list.append(str(random.randint(int(solution)-10,int(solution)-1)))
-            # option_list.append(str(random.randint(int(solution)+1,int(solution)+10)))
-            # option_list.append(str(random.randint(int(solution)+5,int(solution)+20)))
-            # option_list.append(solution)
-            # random.shuffle(option_list)
-            # answer = ["A", "B", "C", "D"]
-            # idx = 0
-            # for op in option_list:
-            #     if op == solution:
-            #         an = answer[idx]
-            #     idx += 1
-            # list.append({
-            #     'id': i,
-            #     'title': problem,
-            #     'option': option_list,
-            #     'answer': an,
-            #     'analysis': img_list
-            # })
+            problem = ''
+            solution = ''
+            if skill.skill_id == 1:
+                ran_num = random.randint(0, 1)
+                if ran_num == 0:
+                    problem, solution = mathgen.genById(0)
+                else:
+                    problem, solution = mathgen.genById(1)
+        #     app_id = 'XQAUEU-WR3AY23332'
+        #     client = wolframalpha.Client(app_id)
+        #     res = client.query(problem)
+        #     img_list = []
+        #     solution_list = []
+        #     for pod in res.pods:
+        #         for sub in pod.subpods:
+        #             img_list.append(sub.img['@src'])
+        #             solution_list.append(sub.plaintext)
+        #     option_list = []
+        #     option_list.append(str(random.randint(int(solution)-10,int(solution)-1)))
+        #     option_list.append(str(random.randint(int(solution)+1,int(solution)+10)))
+        #     option_list.append(str(random.randint(int(solution)+5,int(solution)+20)))
+        #     option_list.append(solution)
+        #     random.shuffle(option_list)
+        #     answer = ["A", "B", "C", "D"]
+        #     idx = 0
+        #     for op in option_list:
+        #         if op == solution:
+        #             an = answer[idx]
+        #         idx += 1
+        #     list.append({
+        #         'id': i,
+        #         'title': problem,
+        #         'option': option_list,
+        #         'answer': an,
+        #         'analysis': img_list
+        #     })
         # with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
         #     json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('practice.html', num=1*120, name=name, email=email, coins=user.coins)
+    return render_template('practice.html', num=1*120, name=name, email=email, coins=user.coins, skill_=skill_)
 
 
 @app.route('/return_result', methods=['GET', 'POST'])
 def return_result():
-    from models import db
-    coins = request.form.get("coins")
-    email = request.form.get("email")
-    user = Student.query.filter(Student.email == email).first()
-    user.coins = int(coins)
-    db.session.add(user)
-    db.session.commit()
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    if (name):
+        session['NAME'] = name
+        session['EMAIL'] = email
+        from models import db
+        coins = request.form.get("coins")
+        email = request.form.get("email")
+        skill = request.form.get("skill")
+        score = request.form.get("score")
+        student = Student.query.filter(Student.email == email).first()
+        scores = Score.query.filter(student.id == Score.student_id).all()
+        if scores:
+            for sc in scores:
+                skill = Skills.query.filter(Skills.skill_name == skill).first()
+                if sc.skill_id == skill.skill_id:
+                    sc.total_score = sc.total_score + int(score)
+                    sc.number_times += 1
+                    db.session.add(sc)
+                    db.session.commit()
+                else:
+                    score_add = Score(student_id=student.id, skill_id=skill.skill_id, total_score=sc.total_score + int(score),
+                                      number_times=sc.number_times + 1)
+                    db.session.add(score_add)
+                    db.session.commit()
+        else:
+            skill = Skills.query.filter(Skills.skill_name == skill).first()
+            score_add = Score(student_id=student.id, skill_id=skill.skill_id, total_score=score, number_times=1)
+            db.session.add(score_add)
+            db.session.commit()
+        student.coins = int(coins)
+        db.session.add(student)
+        db.session.commit()
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
     return 'hello'
 
 
