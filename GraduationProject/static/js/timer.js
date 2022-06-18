@@ -17,9 +17,7 @@ $(document).ready(function() {
                 display.text("Time's Up!");
                 clearInterval(refresh);  // exit refresh loop
                 document.getElementById("time").style.color = "red";
-                if(vue.finish===false){
-                    document.getElementById("submit").click();
-                }
+                document.getElementById("finish").click();
             }
         }, 1000);
 

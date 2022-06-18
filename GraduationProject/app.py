@@ -55,7 +55,10 @@ def add_header(r):
 @app.errorhandler(404)
 # inbuilt function which takes error as parameter
 def not_found(e):
-    # defining function
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    session['NAME'] = name
+    session['EMAIL'] = email
     return render_template("404.html")
 
 
@@ -509,6 +512,25 @@ def practice(skill_):
     return render_template('practice.html', num=1*120, name=name, email=email, coins=user.coins, skill_=skill_)
 
 
+@app.route('/return_coins', methods=['GET', 'POST'])
+def return_coins():
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    if (name):
+        session['NAME'] = name
+        session['EMAIL'] = email
+        from models import db
+        student = Student.query.filter(Student.email == email).first()
+        coins = request.form.get("coins")
+        student.coins = int(coins)
+        db.session.add(student)
+        db.session.commit()
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return 'coins'
+
+
 @app.route('/return_result', methods=['GET', 'POST'])
 def return_result():
     name = session.get('NAME')
@@ -547,7 +569,7 @@ def return_result():
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return 'hello'
+    return 'result'
 
 
 @app.route('/logout', methods=['GET', 'POST'])
