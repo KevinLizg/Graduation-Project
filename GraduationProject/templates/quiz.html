@@ -120,7 +120,7 @@
                 </div>
             </div>
 
-            <div type="success" v-if='checkList[page]===2 || answer&&result===1' class='result success'>Great! The answer is correct!</div><br>
+            <div type="success" v-if='checkList[page]===2 || answer&&result===1' class='result success'>Great! The answer is correct!</div>
             <div type="warning" v-if='checkList[page]===1 || answer&&result===0' class='result warning'>Sorry! Your answer is wrong!</div>
 
             <div v-if='checkList[page]!==0' class="answer">Answer is：^*timu.answer*^</div><button disabled v-if='checkList[page]===2 || answer&&result===1' class="btn btn-xs btn-primary">You earn one coin!</button>
@@ -131,7 +131,6 @@
 
             <div class="analysis" id="solution" v-if="checkSolution[page]">
                 <div>Solution：
-                    <button disabled id="tip" type="button" class="btn btn-danger" style="display: none"><i class="fa fa-diamond"></i>Five coins have been deducted</button>
                 </div><br>
                 <Card class="timu" v-for="i in timu.analysis.slice(0,2)" >
                      <img :src="i">
@@ -268,7 +267,9 @@
                 this.showAlert();
             }
             else{
-                $("#tip").fadeIn("500");
+{#                alert(<button disabled id="tip" type="button" class="btn btn-danger" style="display: none"><i class="fa fa-diamond"></i>Five coins have been deducted</button>#}
+{#);#}
+                alert("Five coins have been deducted");
                 vue.coins = vue.coins - 5;
                 vue.checkDetail[vue.page] = true;
                 document.getElementById("detail").style.filter = "blur(0px)";

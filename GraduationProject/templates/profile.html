@@ -357,18 +357,21 @@
                             <!-- Tabs -->
                             <ul class="nav nav-pills custom-pills" id="pills-tab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="pills-timeline-tab" data-toggle="pill" href="#current-month" role="tab" aria-controls="pills-timeline" aria-selected="true">History</a>
+                                    <a class="nav-link active" id="pills-timeline-tab" data-toggle="pill" href="#history" role="tab" aria-controls="pills-timeline" aria-selected="true">History</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#last-month" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</a>
+                                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#previous-month" role="tab" aria-controls="pills-setting" aria-selected="false">Setting</a>
+                                    <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#setting" role="tab" aria-controls="pills-setting" aria-selected="false">Setting</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-toggle="pill" href="#analysis" role="tab" aria-controls="pills-setting" aria-selected="false">Analysis</a>
                                 </li>
                             </ul>
                             <!-- Tabs -->
                             <div class="tab-content" id="pills-tabContent">
-                                <div class="tab-pane fade show active" id="current-month" role="tabpanel" aria-labelledby="pills-timeline-tab">
+                                <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="pills-timeline-tab">
                                     <div class="card-body">
                                         <div class="profiletimeline m-t-0">
                                             <div class="sl-item">
@@ -390,7 +393,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="last-month" role="tabpanel" aria-labelledby="pills-profile-tab">
+                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-md-3 col-xs-6 b-r"> <strong>First Name</strong>
@@ -451,7 +454,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="previous-month" role="tabpanel" aria-labelledby="pills-setting-tab">
+                                <div class="tab-pane fade" id="setting" role="tabpanel" aria-labelledby="pills-setting-tab">
                                     <div class="card-body">
                                         <form class="form-horizontal form-material" method="post" novalidate>
                                             {{ form.hidden_tag() }}
@@ -524,6 +527,20 @@
                                         </form>
                                     </div>
                                 </div>
+                                {#Start pie chart#}
+                                <div class="tab-pane fade" id="analysis" role="tabpanel" aria-labelledby="analysis">
+                                    <div class="card-body">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title">Line Chart</h4>
+                                                <div>
+                                                    <canvas id="pie-chart" height="150"></canvas>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {#End pie chart#}
                             </div>
                         </div>
                     </div>
