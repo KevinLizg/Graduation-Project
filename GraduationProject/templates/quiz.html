@@ -50,23 +50,24 @@
 <body>
     {% block mainContent %}
 
-{#    <section id="page-breadcrumb">#}
-{#        <div class="vertical-center sun">#}
-{#             <div class="container">#}
-{#                <div class="row">#}
-{#                    <div class="action">#}
+    <section id="page-breadcrumb">
+        <div class="vertical-center sun">
+             <div class="container">
+                <div class="row">
+                    <div class="action">
                         <div id="email" style="display: none">{{ email }}</div>
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#   </section>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+   </section>
     <h1 class="title" style="text-align: center">Just Math It</h1><hr>
     <p id="skill_" hidden>{{ skill_ }}</p>
     <center><i class="fa fa-pencil fa-2x" title="Edit" ></i>&nbsp;<h2 id="time" style="display: inline;"></h2></center>
+        <div id="spendtime" style="display: none"></div>
     <div id="el">
         <div class="clients text-center wow fadeInUp" data-wow-duration="500ms" data-wow-delay="300ms">
-            <h1 v-if="finish&&score>=80">
+            <h2 v-if="finish&&score>=80">
                 <div class="feature-inner">
                     <div class="icon-wrapper" style="background-color: gold; color: white;">
                         <i class="fa fa-2x fa-star-o"></i>
@@ -74,7 +75,7 @@
                 </div>
                 Great! You are wonderful!<br>
                 Your score is: <b>^*score*^</b>
-            </h1>
+            </h2>
 
             <h2 v-if="finish&&score>=60&&score<80">
                 <div class="feature-inner">
@@ -86,7 +87,7 @@
                 Your score is: <b>^*score*^</b>
             </h2>
 
-            <h1 v-if="finish&&score<60">
+            <h2 v-if="finish&&score<60">
                 <div class="feature-inner">
                     <div class="icon-wrapper" style="background-color: #cd7f32; color: white;">
                         <i class="fa fa-2x fa-star-o"></i>
@@ -94,7 +95,7 @@
                 </div>
                 Do not worry! Practice makes perfect!<br>
                 Your score is: <b>^*score*^</b>
-            </h1>
+            </h2>
             <hr>
             <p>Question ^*page+1*^，^*data.length*^ questions in total</p>
         </div>
@@ -119,15 +120,14 @@
                 </div>
             </div>
 
-            <div type="success" v-if='checkList[page]===2 || answer&&result===1' class='result success'>Great! The answer is correct!</div>
+            <div type="success" v-if='checkList[page]===2 || answer&&result===1' class='result success'>Great! The answer is correct!</div><br>
             <div type="warning" v-if='checkList[page]===1 || answer&&result===0' class='result warning'>Sorry! Your answer is wrong!</div>
 
-            <div v-if='checkList[page]!==0' class="answer">Answer is：^*timu.answer*^</div>
+            <div v-if='checkList[page]!==0' class="answer">Answer is：^*timu.answer*^</div><button disabled v-if='checkList[page]===2 || answer&&result===1' class="btn btn-xs btn-primary">You earn one coin!</button>
             <hr>
             <div class="bs-example" v-if='checkList[page]!==0'>
-                <button type="button" class="btn btn-success" onclick="showSolution()"><i class="fa fa-cog"></i> Check solution</button>
+                <button type="button" class="btn btn-success" onclick="showSolution()" id="shit"><i class="fa fa-cog"></i> Check solution</button>
             </div>
-
 
             <div class="analysis" id="solution" v-if="checkSolution[page]">
                 <div>Solution：
@@ -157,8 +157,7 @@
             </div>
 
         </Card>
-        <i-button class="huida" type="primary" :disabled='daan.length===0 || checkList[page]!==0' @click='huida' size="large" small><i class="fa fa-search"></i> Check</i-button>
-        <i-button class="huida" size="large" @click="submit" onclick="returnResult()" small id="finish"><i class="fa fa-trophy"></i> Finish</i-button>
+        <i-button class="huida" size="large" :disabled="finish" @click="submit" onclick="returnResult()" small id="finish"><i class="fa fa-trophy"></i> Finish</i-button>
     </div>
 
     <script>
@@ -176,12 +175,12 @@
                 answer: false,
                 result: false,
                 map: {},
-                checkList: [0,0,0,0,0],
+                checkList: Array(15).fill(0),
                 score: 0,
                 finish: false,
-                coins: {{ coins }},
-                checkSolution: [false, false, false, false, false],
-                checkDetail: [false, false, false, false, false],
+                coins: parseInt({{ coins }}),
+                checkSolution: Array(15).fill(false),
+                checkDetail: Array(15).fill(false),
             },
             methods: {
                 select(k) {
@@ -189,21 +188,6 @@
                     if(k != null){
                         this.daan.push(k)
                     }
-                },
-                huida() {
-                    let answer = this.timu.answer.split('')
-                    this.result = 1;
-                    if (this.daan.length != answer.length) {
-                        this.result = 0;
-                    } else {
-                        for (i in this.daan) {
-                            if (answer.indexOf(this.zidian[this.daan[i]]) == -1) {
-                                this.result = 0;
-                            }
-                        }
-                    }
-                    this.answer = true;
-                    this.checkList[this.page] = this.result+1;
                 },
                 checkAnswer(n){
                     this.prev();
@@ -217,11 +201,11 @@
                     this.answer = true;
                     this.checkList[n] = this.result+1;
                     if(this.result===1){
+                        this.coins += 1;
                         this.score+=100/this.data.length;
                     }
                 },
                 next() {
-                    console.log(this.fileId)
                     this.map[this.page] = this.daan[0];
                     this.page += 1;
                     this.initTimu();
@@ -240,8 +224,8 @@
                     for(let i in this.data){
                         this.checkAnswer(i);
                     }
-                    this.next();
                     this.prev();
+                    this.next();
                     this.finish = true;
                 }
             },
@@ -284,13 +268,13 @@
                 this.showAlert();
             }
             else{
-                $("#tip").fadeIn("3000");
+                $("#tip").fadeIn("500");
                 vue.coins = vue.coins - 5;
                 vue.checkDetail[vue.page] = true;
                 document.getElementById("detail").style.filter = "blur(0px)";
                 vue.next();
                 vue.prev();
-                this.returnResult();
+                this.returnCoins();
             }
         }
 
@@ -301,6 +285,32 @@
 
     <script>
         function returnResult() {
+            const coins = vue.coins;
+            const email = document.getElementById("email").innerText;
+            const score = vue.score;
+            const skill = document.getElementById("skill_").innerText;
+            const time = document.getElementById("spendtime").innerText;
+            console.log(time);
+            $.ajax({
+                url: '{{ url_for('return_result') }}',
+                type: 'POST',
+                data: {
+                    coins: coins,
+                    email: email,
+                    score: score,
+                    skill: skill,
+                    time: time
+                },
+                success: function (response) {
+
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+
+        function returnCoins() {
             const coins = vue.coins;
             $.ajax({
                 url: '{{ url_for('return_coins') }}',
@@ -316,6 +326,8 @@
             });
         }
     </script>
+
+
 </body>
 
 {% endblock %}

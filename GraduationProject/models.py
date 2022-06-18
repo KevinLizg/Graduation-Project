@@ -67,5 +67,6 @@ class Score(db.Model):
     score_id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
     skill_id = db.Column(db.Integer, db.ForeignKey('skills.skill_id'))
-    total_score = db.Column(db.Integer)
-    number_times = db.Column(db.Integer)
+    score = db.Column(db.Integer)
+    date = db.Column(db.DateTime, index=True, default=datetime.now())
+    time = db.Column(db.String(128), nullable=True)
