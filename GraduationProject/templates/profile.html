@@ -532,7 +532,7 @@
                                     <div class="card-body">
                                         <div class="card">
                                             <div class="card-body">
-                                                <h4 class="card-title">Line Chart</h4>
+                                                <h4 class="card-title">History Analysis</h4>
                                                 <div>
                                                     <canvas id="pie-chart" height="150"></canvas>
                                                 </div>
@@ -807,6 +807,30 @@
     <script src="{{ url_for('static',filename='profile/js/sparkline.js') }}"></script>
     <script src="{{ url_for('static',filename='profile/js/sidebarmenu.js') }}"></script>
     <script src="{{ url_for('static',filename='profile/js/custom.min.js') }}"></script>
+    <script>
+            s = JSON.parse({{ skill_list|tojson }})
+            $(function () {
+                // New chart
+                new Chart(document.getElementById("pie-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: s['skill_list'],
+                        datasets: [{
+                            label: "Population (millions)",
+                            backgroundColor: ["#36a2eb", "#ff6384", "#4bc0c0", "#ffcd56", "#07b107"],
+                            data: s['skill_value_list']
+                        }]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Proportion of different skills'
+                        }
+                    }
+                });
+            });
+    </script>
+    <script src="{{ url_for('static',filename='profile/js/chartjs/Chart.min.js') }}"></script>
 </body>
 
 </html>

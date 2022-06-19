@@ -39,7 +39,7 @@ class SignupForm(FlaskForm):
     gender = SelectField('Your Gender',
                           choices=[('Male', "Male"), ('Female', 'Female')],
                           validators=[DataRequired()], render_kw={"placeholder": "Gender"})
-    # level = SelectField('Level', validators=[DataRequired(message='Please enter your Level'), ], render_kw={"placeholder": "Your level"}, choices=[('1', 'Level 1'), ('2', 'Level 2'), ('3', 'Level 3')])
+    level = SelectField('Level', validators=[DataRequired(message='Please enter your Level'), ], render_kw={"placeholder": "Your level"}, choices=[('1', 'Level 1'), ('2', 'Level 2'), ('3', 'Level 3')])
     school = StringField('School', validators=[DataRequired(message='Please enter your School'), ], render_kw={"placeholder": "Your school"})
     submit = SubmitField('Sign Up')
 

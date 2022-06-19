@@ -651,6 +651,21 @@ def profile():
     student = Student.query.filter(Student.email == email).first()
     teacher = Teacher.query.filter(Teacher.email == email).first()
     if student:
+        student = Student.query.filter(Student.email == email).first()
+        scores = Score.query.filter(Score.student_id == student.id).all()
+        skill_name_dict = {}
+        for score in scores:
+            skill = Skills.query.filter(Skills.skill_id == score.skill_id).first()
+            s_name = skill.skill_name
+            if skill_name_dict.get(s_name) is None:
+                skill_name_dict[s_name] = 1
+            else:
+                skill_name_dict[s_name] += 1
+        # p = json.dumps(list(skill_name_dict.keys()))
+        p = {
+            'skill_list': list(skill_name_dict.keys()),
+            'skill_value_list': list(skill_name_dict.values())
+        }
         form = UpdateInfo()
         # if student.agent_photo != None:
         #     image = open(os.path.join(app.config['UPLOAD_PATH'], student.agent_photo), 'rb')
@@ -714,7 +729,12 @@ def profile():
             flash('Information has been updated')
             return redirect(url_for('signin'))
     session['EMAIL'] = email
-    return render_template('profile.html', user=user_info, form=form)
+    return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(p))
+
+
+@app.route('/testchart', methods=['GET', 'POST'])
+def testchart():
+    return render_template('testchart.html')
 
 
 if __name__ == '__main__':
