@@ -1,8 +1,11 @@
 import base64
+import itertools
 import os
 import random, json
+import urllib
 
 import wolframalpha
+import xmltodict
 from mathgenerator import mathgen
 
 from flask import Flask, render_template, url_for, jsonify, redirect, flash, session, request
@@ -512,6 +515,22 @@ def practice(skill_):
     return render_template('practice.html', num=1*120, name=name, email=email, coins=user.coins, skill_=skill_)
 
 
+def query(input, app_id, params=(), **kwargs):
+    data = dict(
+        input=input,
+        appid=app_id,
+    )
+    data = itertools.chain(params, data.items(), kwargs.items())
+
+    query = urllib.parse.urlencode(tuple(data))
+    url = 'https://api.wolframalpha.com/v2/query?' + query + '&podstate=Step-by-step%20solution'
+    print(url)
+    resp = urllib.request.urlopen(url)
+    assert resp.headers.get_content_type() == 'text/xml'
+    assert resp.headers.get_param('charset') == 'utf-8'
+    doc = xmltodict.parse(resp, postprocessor=wolframalpha.Document.make)
+    return doc['queryresult']
+
 @app.route('/quiz/<skill_>')
 def quiz(skill_):
     name = session.get('NAME')
@@ -522,50 +541,72 @@ def quiz(skill_):
         user = Student.query.filter(Student.email == email).first()
         skill = Skills.query.filter(Skills.skill_name == skill_).first()
         list = []
-        coins = 50
-        for i in range(0, 10):
+        skill_dict = {
+            1: [0,1],
+            2: [2,3],
+            3: [6,8],
+            4: [13,16,28],
+            5: [53],
+            6: [11],
+            7: [21],
+            8: [26],
+            9: [24],
+            10: [50],
+            11: [111],
+            12: [18,19,22,25],
+            13: [32,33,34,38],
+            14: [35,36,37,39],
+            15: [112,75,115],
+            16: [114],
+            17: [30,42],
+            18: [59],
+            19: [40],
+            20: [101,102],
+            21: [27],
+            22: [55],
+        }
+        for i in range(0, 1):
             problem = ''
             solution = ''
-            if skill.skill_id == 1:
-                ran_num = random.randint(0, 1)
-                if ran_num == 0:
-                    problem, solution = mathgen.genById(0)
-                else:
-                    problem, solution = mathgen.genById(1)
-        #     app_id = 'XQAUEU-WR3AY23332'
-        #     client = wolframalpha.Client(app_id)
-        #     res = client.query(problem)
-        #     img_list = []
-        #     solution_list = []
-        #     for pod in res.pods:
-        #         for sub in pod.subpods:
-        #             img_list.append(sub.img['@src'])
-        #             solution_list.append(sub.plaintext)
-        #     option_list = []
-        #     option_list.append(str(random.randint(int(solution)-10,int(solution)-1)))
-        #     option_list.append(str(random.randint(int(solution)+1,int(solution)+10)))
-        #     option_list.append(str(random.randint(int(solution)+5,int(solution)+20)))
-        #     option_list.append(solution)
-        #     random.shuffle(option_list)
-        #     answer = ["A", "B", "C", "D"]
-        #     idx = 0
-        #     for op in option_list:
-        #         if op == solution:
-        #             an = answer[idx]
-        #         idx += 1
-        #     list.append({
-        #         'id': i,
-        #         'title': problem,
-        #         'option': option_list,
-        #         'answer': an,
-        #         'analysis': img_list
-        #     })
-        # with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
-        #     json.dump(list, f, ensure_ascii=False, indent=4)
+            ran_num = random.randint(0,len(skill_dict[skill.skill_id])-1)
+            problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+            print(i,": ",problem)
+            print(solution)
+            print("*"*10)
+            app_id = 'XQAUEU-WR3AY23332'
+            client = wolframalpha.Client(app_id)
+            res = query(problem, app_id)
+            img_list = []
+            solution_list = []
+            for pod in res.pods:
+                for sub in pod.subpods:
+                    img_list.append(sub.img['@src'])
+                    solution_list.append(sub.plaintext)
+                    print(sub)
+            option_list = [solution]
+            for j in range(1,4):
+                problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+                option_list.append(solution)
+            random.shuffle(option_list)
+            answer = ["A", "B", "C", "D"]
+            idx = 0
+            for op in option_list:
+                if op == solution:
+                    an = answer[idx]
+                idx += 1
+            list.append({
+                'id': i,
+                'title': problem,
+                'option': option_list,
+                'answer': an,
+                'analysis': img_list
+            })
+        with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
+            json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('quiz.html', num=1*240, name=name, email=email, coins=user.coins, skill_=skill_)
+    return render_template('quiz.html', num=1*2000, name=name, email=email, coins=user.coins, skill_=skill_)
 
 
 @app.route('/return_coins', methods=['GET', 'POST'])
@@ -654,17 +695,31 @@ def profile():
         student = Student.query.filter(Student.email == email).first()
         scores = Score.query.filter(Score.student_id == student.id).all()
         skill_name_dict = {}
+        topic_master_dict = {}
+        topic_master_count = {}
+        score_list = []
         for score in scores:
             skill = Skills.query.filter(Skills.skill_id == score.skill_id).first()
+            topic = Topics.query.filter(Topics.topic_id == skill.topic_id).first()
+            t_name = topic.topic_name
             s_name = skill.skill_name
             if skill_name_dict.get(s_name) is None:
                 skill_name_dict[s_name] = 1
             else:
                 skill_name_dict[s_name] += 1
-        # p = json.dumps(list(skill_name_dict.keys()))
-        p = {
+            if topic_master_count.get(t_name) is None:
+                topic_master_count[t_name] = 1
+            else:
+                topic_master_count[t_name] += 1
+            if topic_master_dict.get(t_name) is None:
+                topic_master_dict[t_name] = int(score.score)
+            else:
+                topic_master_dict[t_name] += int(score.score)
+        for k in topic_master_dict.keys():
+            topic_master_dict[k] = int(topic_master_dict[k]/topic_master_count[k])
+        skill_statistic = {
             'skill_list': list(skill_name_dict.keys()),
-            'skill_value_list': list(skill_name_dict.values())
+            'skill_value_list': list(skill_name_dict.values()),
         }
         form = UpdateInfo()
         # if student.agent_photo != None:
@@ -702,6 +757,8 @@ def profile():
             flash('Information has been updated')
             return redirect(url_for('signin'))
     elif teacher:
+        skill_statistic = {}
+        topic_master_dict = {}
         form = TeacherUpdateInfo()
         name = teacher.lastname
         image = open('static/images/icon/' + name[0] + ".png", 'rb')
@@ -729,7 +786,8 @@ def profile():
             flash('Information has been updated')
             return redirect(url_for('signin'))
     session['EMAIL'] = email
-    return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(p))
+    return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(skill_statistic),
+                           topic_master=topic_master_dict)
 
 
 @app.route('/testchart', methods=['GET', 'POST'])

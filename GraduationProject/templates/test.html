@@ -1,132 +1,161 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width">
-  <title>Testing MathJax v3 Equation Numbering</title>
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script>
-  MathJax = {
-    tex: {
-      tags: 'ams'  // should be 'ams', 'none', or 'all'
-    }
-  };
-  </script>
-  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-</head>
-<body>
-
-<div style="padding:0 2em">
-
-<h1>Equations with automatic AMS numbering</h1>
-
-<hr>
-Equation:
-
-\begin{equation}
-E = mc^2
-\end{equation}
-
-Equation*:
-
-\begin{equation*}
-E = mc^2
-\end{equation*}
-
-<hr>
-Brackets:
-
-\[E = mc^2\]
-
-Brackets tagged:
-
-\[E = mc^2\tag{x}\]
-
-<hr>
-Split:
-
-\begin{equation}
-\begin{split}
-a& =b+c-d\\
-& \quad +e-f\\
-& =g+h\\
-& =i
-\end{split}
-\end{equation}
-
-<hr>
-Multline:
-
-\begin{multline}
-  a+b+c+d+e+f+g\\
-  M+N+O+P+Q\\
-  R+S+T\\
-  u+v+w+x+y+z
-\end{multline}
-
-Multline*:
-
-\begin{multline*}
-  a+b+c+d+e+f+g\\
-  M+N+O+P+Q\\
-  R+S+T\\
-  u+v+w+x+y+z
-\end{multline*}
-
-<hr>
-Gather:
-
-\begin{gather}
-a_1=b_1+c_1\\
-a_2=b_2+c_2-d_2+e_2
-\end{gather}
-
-Gather*:
-
-\begin{gather*}
-a_1=b_1+c_1\\
-a_2=b_2+c_2-d_2+e_2
-\end{gather*}
-
-<hr>
-Align:
-
-\begin{align}
-a_1& =b_1+c_1\\
-a_2& =b_2+c_2-d_2+e_2
-\end{align}
-
-Align*:
-
-\begin{align*}
-a_1& =b_1+c_1\\
-a_2& =b_2+c_2-d_2+e_2
-\end{align*}
-
-Align:
-
-\begin{align}
-a_{11}& =b_{11}& a_{12}& =b_{12}\\
-a_{21}& =b_{21}& a_{22}& =b_{22}+c_{22}
-\end{align}
-
-Align with \notag and \tag:
-
-\begin{align}
-a_{11}& =b_{11}& a_{12}& =b_{12}\notag\\
-a_{21}& =b_{21}& a_{22}& =b_{22}+c_{22} \tag{y}
-\end{align}
-
-Align* with \tag:
-
-\begin{align*}
-a_1& =b_1+c_1\tag{z}\\
-a_2& =b_2+c_2-d_2+e_2
-\end{align*}
-
-</div>
-
-
-</body>
-</html>
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#  <meta charset="utf-8">#}
+{#  <meta http-equiv="x-ua-compatible" content="ie=edge">#}
+{#  <meta name="viewport" content="width=device-width">#}
+{#  <title>Testing MathJax v3 Equation Numbering</title>#}
+{#  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>#}
+{#  <script>#}
+{#  MathJax = {#}
+{#    tex: {#}
+{#      tags: 'ams'  // should be 'ams', 'none', or 'all'#}
+{#    }#}
+{#  };#}
+{#  </script>#}
+{#  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>#}
+{#</head>#}
+{#<body>#}
+{##}
+{#<div style="padding:0 2em">#}
+{##}
+{#<h1>Equations with automatic AMS numbering</h1>#}
+{##}
+{#<hr>#}
+{#Equation:#}
+{##}
+{#\begin{equation}#}
+{#E = mc^2#}
+{#\end{equation}#}
+{##}
+{#Equation*:#}
+{##}
+{#\begin{equation*}#}
+{#E = mc^2#}
+{#\end{equation*}#}
+{##}
+{#<hr>#}
+{#Brackets:#}
+{##}
+{#\[E = mc^2\]#}
+{##}
+{#Brackets tagged:#}
+{##}
+{#\[E = mc^2\tag{x}\]#}
+{##}
+{#<hr>#}
+{#Split:#}
+{##}
+{#\begin{equation}#}
+{#\begin{split}#}
+{#a& =b+c-d\\#}
+{#& \quad +e-f\\#}
+{#& =g+h\\#}
+{#& =i#}
+{#\end{split}#}
+{#\end{equation}#}
+{##}
+{#<hr>#}
+{#Multline:#}
+{##}
+{#\begin{multline}#}
+{#  a+b+c+d+e+f+g\\#}
+{#  M+N+O+P+Q\\#}
+{#  R+S+T\\#}
+{#  u+v+w+x+y+z#}
+{#\end{multline}#}
+{##}
+{#Multline*:#}
+{##}
+{#\begin{multline*}#}
+{#  a+b+c+d+e+f+g\\#}
+{#  M+N+O+P+Q\\#}
+{#  R+S+T\\#}
+{#  u+v+w+x+y+z#}
+{#\end{multline*}#}
+{##}
+{#<hr>#}
+{#Gather:#}
+{##}
+{#\begin{gather}#}
+{#a_1=b_1+c_1\\#}
+{#a_2=b_2+c_2-d_2+e_2#}
+{#\end{gather}#}
+{##}
+{#Gather*:#}
+{##}
+{#\begin{gather*}#}
+{#a_1=b_1+c_1\\#}
+{#a_2=b_2+c_2-d_2+e_2#}
+{#\end{gather*}#}
+{##}
+{#<hr>#}
+{#Align:#}
+{##}
+{#\begin{align}#}
+{#a_1& =b_1+c_1\\#}
+{#a_2& =b_2+c_2-d_2+e_2#}
+{#\end{align}#}
+{##}
+{#Align*:#}
+{##}
+{#\begin{align*}#}
+{#a_1& =b_1+c_1\\#}
+{#a_2& =b_2+c_2-d_2+e_2#}
+{#\end{align*}#}
+{##}
+{#Align:#}
+{##}
+{#\begin{align}#}
+{#a_{11}& =b_{11}& a_{12}& =b_{12}\\#}
+{#a_{21}& =b_{21}& a_{22}& =b_{22}+c_{22}#}
+{#\end{align}#}
+{##}
+{#Align with \notag and \tag:#}
+{##}
+{#\begin{align}#}
+{#a_{11}& =b_{11}& a_{12}& =b_{12}\notag\\#}
+{#a_{21}& =b_{21}& a_{22}& =b_{22}+c_{22} \tag{y}#}
+{#\end{align}#}
+{##}
+{#Align* with \tag:#}
+{##}
+{#\begin{align*}#}
+{#a_1& =b_1+c_1\tag{z}\\#}
+{#a_2& =b_2+c_2-d_2+e_2#}
+{#\end{align*}#}
+{##}
+{#</div>#}
+{##}
+{##}
+{#</body>#}
+{#</html>#}
+<queryresult success="true" error="false" numpods="4" datatypes="Solve" timedout="" timedoutpods="" timing="1.135" parsetiming="0.43" parsetimedout="false" recalculate="" id="MSPa275316db5fa7g8a57531000039110ae0c5h41g4d" host="http://www4b.wolframalpha.com" server="41" related="http://www4b.wolframalpha.com/api/v2/relatedQueries.jsp?id=MSPa275416db5fa7g8a57531000029461hicfh43435h7565264462549653373" version="2.6">
+  <pod title="Input interpretation" scanner="Identity" id="Input" position="100" error="false" numsubpods="1">
+    <subpod title="">
+      <img src="http://www4b.wolframalpha.com/Calculate/MSP/MSP275516db5fa7g8a5753100006255hi8e8d99025f?MSPStoreType=image/gif&s=41" alt="solve 3 x - 7 = 11" title="solve 3 x - 7 = 11" width="165" height="32" />
+      <plaintext>solve 3 x - 7 = 11</plaintext>
+    </subpod>
+  </pod>
+  <pod title="Result" scanner="Solve" id="Result" position="200" error="false" numsubpods="1" primary="true">
+    <subpod title="">
+      <img src="http://www4b.wolframalpha.com/Calculate/MSP/MSP275616db5fa7g8a5753100003ab07d5328de0f62?MSPStoreType=image/gif&s=41" alt="x = 6" title="x = 6" width="34" height="18" />
+      <plaintext>x = 6</plaintext>
+    </subpod>
+    <states count="1">
+      <state name="Step-by-step solution" input="Result__Step-by-step solution" />
+    </states>
+  </pod>
+  <pod title="Plot" scanner="Solve" id="RootPlot" position="300" error="false" numsubpods="1">
+    <subpod title="">
+      <img src="http://www4b.wolframalpha.com/Calculate/MSP/MSP275716db5fa7g8a57531000051bd35e9382gb85e?MSPStoreType=image/gif&s=41" alt="" title="" width="363" height="188" />
+      <plaintext/>
+    </subpod>
+  </pod>
+  <pod title="Number line" scanner="Solve" id="NumberLine" position="400" error="false" numsubpods="1">
+    <subpod title="">
+      <img src="http://www4b.wolframalpha.com/Calculate/MSP/MSP275816db5fa7g8a57531000046fb6912765b3b84?MSPStoreType=image/gif&s=41" alt="" title="" width="300" height="56" />
+      <plaintext/>
+    </subpod>
+  </pod>
+</queryresult>

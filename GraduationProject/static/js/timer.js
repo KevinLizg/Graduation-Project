@@ -35,6 +35,7 @@ $(document).ready(function() {
                 display.text("Time's Up!");
                 clearInterval(refresh);  // exit refresh loop
                 document.getElementById("time").style.color = "red";
+                vue.submit();
             }
         }, 1000);
     }
