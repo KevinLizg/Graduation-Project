@@ -565,16 +565,12 @@ def quiz(skill_):
             21: [27],
             22: [55],
         }
-        for i in range(0, 1):
-            problem = ''
-            solution = ''
+        for i in range(0, 3):
             ran_num = random.randint(0,len(skill_dict[skill.skill_id])-1)
             problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-            print(i,": ",problem)
-            print(solution)
-            print("*"*10)
             app_id = 'XQAUEU-WR3AY23332'
             client = wolframalpha.Client(app_id)
+            # res = client.query(problem)
             res = query(problem, app_id)
             img_list = []
             solution_list = []
@@ -585,8 +581,8 @@ def quiz(skill_):
                     print(sub)
             option_list = [solution]
             for j in range(1,4):
-                problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-                option_list.append(solution)
+                gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+                option_list.append(gen_solution)
             random.shuffle(option_list)
             answer = ["A", "B", "C", "D"]
             idx = 0
@@ -693,7 +689,7 @@ def profile():
     teacher = Teacher.query.filter(Teacher.email == email).first()
     if student:
         student = Student.query.filter(Student.email == email).first()
-        scores = Score.query.filter(Score.student_id == student.id).all()
+        scores = Score.query.filter(Score.student_id == student.id).order_by(Score.date.desc()).all()
         skill_name_dict = {}
         topic_master_dict = {}
         topic_master_count = {}
@@ -701,8 +697,17 @@ def profile():
         for score in scores:
             skill = Skills.query.filter(Skills.skill_id == score.skill_id).first()
             topic = Topics.query.filter(Topics.topic_id == skill.topic_id).first()
+            comment = Comments.query.filter(Comments.skill_id == skill.skill_id).count()
             t_name = topic.topic_name
             s_name = skill.skill_name
+            score_list.append({
+                'score': score.score,
+                'date': score.date,
+                'topic': t_name,
+                'skill': s_name,
+                'comment': comment,
+                'like': skill.like
+            })
             if skill_name_dict.get(s_name) is None:
                 skill_name_dict[s_name] = 1
             else:
@@ -787,7 +792,7 @@ def profile():
             return redirect(url_for('signin'))
     session['EMAIL'] = email
     return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(skill_statistic),
-                           topic_master=topic_master_dict)
+                           topic_master=topic_master_dict, score_list=score_list)
 
 
 @app.route('/testchart', methods=['GET', 'POST'])

@@ -1,28 +1,60 @@
 [
     {
         "id": 0,
-        "title": "Surface area of cone with height = 6m and radius = 15m is",
+        "title": "4x + 18y = 306, -13x + 14y = -52",
         "option": [
-            "633 m^2",
-            "1250 m^2",
-            "1468 m^2",
-            "158 m^2"
+            "x = -13, y = 5",
+            "x = 18, y = 13",
+            "x = 6, y = -1",
+            "x = 15, y = -18"
+        ],
+        "answer": "B",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP143613430ae1a87h8c1g00001dceaee1g173f6ee?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP143713430ae1a87h8c1g000031f3i82cc5g6ebh8?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP143813430ae1a87h8c1g00002219ghc9364h22f0?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP143913430ae1a87h8c1g0000689671f1deia2gc5?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP144013430ae1a87h8c1g00004ceae43fc01g166a?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP144113430ae1a87h8c1g000041976b5c5e4chbe6?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP144213430ae1a87h8c1g000033b8fdi57ad9448a?MSPStoreType=image/gif&s=8"
+        ]
+    },
+    {
+        "id": 1,
+        "title": "-11x + -12y = -70, -6x + 17y = 315",
+        "option": [
+            "x = -10, y = 15",
+            "x = 20, y = 1",
+            "x = -11, y = -10",
+            "x = -8, y = -19"
+        ],
+        "answer": "A",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP198523hc884729c055140000647d4h70881e4cb3?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP198623hc884729c05514000031247cd4a6f88ad4?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP198723hc884729c0551400006383eaf5450139c8?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP198823hc884729c0551400001cf9f28809f73h63?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP198923hc884729c0551400006622e38d9409de2f?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP199023hc884729c0551400003g95389eagbf8582?MSPStoreType=image/gif&s=3"
+        ]
+    },
+    {
+        "id": 2,
+        "title": "-9x + 17y = -156, 17x + -14y = 186",
+        "option": [
+            "x = 3, y = -5",
+            "x = -15, y = -13",
+            "x = 6, y = -6",
+            "x = -18, y = -12"
         ],
         "answer": "C",
         "analysis": [
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP448016d596if920fe7be00001758bfh065bc2cdf?MSPStoreType=image/gif&s=20",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP448116d596if920fe7be00006ab877589gf00b2h?MSPStoreType=image/gif&s=20",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP448216d596if920fe7be00002cff4aagb148626d?MSPStoreType=image/gif&s=20",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP448316d596if920fe7be000065g449546a68469f?MSPStoreType=image/gif&s=20",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP448416d596if920fe7be000016gc3gg87ib9534e?MSPStoreType=image/gif&s=20",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP448516d596if920fe7be00005h69de2ae266f226?MSPStoreType=image/gif&s=20",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP448616d596if920fe7be0000444fgg0bc01icghg?MSPStoreType=image/gif&s=20",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP448716d596if920fe7be000015cd28aib7eihgee?MSPStoreType=image/gif&s=20",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP448816d596if920fe7be000035hfiigig1h94759?MSPStoreType=image/gif&s=20",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP448916d596if920fe7be00004h4135ad2b588fa1?MSPStoreType=image/gif&s=20",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP449016d596if920fe7be00003053bbhb584a6f21?MSPStoreType=image/gif&s=20",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP449116d596if920fe7be00003ad472igad32a5ef?MSPStoreType=image/gif&s=20",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP449216d596if920fe7be0000607359i3h62gd82h?MSPStoreType=image/gif&s=20"
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP17501heg7576gdc315ib00003007fh5a1f6bfi28?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP17511heg7576gdc315ib000045900iiddh5f5197?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP17521heg7576gdc315ib00000iid98hb45h04i3a?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP17531heg7576gdc315ib000019818cg6d53gb6gd?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP17541heg7576gdc315ib0000628d0c198i4hh1fa?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP17551heg7576gdc315ib0000398h644d3b5gc1g7?MSPStoreType=image/gif&s=12"
         ]
     }
 ]

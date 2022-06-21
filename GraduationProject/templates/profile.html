@@ -375,24 +375,24 @@
                             <div class="tab-content" id="pills-tabContent">
                                 <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="pills-timeline-tab">
                                     <div class="card-body">
+                                        {% for sc in score_list[0:5] %}
                                         <div class="profiletimeline m-t-0">
                                             <div class="sl-item">
-                                                <div class="sl-left"> <img src="../../assets/images/users/1.jpg" alt="user" class="rounded-circle" /> </div>
+                                                <div class="sl-left"> <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" /> </div>
                                                 <div class="sl-right">
-                                                    <div><a href="javascript:void(0)" class="link">John Doe</a> <span class="sl-date">5 minutes ago</span>
-                                                        <p>assign a new task <a href="javascript:void(0)"> Design weblayout</a></p>
+                                                    <div>I finished<span class="sl-date">{{ sc['date'] }}</span>
+                                                        <p>The topic is <a href="{{ url_for('topics',topic=sc['topic']) }}">{{ sc['topic'] }}</a>, and the skill is <a href="{{ url_for('skill_details',skill_=sc['skill']) }}">{{ sc['skill'] }}</a></p>
+                                                        <p>The score is {{ sc['score'] }}</p>
                                                         <div class="row">
-                                                            <div class="col-lg-3 col-md-6 m-b-20"><img src="../../assets/images/big/img1.jpg" class="img-fluid rounded" /></div>
-                                                            <div class="col-lg-3 col-md-6 m-b-20"><img src="../../assets/images/big/img2.jpg" class="img-fluid rounded" /></div>
-                                                            <div class="col-lg-3 col-md-6 m-b-20"><img src="../../assets/images/big/img3.jpg" class="img-fluid rounded" /></div>
-                                                            <div class="col-lg-3 col-md-6 m-b-20"><img src="../../assets/images/big/img4.jpg" class="img-fluid rounded" /></div>
+                                                            <div class="col-lg-3 col-md-6 m-b-20"><img src="{{ url_for('static',filename='images/skills/'+sc['skill']+'.png') }}" class="img-fluid rounded" /></div>
                                                         </div>
-                                                        <div class="like-comm"> <a href="javascript:void(0)" class="link m-r-10">2 comment</a> <a href="javascript:void(0)" class="link m-r-10"><i class="fa fa-heart text-danger"></i> 5 Love</a> </div>
+                                                        <div class="like-comm"> <a href="{{ url_for('skill_details',skill_=sc['skill']) }}" class="link m-r-10">{{ sc['comment'] }} comment</a> <a href="{{ url_for('skill_details',skill_=sc['skill']) }}" class="link m-r-10"><i class="fa fa-heart text-danger"></i> {{ sc['like'] }} Love</a> </div>
                                                     </div>
                                                 </div>
                                             </div>
                                             <hr>
                                         </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
                                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="pills-profile-tab">
@@ -825,7 +825,9 @@
                         labels: s['skill_list'],
                         datasets: [{
                             label: "Population (millions)",
-                            backgroundColor: ["#36a2eb", "#ff6384", "#4bc0c0", "#ffcd56", "#07b107"],
+                            backgroundColor: ["#000000", "#ff6384", "#4bc0c0", "#ffcd56",
+                                "#07b107","#FFFAF0","#BBFFFF","#36a2eb",
+                                "#2F4F4F","#54FF9F","#4bc0c0", "#ffcd56"],
                             data: s['skill_value_list']
                         }]
                     },

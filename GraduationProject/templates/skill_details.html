@@ -30,9 +30,9 @@
                          <div class="col-md-12 col-sm-12">
                             <div class="single-blog blog-details two-column">
                                 <div class="post-thumb">
-                                    <a href="{{ url_for('ready') }}"><img src="{{ url_for('static',filename='images/skills/'+skill.skill_name+'.png') }}" class="img-responsive" alt=""></a>
+                                    <a href="{{ url_for('ready',skill_=skill.skill_name) }}"><img src="{{ url_for('static',filename='images/skills/'+skill.skill_name+'.png') }}" class="img-responsive" alt=""></a>
                                     <div class="post-overlay">
-                                        <span class="uppercase"><a href="{{ url_for('ready') }}">St <br><small>art</small></a></span>
+                                        <span class="uppercase"><a href="{{ url_for('ready',skill_=skill.skill_name) }}">St <br><small>art</small></a></span>
                                     </div>
                                 </div>
                                 <div class="post-content overflow">
@@ -41,7 +41,7 @@
                                     <p>{{ skill.skill_introduction }}</p>
                                     <div class="post-bottom overflow">
                                         <ul class="nav navbar-nav post-nav">
-{#                                            <li><a href="#"><i class="fa fa-tag"></i>Creative</a></li>#}
+                                            <li><img src="{{ url_for('static',filename='images/like/unlike.png') }}" width="25px"></li>
                                             <li><a href="#"><i class="fa fa-heart"></i>{{ skill.like }} Love</a></li>
                                             <li><a href="#"><i class="fa fa-comments"></i>
                                                 {{ comment_count }} Comments
