@@ -40,7 +40,7 @@ class Skills(db.Model):
     skill_id = db.Column(db.Integer, primary_key=True)
     skill_name = db.Column(db.String(128), nullable=True)
     skill_introduction = db.Column(db.String(128), nullable=True)
-    like = db.Column(db.String(128))
+    like = db.Column(db.Integer, default=0)
     topic_id = db.Column(db.Integer, db.ForeignKey('topics.topic_id'))
 
 
@@ -70,3 +70,9 @@ class Score(db.Model):
     score = db.Column(db.Integer)
     date = db.Column(db.DateTime, index=True, default=datetime.now())
     time = db.Column(db.String(128), nullable=True)
+
+
+class Like(db.Model):
+    like_id = db.Column(db.Integer, primary_key=True)
+    skill_id = db.Column(db.Integer, db.ForeignKey('skills.skill_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('student.id'))

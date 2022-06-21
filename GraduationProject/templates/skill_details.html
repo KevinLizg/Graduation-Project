@@ -14,6 +14,7 @@
                         <div class="col-sm-12">
                             <h1 class="title">Skill Details</h1>
                             <p>Introduction of {{ skill.skill_name }}</p>
+                            <p style="display: none" id="skill_name">{{ skill.skill_name }}</p>
                         </div>
                     </div>
                 </div>
@@ -41,7 +42,11 @@
                                     <p>{{ skill.skill_introduction }}</p>
                                     <div class="post-bottom overflow">
                                         <ul class="nav navbar-nav post-nav">
-                                            <li><img src="{{ url_for('static',filename='images/like/unlike.png') }}" width="25px"></li>
+                                            {% if like %}
+                                            <li onclick="returnLike();" ><img src="{{ url_for('static',filename='images/like/like.png') }}" width="25px"></li>
+                                            {% else %}
+                                            <li onclick="returnLike();"><img src="{{ url_for('static',filename='images/like/unlike.png') }}" width="25px"></li>
+                                            {% endif %}
                                             <li><a href="#"><i class="fa fa-heart"></i>{{ skill.like }} Love</a></li>
                                             <li><a href="#"><i class="fa fa-comments"></i>
                                                 {{ comment_count }} Comments
@@ -227,5 +232,27 @@
     <!--/#blog-->
 </body>
 </html>
+
+    <script>
+        var sname = document.getElementById("skill_name").innerText
+        function returnLike() {
+            $.ajax({
+                url: '{{ url_for('return_like') }}',
+                type: 'POST',
+                data: {
+                    skill_name: sname
+                },
+                success: function (response) {
+                    location.reload();
+                },
+                error: function (response) {
+                }
+            });
+            {#location.reload(true);#}
+            {#window.location.href = '../index'#}
+            {#location.href = '../index'#}
+            {#window.location.href = '../skill_details/'+sname#}
+        }
+    </script>
 
 {% endblock %}

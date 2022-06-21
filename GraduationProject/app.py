@@ -369,6 +369,7 @@ def skill_details(skill_):
         user_in_db = ''
         student_in_db = Student.query.filter(Student.email == email).first()
         teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+        like = Like.query.filter(Like.skill_id == skill.skill_id and student_in_db.id).first()
         if student_in_db:
             user_in_db = student_in_db
             user_type = 1
@@ -434,14 +435,13 @@ def skill_details(skill_):
             session['NAME'] = name
             session['EMAIL'] = email
             return redirect(url_for('skill_details', skill_=skill_))
-        print(comment_count)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
     return render_template('skill_details.html', skill=skill, comments=comments, replyForm=replyForm,
                            commentForm=commentForm,
                            name=name, email=email, all_skill=all_skill,
-                           paginate=paginate, comment_count=comment_count
+                           paginate=paginate, comment_count=comment_count, like=like
                            )
 
 
@@ -524,7 +524,6 @@ def query(input, app_id, params=(), **kwargs):
 
     query = urllib.parse.urlencode(tuple(data))
     url = 'https://api.wolframalpha.com/v2/query?' + query + '&podstate=Step-by-step%20solution'
-    print(url)
     resp = urllib.request.urlopen(url)
     assert resp.headers.get_content_type() == 'text/xml'
     assert resp.headers.get_param('charset') == 'utf-8'
@@ -603,6 +602,29 @@ def quiz(skill_):
         flash("Please sign in first")
         return redirect(url_for('signin'))
     return render_template('quiz.html', num=1*2000, name=name, email=email, coins=user.coins, skill_=skill_)
+
+
+@app.route('/return_like', methods=['GET', 'POST'])
+def return_like():
+    from models import db
+    print("shit")
+    email = session.get('EMAIL')
+    student = Student.query.filter(Student.email == email).first()
+    skill_name = request.form.get("skill_name")
+    skill = Skills.query.filter(Skills.skill_name == skill_name).first()
+    like = Like.query.filter(Like.skill_id == skill.skill_id and Like.user_id == student).first()
+    if like:
+        skill.like -= 1
+        db.session.add(skill)
+        db.session.delete(like)
+        db.session.commit()
+    else:
+        skill.like += 1
+        db.session.add(skill)
+        new_like = Like(skill_id=skill.skill_id, user_id=student.id)
+        db.session.add(new_like)
+        db.session.commit()
+    return ''
 
 
 @app.route('/return_coins', methods=['GET', 'POST'])
