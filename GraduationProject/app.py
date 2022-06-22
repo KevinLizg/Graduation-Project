@@ -367,15 +367,18 @@ def skill_details(skill_):
             Comments.comment_time.desc()).all()
         comments = []
         user_in_db = ''
+        user_type = 0
         student_in_db = Student.query.filter(Student.email == email).first()
         teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
-        like = Like.query.filter(Like.skill_id == skill.skill_id and student_in_db.id).first()
         if student_in_db:
             user_in_db = student_in_db
-            user_type = 1
-        elif teacher_in_db:
+        if teacher_in_db:
             user_in_db = teacher_in_db
-            user_type = 0
+            user_type = 1
+        print(user_in_db.id)
+        like = Like.query.filter(
+            Like.user_type == user_type, Like.skill_id == skill.skill_id, Like.user_id == user_in_db.id).first()
+        print(like)
         page = int(request.args.get('page', 1))
         per_page = int(request.args.get('per_page', 3))
         paginate = Comments.query.filter(Comments.skill_id == skill.skill_id).order_by(
@@ -607,12 +610,19 @@ def quiz(skill_):
 @app.route('/return_like', methods=['GET', 'POST'])
 def return_like():
     from models import db
-    print("shit")
     email = session.get('EMAIL')
     student = Student.query.filter(Student.email == email).first()
+    teacher = Teacher.query.filter(Teacher.email == email).first()
     skill_name = request.form.get("skill_name")
     skill = Skills.query.filter(Skills.skill_name == skill_name).first()
-    like = Like.query.filter(Like.skill_id == skill.skill_id and Like.user_id == student).first()
+    user = ''
+    user_type = 0
+    if student:
+        user = student
+    if teacher:
+        user = teacher
+        user_type = 1
+    like = Like.query.filter(Like.user_type == user_type, Like.skill_id == skill.skill_id, Like.user_id == user.id).first()
     if like:
         skill.like -= 1
         db.session.add(skill)
@@ -621,7 +631,7 @@ def return_like():
     else:
         skill.like += 1
         db.session.add(skill)
-        new_like = Like(skill_id=skill.skill_id, user_id=student.id)
+        new_like = Like(skill_id=skill.skill_id, user_id=user.id, user_type=user_type)
         db.session.add(new_like)
         db.session.commit()
     return ''
