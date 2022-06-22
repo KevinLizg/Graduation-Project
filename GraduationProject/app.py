@@ -454,6 +454,7 @@ def ready(skill_):
     name = session.get('NAME')
     email = session.get('EMAIL')
     print(skill_)
+    print(email)
     if (name):
         session['NAME'] = name
         session['EMAIL'] = email
@@ -483,36 +484,36 @@ def practice(skill_):
                     problem, solution = mathgen.genById(0)
                 else:
                     problem, solution = mathgen.genById(1)
-        #     app_id = 'XQAUEU-WR3AY23332'
-        #     client = wolframalpha.Client(app_id)
-        #     res = client.query(problem)
-        #     img_list = []
-        #     solution_list = []
-        #     for pod in res.pods:
-        #         for sub in pod.subpods:
-        #             img_list.append(sub.img['@src'])
-        #             solution_list.append(sub.plaintext)
-        #     option_list = []
-        #     option_list.append(str(random.randint(int(solution)-10,int(solution)-1)))
-        #     option_list.append(str(random.randint(int(solution)+1,int(solution)+10)))
-        #     option_list.append(str(random.randint(int(solution)+5,int(solution)+20)))
-        #     option_list.append(solution)
-        #     random.shuffle(option_list)
-        #     answer = ["A", "B", "C", "D"]
-        #     idx = 0
-        #     for op in option_list:
-        #         if op == solution:
-        #             an = answer[idx]
-        #         idx += 1
-        #     list.append({
-        #         'id': i,
-        #         'title': problem,
-        #         'option': option_list,
-        #         'answer': an,
-        #         'analysis': img_list
-        #     })
-        # with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
-        #     json.dump(list, f, ensure_ascii=False, indent=4)
+            app_id = 'XQAUEU-WR3AY23332'
+            client = wolframalpha.Client(app_id)
+            res = client.query(problem)
+            img_list = []
+            solution_list = []
+            for pod in res.pods:
+                for sub in pod.subpods:
+                    img_list.append(sub.img['@src'])
+                    solution_list.append(sub.plaintext)
+            option_list = []
+            option_list.append(str(random.randint(int(solution)-10,int(solution)-1)))
+            option_list.append(str(random.randint(int(solution)+1,int(solution)+10)))
+            option_list.append(str(random.randint(int(solution)+5,int(solution)+20)))
+            option_list.append(solution)
+            random.shuffle(option_list)
+            answer = ["A", "B", "C", "D"]
+            idx = 0
+            for op in option_list:
+                if op == solution:
+                    an = answer[idx]
+                idx += 1
+            list.append({
+                'id': i,
+                'title': problem,
+                'option': option_list,
+                'answer': an,
+                'analysis': img_list
+            })
+        with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
+            json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
@@ -568,40 +569,40 @@ def quiz(skill_):
             21: [27],
             22: [55],
         }
-        for i in range(0, 3):
-            ran_num = random.randint(0,len(skill_dict[skill.skill_id])-1)
-            problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-            app_id = 'XQAUEU-WR3AY23332'
-            client = wolframalpha.Client(app_id)
-            # res = client.query(problem)
-            res = query(problem, app_id)
-            img_list = []
-            solution_list = []
-            for pod in res.pods:
-                for sub in pod.subpods:
-                    img_list.append(sub.img['@src'])
-                    solution_list.append(sub.plaintext)
-                    print(sub)
-            option_list = [solution]
-            for j in range(1,4):
-                gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-                option_list.append(gen_solution)
-            random.shuffle(option_list)
-            answer = ["A", "B", "C", "D"]
-            idx = 0
-            for op in option_list:
-                if op == solution:
-                    an = answer[idx]
-                idx += 1
-            list.append({
-                'id': i,
-                'title': problem,
-                'option': option_list,
-                'answer': an,
-                'analysis': img_list
-            })
-        with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
-            json.dump(list, f, ensure_ascii=False, indent=4)
+        # for i in range(0, 10):
+        #     ran_num = random.randint(0,len(skill_dict[skill.skill_id])-1)
+        #     problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+        #     app_id = 'XQAUEU-WR3AY23332'
+        #     client = wolframalpha.Client(app_id)
+        #     # res = client.query(problem)
+        #     res = query(problem, app_id)
+        #     img_list = []
+        #     solution_list = []
+        #     for pod in res.pods:
+        #         for sub in pod.subpods:
+        #             img_list.append(sub.img['@src'])
+        #             solution_list.append(sub.plaintext)
+        #             print(sub)
+        #     option_list = [solution]
+        #     for j in range(1,4):
+        #         gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+        #         option_list.append(gen_solution)
+        #     random.shuffle(option_list)
+        #     answer = ["A", "B", "C", "D"]
+        #     idx = 0
+        #     for op in option_list:
+        #         if op == solution:
+        #             an = answer[idx]
+        #         idx += 1
+        #     list.append({
+        #         'id': i,
+        #         'title': problem,
+        #         'option': option_list,
+        #         'answer': an,
+        #         'analysis': img_list
+        #     })
+        # with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
+        #     json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
@@ -738,13 +739,6 @@ def user_profile(user_email):
             'first_name': me.firstname,
             'last_name': me.lastname,
             'profile_pic': me_img,
-            # 'phone': student.phone,
-            # 'school': student.school,
-            # 'address': student.address,
-            # 'age': datetime.now().date().year - int(student.dob.split("-")[0]),
-            # 'gender': student.gender,
-            # 'password': student.password,
-            # 'occupation': 'Student'
         }
     if student:
         student = Student.query.filter(Student.email == user_email).first()

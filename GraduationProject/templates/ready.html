@@ -86,6 +86,8 @@
             },
             methods: {
                 goNext(id) {
+                    console.log('file:'+document.getElementById("filename").innerText);
+                    console.log('href:'+document.getElementById("skill_").innerText);
                     if(id === "practice"){
                         sessionStorage.type = id;
                         sessionStorage.file = document.getElementById("filename").innerText;
