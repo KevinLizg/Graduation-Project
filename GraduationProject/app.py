@@ -367,14 +367,14 @@ def skill_details(skill_):
             Comments.comment_time.desc()).all()
         comments = []
         user_in_db = ''
-        user_type = 0
+        user_type = 1
         student_in_db = Student.query.filter(Student.email == email).first()
         teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
         if student_in_db:
             user_in_db = student_in_db
         if teacher_in_db:
             user_in_db = teacher_in_db
-            user_type = 1
+            user_type = 0
         print(user_in_db.id)
         like = Like.query.filter(
             Like.user_type == user_type, Like.skill_id == skill.skill_id, Like.user_id == user_in_db.id).first()
@@ -386,16 +386,16 @@ def skill_details(skill_):
         comment_count = Comments.query.filter(Comments.skill_id == skill.skill_id).count()
         for comment in paginate.items:
             user = ''
-            if comment.user_type == True:
+            if comment.user_type == 1:
                 user = Student.query.filter(Student.id == comment.user_id).first()
-            elif comment.user_type == False:
+            elif comment.user_type == 0:
                 user = Teacher.query.filter(Teacher.id == comment.user_id).first()
             reply_list = []
             replies = Reply.query.filter(Reply.comment_id == comment.comment_id).all()
             for reply in replies:
-                if reply.user_type == True:
-                    reply_user = Student.query.filter(Student.id == comment.user_id).first()
-                elif reply.user_type == False:
+                if reply.user_type == 1:
+                    reply_user = Student.query.filter(Student.id == reply.user_id).first()
+                elif reply.user_type == 0:
                     reply_user = Teacher.query.filter(Teacher.id == comment.user_id).first()
                 image = open('static/images/icon/' + reply_user.lastname[0] + ".png", 'rb')
                 img_stream = image.read()
@@ -413,6 +413,7 @@ def skill_details(skill_):
                 'comment_id': comment.comment_id,
                 'comment': comment.comment,
                 'user_name': user.firstname + ', ' + user.lastname,
+                'user_email': user.email,
                 'comment_time': comment.comment_time,
                 'replies': reply_list,
                 'user_img': img_stream
@@ -616,12 +617,12 @@ def return_like():
     skill_name = request.form.get("skill_name")
     skill = Skills.query.filter(Skills.skill_name == skill_name).first()
     user = ''
-    user_type = 0
+    user_type = 1
     if student:
         user = student
     if teacher:
         user = teacher
-        user_type = 1
+        user_type = 0
     like = Like.query.filter(Like.user_type == user_type, Like.skill_id == skill.skill_id, Like.user_id == user.id).first()
     if like:
         skill.like -= 1
@@ -713,6 +714,117 @@ def test():
     return render_template('test.html')
 
 
+@app.route('/user_profile/<user_email>', methods=['GET', 'POST'])
+def user_profile(user_email):
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    session['NAME'] = name
+    session['EMAIL'] = email
+    user_email = user_email
+    student = Student.query.filter(Student.email == user_email).first()
+    teacher = Teacher.query.filter(Teacher.email == user_email).first()
+    me_student = Student.query.filter(Student.email == email).first()
+    me_teacher = Teacher.query.filter(Teacher.email == email).first()
+    me = ''
+    if me_student:
+        me = me_student
+    if me_teacher:
+        me = me_teacher
+    me_i = open('static/images/icon/' + me.lastname[0] + ".png", 'rb')
+    me_img = me_i.read()
+    me_img = base64.b64encode(me_img).decode('ascii')
+    my_info = {
+            'email': email,
+            'first_name': me.firstname,
+            'last_name': me.lastname,
+            'profile_pic': me_img,
+            # 'phone': student.phone,
+            # 'school': student.school,
+            # 'address': student.address,
+            # 'age': datetime.now().date().year - int(student.dob.split("-")[0]),
+            # 'gender': student.gender,
+            # 'password': student.password,
+            # 'occupation': 'Student'
+        }
+    if student:
+        student = Student.query.filter(Student.email == user_email).first()
+        scores = Score.query.filter(Score.student_id == student.id).order_by(Score.date.desc()).all()
+        skill_name_dict = {}
+        topic_master_dict = {}
+        topic_master_count = {}
+        score_list = []
+        for score in scores:
+            skill = Skills.query.filter(Skills.skill_id == score.skill_id).first()
+            topic = Topics.query.filter(Topics.topic_id == skill.topic_id).first()
+            comment = Comments.query.filter(Comments.skill_id == skill.skill_id).count()
+            t_name = topic.topic_name
+            s_name = skill.skill_name
+            score_list.append({
+                'score': score.score,
+                'date': score.date,
+                'topic': t_name,
+                'skill': s_name,
+                'comment': comment,
+                'like': skill.like
+            })
+            if skill_name_dict.get(s_name) is None:
+                skill_name_dict[s_name] = 1
+            else:
+                skill_name_dict[s_name] += 1
+            if topic_master_count.get(t_name) is None:
+                topic_master_count[t_name] = 1
+            else:
+                topic_master_count[t_name] += 1
+            if topic_master_dict.get(t_name) is None:
+                topic_master_dict[t_name] = int(score.score)
+            else:
+                topic_master_dict[t_name] += int(score.score)
+        for k in topic_master_dict.keys():
+            topic_master_dict[k] = int(topic_master_dict[k] / topic_master_count[k])
+        skill_statistic = {
+            'skill_list': list(skill_name_dict.keys()),
+            'skill_value_list': list(skill_name_dict.values()),
+        }
+        student_name = student.lastname
+        image = open('static/images/icon/' + student_name[0] + ".png", 'rb')
+        img_stream = image.read()
+        img_stream = base64.b64encode(img_stream).decode('ascii')
+        user_info = {
+            'email': user_email,
+            'first_name': student.firstname,
+            'last_name': student.lastname,
+            'profile_pic': img_stream,
+            'phone': student.phone,
+            'school': student.school,
+            'address': student.address,
+            'age': datetime.now().date().year - int(student.dob.split("-")[0]),
+            'gender': student.gender,
+            'password': student.password,
+            'occupation': 'Student'
+        }
+    elif teacher:
+        skill_statistic = {}
+        topic_master_dict = {}
+        score_list = []
+        form = TeacherUpdateInfo()
+        name = teacher.lastname
+        image = open('static/images/icon/' + name[0] + ".png", 'rb')
+        img_stream = image.read()
+        img_stream = base64.b64encode(img_stream).decode('ascii')
+        user_info = {
+            'email': user_email,
+            'first_name': teacher.firstname,
+            'last_name': teacher.lastname,
+            'profile_pic': img_stream,
+            'phone': teacher.phone,
+            'school': teacher.school,
+            'password': teacher.password,
+            'occupation': 'Teacher'
+        }
+    return render_template('user_profile.html', name=name, email=email, user=user_info, skill_list=json.dumps(skill_statistic),
+                           topic_master=topic_master_dict, score_list=score_list, my_info=my_info)
+
+
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     from models import db
@@ -796,6 +908,7 @@ def profile():
     elif teacher:
         skill_statistic = {}
         topic_master_dict = {}
+        score_list = []
         form = TeacherUpdateInfo()
         name = teacher.lastname
         image = open('static/images/icon/' + name[0] + ".png", 'rb')
@@ -825,6 +938,7 @@ def profile():
     session['EMAIL'] = email
     return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(skill_statistic),
                            topic_master=topic_master_dict, score_list=score_list)
+
 
 
 @app.route('/testchart', methods=['GET', 'POST'])

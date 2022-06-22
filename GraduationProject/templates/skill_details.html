@@ -79,11 +79,11 @@
                                     <ul class="media-list">
                                         <li class="media">
                                             <div class="post-comment">
-                                                <a class="pull-left" href="#">
+                                                <a class="pull-left" href="{{ url_for('user_profile',user_email=comments[i].user_email) }}">
                                                     <img src="data:;base64,{{ comments[i].user_img }}" style="border-radius:50% !important;" width="100">
                                                 </a>
                                                 <div class="media-body">
-                                                    <span><i class="fa fa-user"></i>Posted by <a href="#">{{ comments[i].user_name }}</a></span>
+                                                    <span><i class="fa fa-user"></i>Posted by <a href="{{ url_for('user_profile',user_email=comments[i].user_email) }}">{{ comments[i].user_name }}</a></span>
                                                     <p>{{ comments[i].comment }}</p>
                                                     <ul class="nav navbar-nav post-nav">
                                                         <li><a onclick="false"><i class="fa fa-clock-o"></i>{{ comments[i].comment_time }}</a></li>
