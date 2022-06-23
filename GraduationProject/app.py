@@ -826,7 +826,7 @@ def profile():
     student = Student.query.filter(Student.email == email).first()
     teacher = Teacher.query.filter(Teacher.email == email).first()
     if student:
-        student = Student.query.filter(Student.email == email).first()
+        # student = Student.query.filter(Student.email == email).first()
         scores = Score.query.filter(Score.student_id == student.id).order_by(Score.date.desc()).all()
         skill_name_dict = {}
         topic_master_dict = {}
@@ -933,6 +933,37 @@ def profile():
     return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(skill_statistic),
                            topic_master=topic_master_dict, score_list=score_list)
 
+
+@app.route('/grade/<topic_name>', methods=['GET', 'POST'])
+def grade(topic_name):
+    email = session.get('EMAIL')
+    student = Student.query.filter(Student.email == email).first()
+    img = open('static/images/icon/' + student.lastname[0] + ".png", 'rb')
+    student_img = img.read()
+    student_img = base64.b64encode(student_img).decode('ascii')
+    my_info = {
+        'email': email,
+        'first_name': student.firstname,
+        'last_name': student.lastname,
+        'profile_pic': student_img,
+    }
+    topic = Topics.query.filter(Topics.topic_name == topic_name).first()
+    skills = Skills.query.filter(Skills.topic_id == topic.topic_id).all()
+    skill_score_list = []
+    for skill in skills:
+        scores = Score.query.filter(Score.student_id == student.id, Score.skill_id == skill.skill_id).order_by(Score.date.asc()).all()
+        skill_name = skill.skill_name
+        score_list = {}
+        for score in scores:
+            score_list[str(score.date)] = score.score
+        skill_score_list.append({
+            'skill_name': skill_name,
+            'score_list': list(score_list.values()),
+            'date': list(score_list.keys())
+        })
+    print(skill_score_list)
+    return render_template('grade.html', my_info=my_info, score_list=json.dumps(skill_score_list),
+                           skill_score_list=skill_score_list)
 
 
 @app.route('/testchart', methods=['GET', 'POST'])

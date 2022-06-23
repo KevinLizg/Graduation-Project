@@ -161,8 +161,8 @@
                         <!-- ============================================================== -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="50" height="50">
-                                <span class="m-l-5 font-medium d-none d-sm-inline-block">{{ user.first_name }} {{ user.last_name }}<i class="mdi mdi-chevron-down"></i></span>
+                                <img src="data:;base64,{{ my_info.profile_pic }}" alt="user" class="rounded-circle" width="50" height="50">
+                                <span class="m-l-5 font-medium d-none d-sm-inline-block">{{ my_info.first_name }} {{ my_info.last_name }}<i class="mdi mdi-chevron-down"></i></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
                                 <span class="with-arrow">
@@ -170,11 +170,11 @@
                                 </span>
                                 <div class="d-flex no-block align-items-center p-15 bg-primary text-white m-b-10">
                                     <div class="">
-                                        <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="60" height="60">
+                                        <img src="data:;base64,{{ my_info.profile_pic }}" alt="user" class="rounded-circle" width="60" height="60">
                                     </div>
                                     <div class="m-l-10">
-                                        <h4 class="m-b-0">{{ user.first_name }}{{ user.last_name }}</h4>
-                                        <p class=" m-b-0">{{ user.email }}</p>
+                                        <h4 class="m-b-0">{{ my_info.first_name }}{{ my_info.last_name }}</h4>
+                                        <p class=" m-b-0">{{ my_info.email }}</p>
                                     </div>
                                 </div>
                                 <div class="profile-dis scrollable">
@@ -287,334 +287,43 @@
 {#                                </li>#}
                             </ul>
                         </li>
-
-{#                        <li class="nav-small-cap">#}
-{#                            <i class="mdi mdi-dots-horizontal"></i>#}
-{#                            <span class="hide-menu">Apps</span>#}
-{#                        </li>#}
                     </ul>
                 </nav>
                 <!-- End Sidebar navigation -->
             </div>
-            <!-- End Sidebar scroll-->
         </aside>
-        <!-- ============================================================== -->
-        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Page wrapper  -->
-        <!-- ============================================================== -->
         <div class="page-wrapper">
-            <!-- ============================================================== -->
-            <!-- Bread crumb and right sidebar toggle -->
-            <!-- ============================================================== -->
-            <div class="page-breadcrumb">
-                <div class="row">
-                    <div class="col-5 align-self-center">
-                        <h4 class="page-title">Profile</h4>
-                    </div>
-                    <div class="col-7 align-self-center">
-                        <div class="d-flex align-items-center justify-content-end">
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item">
-                                        <a href="#">Home</a>
-                                    </li>
-                                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
-                                </ol>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- ============================================================== -->
-            <!-- End Bread crumb and right sidebar toggle -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- Container fluid  -->
-            <!-- ============================================================== -->
             <div class="container-fluid">
                 <!-- ============================================================== -->
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
-                <!-- Row -->
                 <div class="row">
-                    <!-- Column -->
-                    <div class="col-lg-4 col-xlg-3 col-md-5">
-                        <div class="card">
-                            <div class="card-body">
-                                <center class="m-t-30"> <img src="data:;base64,{{ user.profile_pic }}" class="rounded-circle" width="150" />
-                                    <h4 class="card-title m-t-10">{{ user.first_name }} {{ user.last_name }}</h4>
-                                    <h6 class="card-subtitle">{{ user.occupation }}</h6>
-                                    <div class="row text-center justify-content-md-center">
-                                        <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-people"></i> <font class="font-medium">254</font></a></div>
-                                        <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-picture"></i> <font class="font-medium">54</font></a></div>
+                    <!-- column -->
+                    {% for index in range(skill_score_list|length) %}
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ skill_score_list[index]['skill_name'] }}</h4>
+                                    <div>
+                                        <canvas id="skill{{ index }}" height="150"></canvas>
                                     </div>
-                                </center>
-                            </div>
-                            <div>
-                                <hr> </div>
-                            <div class="card-body">
-                                <small class="text-muted">Email address </small>
-                                <h6>{{ user.email }}</h6>
-
-                                <small class="text-muted p-t-30 db">Phone</small>
-                                <h6>{{ user.phone }}</h6>
-                                {% if user.occupation == 'Student' %}
-                                <small class="text-muted p-t-30 db">Address</small>
-                                <h6>{{ user.address }}</h6>
-                                {% endif %}
-{#                                <div class="map-box">#}
-{#                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d470029.1604841957!2d72.29955005258641!3d23.019996818380896!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e848aba5bd449%3A0x4fcedd11614f6516!2sAhmedabad%2C+Gujarat!5e0!3m2!1sen!2sin!4v1493204785508" width="100%" height="150" frameborder="0" style="border:0" allowfullscreen></iframe>#}
-{#                                </div>#}
-{#                                <small class="text-muted p-t-30 db">Social Profile</small>#}
-                                <br/>
-                                <button class="btn btn-circle btn-secondary"><i class="fab fa-facebook-f"></i></button>
-                                <button class="btn btn-circle btn-secondary"><i class="fab fa-twitter"></i></button>
-                                <button class="btn btn-circle btn-secondary"><i class="fab fa-youtube"></i></button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- Column -->
-                    <!-- Column -->
-                    <div class="col-lg-8 col-xlg-9 col-md-7">
-                        <div class="card">
-                            <!-- Tabs -->
-                            <ul class="nav nav-pills custom-pills" id="pills-tab" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="pills-timeline-tab" data-toggle="pill" href="#history" role="tab" aria-controls="pills-timeline" aria-selected="true">History</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#setting" role="tab" aria-controls="pills-setting" aria-selected="false">Setting</a>
-                                </li>
-                                {% if user.occupation == 'Student' %}
-                                <li class="nav-item">
-                                    <a class="nav-link" data-toggle="pill" href="#analysis" role="tab" aria-controls="pills-setting" aria-selected="false">Analysis</a>
-                                </li>
-                                {% endif %}
-                            </ul>
-                            <!-- Tabs -->
-                            <div class="tab-content" id="pills-tabContent">
-                                <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="pills-timeline-tab">
-                                    <div class="card-body">
-                                        {% for sc in score_list[0:5] %}
-                                        <div class="profiletimeline m-t-0">
-                                            <div class="sl-item">
-                                                <div class="sl-left"> <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" /> </div>
-                                                <div class="sl-right">
-                                                    <div>I finished the quiz at <span class="sl-date">{{ sc['date'] }}</span>
-                                                        <p>The topic is <a href="{{ url_for('topics',topic=sc['topic']) }}">{{ sc['topic'] }}</a>, and the skill is <a href="{{ url_for('skill_details',skill_=sc['skill']) }}">{{ sc['skill'] }}</a></p>
-                                                        <p>The score is {{ sc['score'] }}</p>
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-6 m-b-20"><img src="{{ url_for('static',filename='images/skills/'+sc['skill']+'.png') }}" class="img-fluid rounded" /></div>
-                                                        </div>
-                                                        <div class="like-comm"> <a href="{{ url_for('skill_details',skill_=sc['skill']) }}" class="link m-r-10">{{ sc['comment'] }} comment</a> <a href="{{ url_for('skill_details',skill_=sc['skill']) }}" class="link m-r-10"><i class="fa fa-heart text-danger"></i> {{ sc['like'] }} Love</a> </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <hr>
-                                        </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-3 col-xs-6 b-r"> <strong>First Name</strong>
-                                                <br>
-                                                <p class="text-muted">{{ user.first_name }}</p>
-                                            </div>
-                                            <div class="col-md-3 col-xs-6 b-r"> <strong>Last Name</strong>
-                                                <br>
-                                                <p class="text-muted">{{ user.last_name }}</p>
-                                            </div>
-                                            <div class="col-md-3 col-xs-6 b-r"> <strong>Mobile</strong>
-                                                <br>
-                                                <p class="text-muted">{{ user.phone }}</p>
-                                            </div>
-                                            <div class="col-md-3 col-xs-6 b-r"> <strong>Email</strong>
-                                                <br>
-                                                <p class="text-muted">{{ user.email }}</p>
-                                            </div>
-                                            <div class="col-md-3 col-xs-6 b-r"> <strong>School</strong>
-                                                <br>
-                                                <p class="text-muted">{{ user.school }}</p>
-                                            </div>
-                                            {% if user.occupation == 'Student' %}
-                                            <div class="col-md-3 col-xs-6 b-r"> <strong>Gender</strong>
-                                                <br>
-                                                <p class="text-muted">{{ user.gender }}</p>
-                                            </div>
-                                            <div class="col-md-3 col-xs-6"> <strong>Address</strong>
-                                                <br>
-                                                <p class="text-muted">{{ user.address }}</p>
-                                            </div>
-                                            <div class="col-md-3 col-xs-6"> <strong>Age</strong>
-                                            <br>
-                                            <p class="text-muted">{{ user.age }}</p>
-                                            </div>
-                                            {% endif %}
-                                        </div>
-                                        <hr>
-                                        <p class="m-t-30">Hello! My name is {{ user.last_name }} {{ user.first_name }}!</p>
-                                        {% if user.occupation == 'Student' %}
-                                        <h4 class="font-medium m-t-30">Mastery Skills</h4>
-                                        <hr>
-                                        <h5 class="m-t-30">Basic Math <span class="pull-right">{{ topic_master['Basic Math'] }}%</span></h5>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width:{{ topic_master['Basic Math'] }}%; height:6px;"> <span class="sr-only">50% Complete</span> </div>
-                                        </div>
-                                        <h5 class="m-t-30">Algebra <span class="pull-right">{{ topic_master['Algebra'] }}%</span></h5>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-info" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width:{{ topic_master['Algebra'] }}%; height:6px;"> <span class="sr-only">50% Complete</span> </div>
-                                        </div>
-                                        <h5 class="m-t-30">Geometry <span class="pull-right">{{ topic_master['Geometry'] }}%</span></h5>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:{{ topic_master['Geometry'] }}%; height:6px;"> <span class="sr-only">50% Complete</span> </div>
-                                        </div>
-                                        <h5 class="m-t-30">Statistic <span class="pull-right">{{ topic_master['Statistic'] }}%</span></h5>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:{{ topic_master['Statistic'] }}%; height:6px;"> <span class="sr-only">50% Complete</span> </div>
-                                        </div>
-                                        <h5 class="m-t-30">Others <span class="pull-right">{{ topic_master['Misc'] }}%</span></h5>
-                                        <div class="progress">
-                                            <div class="progress-bar bg-dark" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width:{{ topic_master['Misc'] }}%; height:6px;"> <span class="sr-only">50% Complete</span> </div>
-                                        </div>
-                                    {% endif %}
-                                    </div>
-                                </div>
-                                <div class="tab-pane fade" id="setting" role="tabpanel" aria-labelledby="pills-setting-tab">
-                                    <div class="card-body">
-                                        <form class="form-horizontal form-material" method="post" novalidate>
-                                            {{ form.hidden_tag() }}
-                                            <div class="form-group">
-                                                <label class="col-md-12">First Name</label>
-                                                <div class="col-md-12">
-                                                    {{ form.firstname(class="form-control form-control-line",value=user.first_name, placeholder= user.first_name)}}
-                                                    {% for error in form.firstname.errors %}
-                                                    <span style="color: red;">[{{ error }}]</span>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-12">Last Name</label>
-                                                <div class="col-md-12">
-                                                    {{ form.lastname(class="form-control form-control-line",value=user.last_name, placeholder= user.last_name)}}
-                                                    {% for error in form.lastname.errors %}
-                                                    <span style="color: red;">[{{ error }}]</span>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-12">Phone No</label>
-                                                <div class="col-md-12">
-                                                    {{ form.phone(class="form-control form-control-line",value=user.phone, placeholder= user.phone)}}
-                                                    {% for error in form.lastname.errors %}
-                                                    <span style="color: red;">[{{ error }}]</span>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-12">School</label>
-                                                <div class="col-md-12">
-                                                    {{ form.school(class="form-control form-control-line",value=user.school, placeholder= user.school)}}
-                                                    {% for error in form.school.errors %}
-                                                    <span style="color: red;">[{{ error }}]</span>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label class="col-md-12">Message</label>
-                                                <div class="col-md-12">
-                                                    <textarea rows="5" class="form-control form-control-line"></textarea>
-                                                </div>
-                                            </div>
-                                            {% if user.occupation == 'Student' %}
-                                            <div class="form-group">
-                                                <label class="col-md-12">Address</label>
-                                                <div class="col-md-12">
-                                                    {{ form.address(class="form-control form-control-line",value=user.address, placeholder= user.address)}}
-                                                    {% for error in form.address.errors %}
-                                                    <span style="color: red;">[{{ error }}]</span>
-                                                    {% endfor %}
-                                                </div>
-                                            </div>
-{#                                            <div class="form-group">#}
-{#                                                <label class="col-sm-12">Select Grade</label>#}
-{#                                                <div class="col-sm-12">#}
-{#                                                    <form class="form-control form-control-line">#}
-{#                                                        {{ SignupForm().level }}#}
-{#                                                    </form>#}
-{#                                                </div>#}
-{#                                            </div>#}
-                                            {% endif %}
-                                            <div class="form-group">
-                                                <div class="col-sm-12">
-                                                    {{ form.submit(class="btn btn-success") }}
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-
-                                {#Start pie chart#}
-                                <div class="tab-pane fade" id="analysis" role="tabpanel" aria-labelledby="analysis">
-                                    <div class="card-body">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <h4 class="card-title">History Analysis</h4>
-                                                <div>
-                                                    <canvas id="pie-chart" height="150"></canvas>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                {#End pie chart#}
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Column -->
+                    {% endfor %}
                 </div>
-                <!-- Row -->
-                <!-- ============================================================== -->
-                <!-- End PAge Content -->
-                <!-- ============================================================== -->
-                <!-- ============================================================== -->
-                <!-- Right sidebar -->
-                <!-- ============================================================== -->
-                <!-- .right-sidebar -->
-                <!-- ============================================================== -->
-                <!-- End Right sidebar -->
-                <!-- ============================================================== -->
             </div>
-            <!-- ============================================================== -->
-            <!-- End Container fluid  -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- footer -->
-            <!-- ============================================================== -->
+        </div>
+        <div class="page-wrapper">
             <footer class="footer text-center">
                 All Rights Reserved by Nice admin. Designed and Developed by
                 <a href="https://wrappixel.com">WrapPixel</a>.
             </footer>
-            <!-- ============================================================== -->
-            <!-- End footer -->
-            <!-- ============================================================== -->
         </div>
         <!-- ============================================================== -->
         <!-- End Page wrapper  -->
         <!-- ============================================================== -->
     </div>
-    <!-- ============================================================== -->
-    <!-- End Wrapper -->
-    <!-- ============================================================== -->
-    <!-- ============================================================== -->
-    <!-- customizer Panel -->
-    <!-- ============================================================== -->
     <aside class="customizer">
         <a href="javascript:void(0)" class="service-panel-toggle"><i class="fa fa-spin fa-cog"></i></a>
         <div class="customizer-body">
@@ -841,57 +550,22 @@
     <script src="{{ url_for('static',filename='profile/js/sidebarmenu.js') }}"></script>
     <script src="{{ url_for('static',filename='profile/js/custom.min.js') }}"></script>
     <script>
-            s = JSON.parse({{ skill_list|tojson }})
-            $(function () {
-                // New chart
-                new Chart(document.getElementById("pie-chart"), {
-                    type: 'pie',
-                    data: {
-                        labels: s['skill_list'],
-                        datasets: [{
-                            label: "Population (millions)",
-                            backgroundColor: ["#ff6384", "#4bc0c0", "#ffcd56",
-                                "#07b107","#FFFAF0","#BBFFFF","#36a2eb",
-                                "#2F4F4F","#54FF9F","#4bc0c0", "#ffcd56"],
-                            data: s['skill_value_list']
-                        }]
-                    },
-                    options: {
-                        title: {
-                            display: true,
-                            text: 'Proportion of different skills'
-                        }
-                    }
-                });
-
-                new Chart(document.getElementById("line-chart"), {
+        $(function () {
+            sc = JSON.parse({{ score_list|tojson }})
+            color = ["#ff6384", "#4bc0c0", "#ffcd56", "#07b107","#FFFAF0","#BBFFFF","#36a2eb", "#2F4F4F","#54FF9F","#4bc0c0", "#ffcd56"]
+            for(let index in sc){
+                console.log('skill'+index)
+                console.log(sc[index]['skill_name'])
+                console.log(sc[index]['score_list'])
+                console.log( sc[index]['date'])
+                new Chart(document.getElementById('skill'+index), {
                       type: 'line',
                       data: {
-                        labels: [4500,3500,3200,3050,2700,2450,2200,1750,1499,2050],
+                        labels: sc[index]['date'],
                         datasets: [{
-                            data: [86,114,106,106,107,111,133,221,783,2478],
-                            label: "Africa",
-                            borderColor: "#3e95cd",
-                            fill: false
-                          }, {
-                            data: [282,350,411,502,635,809,947,1402,3700,5267],
-                            label: "Asia",
-                            borderColor: "#36a2eb",
-                            fill: false
-                          }, {
-                            data: [168,170,178,190,203,276,408,547,675,734],
-                            label: "Europe",
-                            borderColor: "#07b107",
-                            fill: false
-                          }, {
-                            data: [40,20,10,16,24,38,74,167,508,784],
-                            label: "Latin America",
-                            borderColor: "#ff6384",
-                            fill: false
-                          }, {
-                            data: [6,3,2,2,7,26,82,172,312,433],
-                            label: "North America",
-                            borderColor: "#4bc0c0",
+                            data: sc[index]['score_list'],
+                            label: sc[index]['skill_name'],
+                            borderColor: color[index%sc.length],
                             fill: false
                           }
                         ]
@@ -899,11 +573,12 @@
                       options: {
                         title: {
                           display: true,
-                          text: 'World population per region (in millions)'
+                          text: sc[index]['skill_name']
                         }
                       }
-	            });
-            });
+                });
+            }
+       });
     </script>
     <script src="{{ url_for('static',filename='profile/js/chartjs/Chart.min.js') }}"></script>
 </body>
