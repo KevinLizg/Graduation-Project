@@ -1,0 +1,38 @@
+[
+    {
+        "id": 0,
+        "title": "The hypotenuse of a right triangle given the other two lengths 8 and 8 = ",
+        "option": [
+            "14.42",
+            "11.31",
+            "18.03",
+            "13.04"
+        ],
+        "answer": "B",
+        "analysis": []
+    },
+    {
+        "id": 1,
+        "title": "Does triangle with sides 10, 35 and 16 exist?",
+        "option": [
+            "No",
+            "Yes",
+            "No",
+            "Yes"
+        ],
+        "answer": "C",
+        "analysis": []
+    },
+    {
+        "id": 2,
+        "title": "Third angle of triangle with angles 70 and 49 = ",
+        "option": [
+            118,
+            120,
+            61,
+            92
+        ],
+        "answer": "C",
+        "analysis": []
+    }
+]

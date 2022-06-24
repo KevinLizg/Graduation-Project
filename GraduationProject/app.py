@@ -69,16 +69,17 @@ def not_found(e):
 @app.route('/index', methods=['GET', 'POST'])
 def index():
     email = session.get('EMAIL')
-    # user_type = session.get('ACTOR')
-    # name = ''
-    # if email and user_type == 'Student':
-    #     student = Student.query.filter(Student.student_email == email).first()
-    #     name = student.firstname
     name = session.get('NAME')
-    print(name)
-    # session['NAME'] = name
-    # session['ACTOR'] = 'Student'
-    return render_template('index.html', email=email, name=name)
+    session['NAME'] = name
+    session['EMAIL'] = email
+    student_in_db = Student.query.filter(Student.email == email).first()
+    teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+    if student_in_db:
+        user = student_in_db
+    if teacher_in_db:
+        user = teacher_in_db
+    print(user.firstname)
+    return render_template('index.html', user=user)
 
 
 app.config["MAIL_SERVER"] = 'smtp.qq.com'
@@ -321,6 +322,13 @@ def signin():
 def topics(topic):
     name = session.get('NAME')
     email = session.get('EMAIL')
+    student_in_db = Student.query.filter(Student.email == email).first()
+    teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+    user = ''
+    if student_in_db:
+        user = student_in_db
+    if teacher_in_db:
+        user = teacher_in_db
     topic_ = Topics.query.filter(Topics.topic_name == topic).first()
     page = int(request.args.get('page', 1))
     per_page = int(request.args.get('per_page', 3))
@@ -348,7 +356,7 @@ def topics(topic):
             'skill_count': Skills.query.filter(Skills.topic_id == topic_.topic_id).count(),
             'topic_name': topic_.topic_name
         })
-    return render_template('topics.html', name=name, topic=topic, skills=paginate.items, paginate=paginate, info=info,
+    return render_template('topics.html', user=user, topic=topic, skills=paginate.items, paginate=paginate, info=info,
                            comment_info=comment_info, all_topic=topic_info)
 
 
@@ -445,7 +453,7 @@ def skill_details(skill_):
         return redirect(url_for('signin'))
     return render_template('skill_details.html', skill=skill, comments=comments, replyForm=replyForm,
                            commentForm=commentForm, user_type=user_type,
-                           name=name, email=email, coins=student_in_db.coins, all_skill=all_skill,
+                           user=user_in_db, all_skill=all_skill,
                            paginate=paginate, comment_count=comment_count, like=like
                            )
 
@@ -454,19 +462,28 @@ def skill_details(skill_):
 def shop():
     name = session.get('NAME')
     email = session.get('EMAIL')
+    user_avatar = []
     if (name):
         session['NAME'] = name
         session['EMAIL'] = email
         avatar_list = []
         student_in_db = Student.query.filter(Student.email == email).first()
-        teacher_in_db = Student.query.filter(Teacher.email == email).first()
-        # if student_in_db:
-        #     user = student_in_db
-        # if teacher_in_db:
-        #     user = teacher_in_db
+        teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+        user = ''
+        user_type = 1
+        if student_in_db:
+            user = student_in_db
+        elif teacher_in_db:
+            user = teacher_in_db
+            user_type = 0
         for avatar_file in os.listdir('static/images/avatar'):
-            print(avatar_file)
+            avatar = Avatar.query.filter(Avatar.user_id == user.id, Avatar.user_type == user_type,
+                                         Avatar.avatar_name == avatar_file.split('.')[0]).first()
+            have = False
+            if avatar:
+                have = True
             avatar_list.append({
+                'have': have,
                 'name': avatar_file.split('.')[0],
                 'price': 100,
                 'image': base64.b64encode(open('static/images/avatar/'+avatar_file,'rb').read()).decode('ascii')
@@ -475,22 +492,50 @@ def shop():
         flash("Please sign in first")
         return redirect(url_for('signin'))
     return render_template('shop.html', avatar_list=avatar_list,
-                           name=name, email=email, coins=student_in_db.coins)
+                           user=user, coins=user.coins, )
+
+
+@app.route('/shop_buy/<price>', methods=['GET', 'POST'])
+def shop_buy(price):
+    from models import db
+    email = session.get('EMAIL')
+    student = Student.query.filter(Student.email == email).first()
+    teacher = Teacher.query.filter(Teacher.email == email).first()
+    name = request.form.get("name")
+    user = ''
+    user_type = 1
+    if student:
+        user = student
+    if teacher:
+        user = teacher
+        user_type = 0
+    avatar = Avatar(user_id=user.id, avatar_name=name, user_type=user_type)
+    if user.coins >= int(price):
+        user.coins -= int(price)
+        db.session.add(user)
+        db.session.add(avatar)
+        db.session.commit()
+    return ''
 
 
 @app.route('/ready/<skill_>', methods=["GET", "POST"])
 def ready(skill_):
     name = session.get('NAME')
     email = session.get('EMAIL')
-    print(skill_)
-    print(email)
     if (name):
         session['NAME'] = name
         session['EMAIL'] = email
+        student_in_db = Student.query.filter(Student.email == email).first()
+        teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+        user = ''
+        if student_in_db:
+            user = student_in_db
+        if teacher_in_db:
+            user = teacher_in_db
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template("ready.html", filename=email+".json", name=name, email=email, skill_=skill_)
+    return render_template("ready.html", filename=email+".json", user=user, skill_=skill_)
 
 
 @app.route('/practice/<skill_>')
@@ -500,10 +545,15 @@ def practice(skill_):
     if (name):
         session['NAME'] = name
         session['EMAIL'] = email
-        user = Student.query.filter(Student.email == email).first()
+        student_in_db = Student.query.filter(Student.email == email).first()
+        teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+        user = ''
+        if student_in_db:
+            user = student_in_db
+        if teacher_in_db:
+            user = teacher_in_db
         skill = Skills.query.filter(Skills.skill_name == skill_).first()
         list = []
-        coins = 50
         for i in range(0, 5):
             problem = ''
             solution = ''
@@ -546,7 +596,7 @@ def practice(skill_):
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('practice.html', num=1*120, name=name, email=email, coins=user.coins, skill_=skill_)
+    return render_template('practice.html', num=1*120, user=user, coins=user.coins, skill_=skill_)
 
 
 def query(input, app_id, params=(), **kwargs):
@@ -555,7 +605,6 @@ def query(input, app_id, params=(), **kwargs):
         appid=app_id,
     )
     data = itertools.chain(params, data.items(), kwargs.items())
-
     query = urllib.parse.urlencode(tuple(data))
     url = 'https://api.wolframalpha.com/v2/query?' + query + '&podstate=Step-by-step%20solution'
     resp = urllib.request.urlopen(url)
@@ -564,6 +613,8 @@ def query(input, app_id, params=(), **kwargs):
     doc = xmltodict.parse(resp, postprocessor=wolframalpha.Document.make)
     return doc['queryresult']
 
+
+from collections import Counter
 @app.route('/quiz/<skill_>')
 def quiz(skill_):
     name = session.get('NAME')
@@ -571,7 +622,12 @@ def quiz(skill_):
     if (name):
         session['NAME'] = name
         session['EMAIL'] = email
-        user = Student.query.filter(Student.email == email).first()
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        if student:
+            user = student
+        if teacher:
+            user = teacher
         skill = Skills.query.filter(Skills.skill_name == skill_).first()
         list = []
         skill_dict = {
@@ -598,44 +654,51 @@ def quiz(skill_):
             21: [27],
             22: [55],
         }
-        # for i in range(0, 10):
-        #     ran_num = random.randint(0,len(skill_dict[skill.skill_id])-1)
-        #     problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-        #     app_id = 'XQAUEU-WR3AY23332'
-        #     client = wolframalpha.Client(app_id)
-        #     # res = client.query(problem)
-        #     res = query(problem, app_id)
-        #     img_list = []
-        #     solution_list = []
-        #     for pod in res.pods:
-        #         for sub in pod.subpods:
-        #             img_list.append(sub.img['@src'])
-        #             solution_list.append(sub.plaintext)
-        #             print(sub)
-        #     option_list = [solution]
-        #     for j in range(1,4):
-        #         gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-        #         option_list.append(gen_solution)
-        #     random.shuffle(option_list)
-        #     answer = ["A", "B", "C", "D"]
-        #     idx = 0
-        #     for op in option_list:
-        #         if op == solution:
-        #             an = answer[idx]
-        #         idx += 1
-        #     list.append({
-        #         'id': i,
-        #         'title': problem,
-        #         'option': option_list,
-        #         'answer': an,
-        #         'analysis': img_list
-        #     })
-        # with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
-        #     json.dump(list, f, ensure_ascii=False, indent=4)
+        for i in range(0, 3):
+            ran_num = random.randint(0,len(skill_dict[skill.skill_id])-1)
+            problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+            app_id = 'XQAUEU-WR3AY23332'
+            client = wolframalpha.Client(app_id)
+            # res = client.query(problem)
+            res = query(problem, app_id)
+            img_list = []
+            solution_list = []
+            for pod in res.pods:
+                for sub in pod.subpods:
+                    img_list.append(sub.img['@src'])
+                    solution_list.append(sub.plaintext)
+                    print(sub)
+            option_list = [solution]
+            for j in range(1,4):
+                gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+                option_list.append(gen_solution)
+            # while len(set(option_list)) != len(option_list):
+            #     op_dict = dict(Counter(option_list))
+            #     for key, value in op_dict.items():
+            #         if value > 1:
+            #             option_list.remove(key)
+            #             gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+            #             option_list.append(gen_solution)
+            random.shuffle(option_list)
+            answer = ["A", "B", "C", "D"]
+            idx = 0
+            for op in option_list:
+                if op == solution:
+                    an = answer[idx]
+                idx += 1
+            list.append({
+                'id': i,
+                'title': problem,
+                'option': option_list,
+                'answer': an,
+                'analysis': img_list
+            })
+        with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
+            json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('quiz.html', num=1*2000, name=name, email=email, coins=user.coins, skill_=skill_)
+    return render_template('quiz.html', num=1*2000, user=user, coins=user.coins, skill_=skill_)
 
 
 @app.route('/return_like', methods=['GET', 'POST'])
@@ -677,10 +740,13 @@ def return_coins():
         session['EMAIL'] = email
         from models import db
         student = Student.query.filter(Student.email == email).first()
-        coins = request.form.get("coins")
-        student.coins = int(coins)
-        db.session.add(student)
-        db.session.commit()
+        if student:
+            coins = request.form.get("coins")
+            student.coins = int(coins)
+            db.session.add(student)
+            db.session.commit()
+        else:
+            print('This is a teacher')
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
@@ -700,33 +766,17 @@ def return_result():
         skill = request.form.get("skill")
         score = request.form.get("score")
         time = request.form.get("time")
-        print(coins, email, skill, score)
         student = Student.query.filter(Student.email == email).first()
-        skill = Skills.query.filter(Skills.skill_name == skill).first()
-        score_add = Score(student_id=student.id, skill_id=skill.skill_id, score=score, time=time)
-        db.session.add(score_add)
-        db.session.commit()
-        # if scores:
-        #     for sc in scores:
-        #         skill = Skills.query.filter(Skills.skill_name == skill).first()
-        #         if sc.skill_id == skill.skill_id:
-        #             sc.total_score = sc.total_score + int(score)
-        #             sc.number_times += 1
-        #             db.session.add(sc)
-        #             db.session.commit()
-        #         else:
-        #             score_add = Score(student_id=student.id, skill_id=skill.skill_id, total_score=sc.total_score + int(score),
-        #                               number_times=sc.number_times + 1)
-        #             db.session.add(score_add)
-        #             db.session.commit()
-        # else:
-        #     skill = Skills.query.filter(Skills.skill_name == skill).first()
-        #     score_add = Score(student_id=student.id, skill_id=skill.skill_id, total_score=score, number_times=1)
-        #     db.session.add(score_add)
-        #     db.session.commit()
-        student.coins = int(coins)
-        db.session.add(student)
-        db.session.commit()
+        if student:
+            skill = Skills.query.filter(Skills.skill_name == skill).first()
+            score_add = Score(student_id=student.id, skill_id=skill.skill_id, score=score, time=time)
+            db.session.add(score_add)
+            db.session.commit()
+            student.coins = int(coins)
+            db.session.add(student)
+            db.session.commit()
+        else:
+            print('This is a teacher')
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))

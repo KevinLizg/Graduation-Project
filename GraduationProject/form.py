@@ -101,3 +101,7 @@ class ReplyForm(FlaskForm):
     reply = StringField('Reply', validators=[DataRequired(message='Please enter your reply')], render_kw={"placeholder": "Leave your reply"})
     comment_id = StringField('id')
     submit = SubmitField('Reply')
+
+
+class ShopForm(FlaskForm):
+    submit = SubmitField('Buy it!')

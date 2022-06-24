@@ -78,3 +78,9 @@ class Like(db.Model):
     skill_id = db.Column(db.Integer, db.ForeignKey('skills.skill_id'))
     user_id = db.Column(db.Integer, db.ForeignKey('student.id'))
     user_type = db.Column(db.Integer)
+
+
+class Avatar(db.Model):
+    user_id = db.Column(db.Integer, primary_key=True)
+    avatar_name = db.Column(db.String(128))
+    user_type = db.Column(db.Integer)
