@@ -402,6 +402,7 @@ def skill_details(skill_):
                 img_stream = base64.b64encode(img_stream).decode('ascii')
                 reply_list.append({
                     'reply_content': reply.reply_content,
+                    'reply_email': reply_user.email,
                     'reply_user_name': reply_user.firstname + ', ' + reply_user.lastname,
                     'reply_time': reply.reply_time,
                     'reply_img': img_stream
@@ -447,6 +448,12 @@ def skill_details(skill_):
                            name=name, email=email, all_skill=all_skill,
                            paginate=paginate, comment_count=comment_count, like=like
                            )
+
+
+@app.route('/shop', methods=['GET', 'POST'])
+def shop():
+    hello = 'mobile'
+    return render_template('shop.html',hello=hello)
 
 
 @app.route('/ready/<skill_>', methods=["GET", "POST"])

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends "base.html" %}
+
+
+{% block mainContent %}
+
+
+    <section id="page-breadcrumb">
+        <div class="vertical-center sun">
+             <div class="container">
+                <div class="row">
+                    <div class="action">
+                        <div class="col-sm-12">
+                            <h1 class="title">Shop</h1>
+                            <p>Buy something you like here!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   </section>
+    <!--/#action-->
+
+    <section id="portfolio">
+        <div class="container">
+            <div class="row">
+                <ul class="portfolio-filter text-center">
+                    <li><a class="btn btn-default active" href="#" data-filter="*">All</a></li>
+                    <li><a class="btn btn-default" href="#" data-filter=".avatar">Avatar</a></li>
+                    <li><a class="btn btn-default" href="#" data-filter=".badgep">Badge</a></li>
+                    <li><a class="btn btn-default" href="#" data-filter=".theme">Profile Theme</a></li>
+                </ul>
+
+                <div class="portfolio-items">
+                    <div class="col-xs-6 col-sm-4 col-md-3 portfolio-item avatar">
+                        <div class="portfolio-wrapper">
+                            <div class="portfolio-single">
+                                <div class="portfolio-thumb">
+                                    <img src="{{ url_for('static',filename='images/coming-soon1.png') }}" class="img-responsive" alt="">
+                                </div>
+                                <div class="portfolio-view">
+                                    <ul class="nav nav-pills">
+                                        <li><a href="portfolio-details.html"><i class="fa fa-link"></i></a></li>
+                                        <li><a href="images/portfolio/1.jpg" data-lightbox="example-set"><i class="fa fa-eye"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="portfolio-info ">
+                                <h2>Avatar</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3 portfolio-item badgep">
+                        <div class="portfolio-wrapper">
+                            <div class="portfolio-single">
+                                <div class="portfolio-thumb">
+                                    <img src="{{ url_for('static',filename='images/coming-soon1.png') }}" class="img-responsive" alt="">
+                                </div>
+                                <div class="portfolio-view">
+                                    <ul class="nav nav-pills">
+                                        <li><a href="portfolio-details.html"><i class="fa fa-link"></i></a></li>
+                                        <li><a href="images/portfolio/1.jpg" data-lightbox="example-set"><i class="fa fa-eye"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="portfolio-info ">
+                                <h2>Badge</h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-4 col-md-3 portfolio-item theme">
+                        <div class="portfolio-wrapper">
+                            <div class="portfolio-single">
+                                <div class="portfolio-thumb">
+                                    <img src="{{ url_for('static',filename='images/coming-soon1.png') }}" class="img-responsive" alt="">
+                                </div>
+                                <div class="portfolio-view">
+                                    <ul class="nav nav-pills">
+                                        <li><a href="portfolio-details.html"><i class="fa fa-link"></i></a></li>
+                                        <li><a href="images/portfolio/1.jpg" data-lightbox="example-set"><i class="fa fa-eye"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="portfolio-info ">
+                                <h2>Profile Theme</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+{#                <div class="portfolio-pagination">#}
+{#                    <ul class="pagination">#}
+{#                      <li><a href="#">left</a></li>#}
+{#                      <li><a href="#">1</a></li>#}
+{#                      <li><a href="#">2</a></li>#}
+{#                      <li class="active"><a href="#">3</a></li>#}
+{#                      <li><a href="#">4</a></li>#}
+{#                      <li><a href="#">5</a></li>#}
+{#                      <li><a href="#">6</a></li>#}
+{#                      <li><a href="#">7</a></li>#}
+{#                      <li><a href="#">8</a></li>#}
+{#                      <li><a href="#">9</a></li>#}
+{#                      <li><a href="#">right</a></li>#}
+{#                    </ul>#}
+{#                </div>#}
+            </div>
+        </div>
+    </section>
+    <!--/#portfolio-->
+</html>
+{% endblock %}

@@ -111,11 +111,11 @@
                                             <div class="parrent">
                                                 <ul class="media-list">
                                                     <li class="post-comment reply">
-                                                        <a class="pull-left" href="#">
+                                                        <a class="pull-left" href="{{ url_for('user_profile',user_email=reply.reply_email) }}">
                                                             <img class="media-object" src="data:;base64,{{ reply.reply_img }}" style="border-radius:50% !important;" width="100">
                                                         </a>
                                                         <div class="media-body">
-                                                            <span><i class="fa fa-user"></i>Posted by <a href="#">{{ reply.reply_user_name }}</a></span>
+                                                            <span><i class="fa fa-user"></i>Posted by <a href="{{ url_for('user_profile',user_email=reply.reply_email) }}">{{ reply.reply_user_name }}</a></span>
                                                             <p>{{ reply.reply_content }}</p>
                                                             <ul class="nav navbar-nav post-nav">
                                                                 <li><a onclick="false"><i class="fa fa-clock-o"></i>{{ reply.reply_time }}</a></li>
