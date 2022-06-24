@@ -444,16 +444,38 @@ def skill_details(skill_):
         flash("Please sign in first")
         return redirect(url_for('signin'))
     return render_template('skill_details.html', skill=skill, comments=comments, replyForm=replyForm,
-                           commentForm=commentForm,
-                           name=name, email=email, all_skill=all_skill,
+                           commentForm=commentForm, user_type=user_type,
+                           name=name, email=email, coins=student_in_db.coins, all_skill=all_skill,
                            paginate=paginate, comment_count=comment_count, like=like
                            )
 
 
 @app.route('/shop', methods=['GET', 'POST'])
 def shop():
-    hello = 'mobile'
-    return render_template('shop.html',hello=hello)
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    if (name):
+        session['NAME'] = name
+        session['EMAIL'] = email
+        avatar_list = []
+        student_in_db = Student.query.filter(Student.email == email).first()
+        teacher_in_db = Student.query.filter(Teacher.email == email).first()
+        # if student_in_db:
+        #     user = student_in_db
+        # if teacher_in_db:
+        #     user = teacher_in_db
+        for avatar_file in os.listdir('static/images/avatar'):
+            print(avatar_file)
+            avatar_list.append({
+                'name': avatar_file.split('.')[0],
+                'price': 100,
+                'image': base64.b64encode(open('static/images/avatar/'+avatar_file,'rb').read()).decode('ascii')
+            })
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('shop.html', avatar_list=avatar_list,
+                           name=name, email=email, coins=student_in_db.coins)
 
 
 @app.route('/ready/<skill_>', methods=["GET", "POST"])

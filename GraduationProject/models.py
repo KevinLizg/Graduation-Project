@@ -29,6 +29,7 @@ class Teacher(db.Model):
     password = db.Column(db.String(128))
     phone = db.Column(db.String(128), index=True, unique=True)
     school = db.Column(db.String(128), index=True, unique=True)
+    coins = db.Column(db.Integer(), default=300)
 
 
 class Topics(db.Model):
