@@ -177,7 +177,7 @@
                                     </div>
                                 </div>
                                 <div class="profile-dis scrollable">
-                                    <a class="dropdown-item" href="javascript:void(0)">
+                                    <a class="dropdown-item" href="{{ url_for('profile') }}">
                                         <i class="ti-user m-r-5 m-l-5"></i> My Profile</a>
 {#                                    <a class="dropdown-item" href="javascript:void(0)">#}
 {#                                        <i class="ti-wallet m-r-5 m-l-5"></i> My Balance</a>#}
@@ -240,7 +240,12 @@
                                 <span class="hide-menu">Email</span>
                             </a>
                         </li>
-
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark" href="{{ url_for('profile_collections') }}" aria-expanded="false">
+                                <i class="mdi mdi-account-star-variant"></i>
+                                <span class="hide-menu">Collections</span>
+                            </a>
+                        </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                                 <i class="mdi mdi-information-outline"></i>
@@ -402,5 +407,98 @@
     <script src="{{ url_for('static',filename='profile/js/sparkline.js') }}"></script>
     <script src="{{ url_for('static',filename='profile/js/sidebarmenu.js') }}"></script>
     <script src="{{ url_for('static',filename='profile/js/custom.min.js') }}"></script>
+    <script>
+            s = JSON.parse({{ skill_list|tojson }})
+            $(function () {
+                // New chart
+                new Chart(document.getElementById("pie-chart"), {
+                    type: 'pie',
+                    data: {
+                        labels: s['skill_list'],
+                        datasets: [{
+                            label: "Population (millions)",
+                            backgroundColor: ["#ff6384", "#4bc0c0", "#ffcd56",
+                                "#07b107","#FFFAF0","#BBFFFF","#36a2eb",
+                                "#2F4F4F","#54FF9F","#4bc0c0", "#ffcd56"],
+                            data: s['skill_value_list']
+                        }]
+                    },
+                    options: {
+                        title: {
+                            display: true,
+                            text: 'Proportion of different skills'
+                        }
+                    }
+                });
+
+                new Chart(document.getElementById("line-chart"), {
+                      type: 'line',
+                      data: {
+                        labels: [4500,3500,3200,3050,2700,2450,2200,1750,1499,2050],
+                        datasets: [{
+                            data: [86,114,106,106,107,111,133,221,783,2478],
+                            label: "Africa",
+                            borderColor: "#3e95cd",
+                            fill: false
+                          }, {
+                            data: [282,350,411,502,635,809,947,1402,3700,5267],
+                            label: "Asia",
+                            borderColor: "#36a2eb",
+                            fill: false
+                          }, {
+                            data: [168,170,178,190,203,276,408,547,675,734],
+                            label: "Europe",
+                            borderColor: "#07b107",
+                            fill: false
+                          }, {
+                            data: [40,20,10,16,24,38,74,167,508,784],
+                            label: "Latin America",
+                            borderColor: "#ff6384",
+                            fill: false
+                          }, {
+                            data: [6,3,2,2,7,26,82,172,312,433],
+                            label: "North America",
+                            borderColor: "#4bc0c0",
+                            fill: false
+                          }
+                        ]
+                      },
+                      options: {
+                        title: {
+                          display: true,
+                          text: 'World population per region (in millions)'
+                        }
+                      }
+                });
+            });
+    </script>
+    <script>
+      $(function () {
+            sc = JSON.parse({{ score_list|tojson }});
+            color = ["#ff6384", "#4bc0c0", "#ffcd56", "#07b107","#FFFAF0","#BBFFFF","#36a2eb", "#2F4F4F","#54FF9F","#4bc0c0", "#ffcd56"]
+            for(let index in sc){
+                new Chart(document.getElementById('skill'+index), {
+                      type: 'line',
+                      data: {
+                        labels: sc[index]['date'],
+                        datasets: [{
+                            data: sc[index]['score_list'],
+                            label: sc[index]['skill_name'],
+                            borderColor: color[index%sc.length],
+                            fill: false
+                          }
+                        ]
+                      },
+                      options: {
+                        title: {
+                          display: true,
+                          text: sc[index]['skill_name']
+                        }
+                      }
+                });
+            }
+       });
+    </script>
+    <script src="{{ url_for('static',filename='profile/js/chartjs/Chart.min.js') }}"></script>
 </body>
 </html>

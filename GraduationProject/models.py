@@ -84,3 +84,4 @@ class Avatar(db.Model):
     user_id = db.Column(db.Integer, primary_key=True)
     avatar_name = db.Column(db.String(128))
     user_type = db.Column(db.Integer)
+    date = db.Column(db.DateTime, index=True, default=datetime.now())

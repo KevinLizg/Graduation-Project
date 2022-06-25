@@ -628,73 +628,73 @@ def quiz(skill_):
             user = student
         if teacher:
             user = teacher
-        skill = Skills.query.filter(Skills.skill_name == skill_).first()
-        list = []
-        skill_dict = {
-            1: [0,1],
-            2: [2,3],
-            3: [6,8],
-            4: [13,16,28],
-            5: [53],
-            6: [11],
-            7: [21],
-            8: [26],
-            9: [24],
-            10: [50],
-            11: [111],
-            12: [18,19,22,25],
-            13: [32,33,34,38],
-            14: [35,36,37,39],
-            15: [112,75,115],
-            16: [114],
-            17: [30,42],
-            18: [59],
-            19: [40],
-            20: [101,102],
-            21: [27],
-            22: [55],
-        }
-        for i in range(0, 3):
-            ran_num = random.randint(0,len(skill_dict[skill.skill_id])-1)
-            problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-            app_id = 'XQAUEU-WR3AY23332'
-            client = wolframalpha.Client(app_id)
-            # res = client.query(problem)
-            res = query(problem, app_id)
-            img_list = []
-            solution_list = []
-            for pod in res.pods:
-                for sub in pod.subpods:
-                    img_list.append(sub.img['@src'])
-                    solution_list.append(sub.plaintext)
-                    print(sub)
-            option_list = [solution]
-            for j in range(1,4):
-                gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-                option_list.append(gen_solution)
-            # while len(set(option_list)) != len(option_list):
-            #     op_dict = dict(Counter(option_list))
-            #     for key, value in op_dict.items():
-            #         if value > 1:
-            #             option_list.remove(key)
-            #             gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-            #             option_list.append(gen_solution)
-            random.shuffle(option_list)
-            answer = ["A", "B", "C", "D"]
-            idx = 0
-            for op in option_list:
-                if op == solution:
-                    an = answer[idx]
-                idx += 1
-            list.append({
-                'id': i,
-                'title': problem,
-                'option': option_list,
-                'answer': an,
-                'analysis': img_list
-            })
-        with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
-            json.dump(list, f, ensure_ascii=False, indent=4)
+        # skill = Skills.query.filter(Skills.skill_name == skill_).first()
+        # list = []
+        # skill_dict = {
+        #     1: [0,1],
+        #     2: [2,3],
+        #     3: [6,8],
+        #     4: [13,16,28],
+        #     5: [53],
+        #     6: [11],
+        #     7: [21],
+        #     8: [26],
+        #     9: [24],
+        #     10: [50],
+        #     11: [111],
+        #     12: [18,19,22,25],
+        #     13: [32,33,34,38],
+        #     14: [35,36,37,39],
+        #     15: [112,75,115],
+        #     16: [114],
+        #     17: [30,42],
+        #     18: [59],
+        #     19: [40],
+        #     20: [101,102],
+        #     21: [27],
+        #     22: [55],
+        # }
+        # for i in range(0, 3):
+        #     ran_num = random.randint(0,len(skill_dict[skill.skill_id])-1)
+        #     problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+        #     app_id = 'XQAUEU-WR3AY23332'
+        #     client = wolframalpha.Client(app_id)
+        #     # res = client.query(problem)
+        #     res = query(problem, app_id)
+        #     img_list = []
+        #     solution_list = []
+        #     for pod in res.pods:
+        #         for sub in pod.subpods:
+        #             img_list.append(sub.img['@src'])
+        #             solution_list.append(sub.plaintext)
+        #             print(sub)
+        #     option_list = [solution]
+        #     for j in range(1,4):
+        #         gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+        #         option_list.append(gen_solution)
+        #     # while len(set(option_list)) != len(option_list):
+        #     #     op_dict = dict(Counter(option_list))
+        #     #     for key, value in op_dict.items():
+        #     #         if value > 1:
+        #     #             option_list.remove(key)
+        #     #             gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+        #     #             option_list.append(gen_solution)
+        #     random.shuffle(option_list)
+        #     answer = ["A", "B", "C", "D"]
+        #     idx = 0
+        #     for op in option_list:
+        #         if op == solution:
+        #             an = answer[idx]
+        #         idx += 1
+        #     list.append({
+        #         'id': i,
+        #         'title': problem,
+        #         'option': option_list,
+        #         'answer': an,
+        #         'analysis': img_list
+        #     })
+        # with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
+        #     json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
@@ -762,11 +762,13 @@ def return_result():
         session['EMAIL'] = email
         from models import db
         coins = request.form.get("coins")
-        email = request.form.get("email")
+        shit = request.form.get("email")
         skill = request.form.get("skill")
         score = request.form.get("score")
         time = request.form.get("time")
-        student = Student.query.filter(Student.email == email).first()
+        print(coins, shit, skill, score, time)
+        student = Student.query.filter(Student.email == shit).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
         if student:
             skill = Skills.query.filter(Skills.skill_name == skill).first()
             score_add = Score(student_id=student.id, skill_id=skill.skill_id, score=score, time=time)
@@ -775,7 +777,7 @@ def return_result():
             student.coins = int(coins)
             db.session.add(student)
             db.session.commit()
-        else:
+        if teacher:
             print('This is a teacher')
     else:
         flash("Please sign in first")
@@ -898,6 +900,47 @@ def user_profile(user_email):
                            topic_master=topic_master_dict, score_list=score_list, user=my_info)
 
 
+def return_score(student):
+    scores = Score.query.filter(Score.student_id == student.id).order_by(Score.date.desc()).all()
+    skill_name_dict = {}
+    topic_master_dict = {}
+    topic_master_count = {}
+    score_list = []
+    for score in scores:
+        skill = Skills.query.filter(Skills.skill_id == score.skill_id).first()
+        topic = Topics.query.filter(Topics.topic_id == skill.topic_id).first()
+        comment = Comments.query.filter(Comments.skill_id == skill.skill_id).count()
+        t_name = topic.topic_name
+        s_name = skill.skill_name
+        score_list.append({
+            'score': score.score,
+            'date': score.date,
+            'topic': t_name,
+            'skill': s_name,
+            'comment': comment,
+            'like': skill.like
+        })
+        if skill_name_dict.get(s_name) is None:
+            skill_name_dict[s_name] = 1
+        else:
+            skill_name_dict[s_name] += 1
+        if topic_master_count.get(t_name) is None:
+            topic_master_count[t_name] = 1
+        else:
+            topic_master_count[t_name] += 1
+        if topic_master_dict.get(t_name) is None:
+            topic_master_dict[t_name] = int(score.score)
+        else:
+            topic_master_dict[t_name] += int(score.score)
+    for k in topic_master_dict.keys():
+        topic_master_dict[k] = int(topic_master_dict[k] / topic_master_count[k])
+    skill_statistic = {
+        'skill_list': list(skill_name_dict.keys()),
+        'skill_value_list': list(skill_name_dict.values()),
+    }
+    return score_list, skill_statistic, topic_master_dict
+
+
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     from models import db
@@ -905,44 +948,7 @@ def profile():
     student = Student.query.filter(Student.email == email).first()
     teacher = Teacher.query.filter(Teacher.email == email).first()
     if student:
-        # student = Student.query.filter(Student.email == email).first()
-        scores = Score.query.filter(Score.student_id == student.id).order_by(Score.date.desc()).all()
-        skill_name_dict = {}
-        topic_master_dict = {}
-        topic_master_count = {}
-        score_list = []
-        for score in scores:
-            skill = Skills.query.filter(Skills.skill_id == score.skill_id).first()
-            topic = Topics.query.filter(Topics.topic_id == skill.topic_id).first()
-            comment = Comments.query.filter(Comments.skill_id == skill.skill_id).count()
-            t_name = topic.topic_name
-            s_name = skill.skill_name
-            score_list.append({
-                'score': score.score,
-                'date': score.date,
-                'topic': t_name,
-                'skill': s_name,
-                'comment': comment,
-                'like': skill.like
-            })
-            if skill_name_dict.get(s_name) is None:
-                skill_name_dict[s_name] = 1
-            else:
-                skill_name_dict[s_name] += 1
-            if topic_master_count.get(t_name) is None:
-                topic_master_count[t_name] = 1
-            else:
-                topic_master_count[t_name] += 1
-            if topic_master_dict.get(t_name) is None:
-                topic_master_dict[t_name] = int(score.score)
-            else:
-                topic_master_dict[t_name] += int(score.score)
-        for k in topic_master_dict.keys():
-            topic_master_dict[k] = int(topic_master_dict[k]/topic_master_count[k])
-        skill_statistic = {
-            'skill_list': list(skill_name_dict.keys()),
-            'skill_value_list': list(skill_name_dict.values()),
-        }
+        score_list, skill_statistic, topic_master_dict = return_score(student)
         form = UpdateInfo()
         # if student.agent_photo != None:
         #     image = open(os.path.join(app.config['UPLOAD_PATH'], student.agent_photo), 'rb')
@@ -1013,18 +1019,70 @@ def profile():
                            topic_master=topic_master_dict, score_list=score_list)
 
 
+@app.route('/profile_collections', methods=['GET', 'POST'])
+def profile_collections():
+    email = session.get('EMAIL')
+    student = Student.query.filter(Student.email == email).first()
+    teacher = Teacher.query.filter(Teacher.email == email).first()
+    user_info = ''
+    if student:
+        name = student.lastname
+        image = open('static/images/icon/' + name[0] + ".png", 'rb')
+        img_stream = image.read()
+        img_stream = base64.b64encode(img_stream).decode('ascii')
+        user_info = {
+            'email': email,
+            'first_name': student.firstname,
+            'last_name': student.lastname,
+            'profile_pic': img_stream,
+            'phone': student.phone,
+            'school': student.school,
+            'address': student.address,
+            'age': datetime.now().date().year - int(student.dob.split("-")[0]),
+            'gender': student.gender,
+            'password': student.password,
+            'occupation': 'Student'
+        }
+    elif teacher:
+        name = teacher.lastname
+        image = open('static/images/icon/' + name[0] + ".png", 'rb')
+        img_stream = image.read()
+        img_stream = base64.b64encode(img_stream).decode('ascii')
+        user_info = {
+            'email': email,
+            'first_name': teacher.firstname,
+            'last_name': teacher.lastname,
+            'profile_pic': img_stream,
+            'phone': teacher.phone,
+            'school': teacher.school,
+            'password': teacher.password,
+            'occupation': 'Teacher'
+        }
+    return render_template('profile_collections.html', user=user_info, skill_list=None,
+                           topic_master=None, score_list=None)
+
+
 @app.route('/grade/<topic_name>', methods=['GET', 'POST'])
 def grade(topic_name):
     email = session.get('EMAIL')
     student = Student.query.filter(Student.email == email).first()
-    img = open('static/images/icon/' + student.lastname[0] + ".png", 'rb')
-    student_img = img.read()
-    student_img = base64.b64encode(student_img).decode('ascii')
-    my_info = {
+    _, skill_statistic, _ = return_score(student)
+    name = student.lastname
+    image = open('static/images/icon/' + name[0] + ".png", 'rb')
+    img_stream = image.read()
+    img_stream = base64.b64encode(img_stream).decode('ascii')
+    user_info = {
         'email': email,
         'first_name': student.firstname,
         'last_name': student.lastname,
-        'profile_pic': student_img,
+        'profile_pic': img_stream,
+        'phone': student.phone,
+        'school': student.school,
+        'address': student.address,
+        'age': datetime.now().date().year - int(student.dob.split("-")[0]),
+        'gender': student.gender,
+        'password': student.password,
+        'occupation': 'Student'
     }
     topic = Topics.query.filter(Topics.topic_name == topic_name).first()
     skills = Skills.query.filter(Skills.topic_id == topic.topic_id).all()
@@ -1035,14 +1093,14 @@ def grade(topic_name):
         score_list = {}
         for score in scores:
             score_list[str(score.date)] = score.score
+            print(score.date)
         skill_score_list.append({
             'skill_name': skill_name,
             'score_list': list(score_list.values()),
             'date': list(score_list.keys())
         })
-    print(skill_score_list)
-    return render_template('grade.html', my_info=my_info, score_list=json.dumps(skill_score_list),
-                           skill_score_list=skill_score_list)
+    return render_template('grade.html', user=user_info, score_list=json.dumps(skill_score_list),
+                           skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic))
 
 
 @app.route('/testchart', methods=['GET', 'POST'])
