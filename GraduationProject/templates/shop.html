@@ -49,9 +49,9 @@
                             </div>
                             <div class="portfolio-info ">
                                 {% if avatar.have == True %}
-                                <button class="btn btn-success" id="{{ avatar.name }}" onclick="test({{ avatar.name }})" disabled>You already had it!</button><br>
+                                <button class="btn btn-success" id="{{ avatar.name }}" onclick="buy({{ avatar.name }})" disabled>You already had it!</button><br>
                                 {% else %}
-                                <button class="btn btn-success" id="{{ avatar.name }}" onclick="test({{ avatar.name }}, {{ avatar.price }})">Buy it!</button><br>
+                                <button class="btn btn-success" id="{{ avatar.name }}" onclick="buy({{ avatar.name }}, {{ avatar.price }})">Buy it!</button><br>
                                 {% endif %}
                                 <img src="{{ url_for('static',filename='images/coins.png') }}" width="15px"> <p id="price">{{ avatar.price }}</p>
                                 <h2 style="text-align: center">{{ avatar.name }}</h2>
@@ -115,7 +115,7 @@
         </div>
     </section>
     <script>
-        function test(id, price) {
+        function buy(id, price) {
             if (price > {{ user.coins }}){
                 alert("You do not have enough coins!")
             }else {

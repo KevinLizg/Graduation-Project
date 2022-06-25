@@ -18,6 +18,7 @@ class Student(db.Model):
     phone = db.Column(db.String(128))
     address = db.Column(db.String(128))
     school = db.Column(db.String(128))
+    profile_photo = db.Column(db.String(128))
     coins = db.Column(db.Integer(), default=20)
 
 
@@ -29,6 +30,7 @@ class Teacher(db.Model):
     password = db.Column(db.String(128))
     phone = db.Column(db.String(128), index=True, unique=True)
     school = db.Column(db.String(128), index=True, unique=True)
+    profile_photo = db.Column(db.String(128))
     coins = db.Column(db.Integer(), default=300)
 
 
@@ -81,6 +83,7 @@ class Like(db.Model):
 
 
 class Avatar(db.Model):
+    avatar_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, primary_key=True)
     avatar_name = db.Column(db.String(128))
     user_type = db.Column(db.Integer)

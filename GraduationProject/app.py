@@ -249,7 +249,8 @@ def signup(token):
                 passw_hash = generate_password_hash(form.password.data)
                 student = Student(email=email, firstname=form.firstname.data, lastname=form.lastname.data,
                                   password=passw_hash, gender=form.gender.data, phone=form.phone.data,
-                                  school=form.school.data, dob=form.dob.data, address=form.address.data)
+                                  school=form.school.data, dob=form.dob.data, address=form.address.data,
+                                  profile_photo=form.lastname.data[0])
                 db.session.add(student)
                 db.session.commit()
                 session.clear()
@@ -272,7 +273,7 @@ def signup_teacher(token):
                 passw_hash = generate_password_hash(form.password.data)
                 teacher = Teacher(email=email, firstname=form.firstname.data, lastname=form.lastname.data,
                                   password=passw_hash, phone=form.phone.data,
-                                  school=form.school.data)
+                                  school=form.school.data, profile_photo=form.lastname.data[0])
                 db.session.add(teacher)
                 db.session.commit()
                 session.clear()
@@ -405,7 +406,7 @@ def skill_details(skill_):
                     reply_user = Student.query.filter(Student.id == reply.user_id).first()
                 elif reply.user_type == 0:
                     reply_user = Teacher.query.filter(Teacher.id == comment.user_id).first()
-                image = open('static/images/icon/' + reply_user.lastname[0] + ".png", 'rb')
+                image = open('static/images/icon/' + reply_user.profile_photo + ".png", 'rb')
                 img_stream = image.read()
                 img_stream = base64.b64encode(img_stream).decode('ascii')
                 reply_list.append({
@@ -415,7 +416,7 @@ def skill_details(skill_):
                     'reply_time': reply.reply_time,
                     'reply_img': img_stream
                 })
-            image = open('static/images/icon/' + user.lastname[0] + ".png", 'rb')
+            image = open('static/images/icon/' + user.profile_photo + ".png", 'rb')
             img_stream = image.read()
             img_stream = base64.b64encode(img_stream).decode('ascii')
             comments.append({
@@ -762,12 +763,12 @@ def return_result():
         session['EMAIL'] = email
         from models import db
         coins = request.form.get("coins")
-        shit = request.form.get("email")
+        email = request.form.get("email")
         skill = request.form.get("skill")
         score = request.form.get("score")
         time = request.form.get("time")
-        print(coins, shit, skill, score, time)
-        student = Student.query.filter(Student.email == shit).first()
+        print(coins, email, skill, score, time)
+        student = Student.query.filter(Student.email == email).first()
         teacher = Teacher.query.filter(Teacher.email == email).first()
         if student:
             skill = Skills.query.filter(Skills.skill_name == skill).first()
@@ -812,7 +813,7 @@ def user_profile(user_email):
         me = me_student
     if me_teacher:
         me = me_teacher
-    me_i = open('static/images/icon/' + me.lastname[0] + ".png", 'rb')
+    me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
     me_img = me_i.read()
     me_img = base64.b64encode(me_img).decode('ascii')
     my_info = {
@@ -861,7 +862,7 @@ def user_profile(user_email):
             'skill_value_list': list(skill_name_dict.values()),
         }
         student_name = student.lastname
-        image = open('static/images/icon/' + student_name[0] + ".png", 'rb')
+        image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
         user_info = {
@@ -883,7 +884,7 @@ def user_profile(user_email):
         score_list = []
         form = TeacherUpdateInfo()
         name = teacher.lastname
-        image = open('static/images/icon/' + name[0] + ".png", 'rb')
+        image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
         user_info = {
@@ -956,7 +957,7 @@ def profile():
         #     img_stream = base64.b64encode(img_stream).decode('ascii')
         # else:
         name = student.lastname
-        image = open('static/images/icon/' + name[0] + ".png", 'rb')
+        image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
         user_info = {
@@ -990,7 +991,7 @@ def profile():
         score_list = []
         form = TeacherUpdateInfo()
         name = teacher.lastname
-        image = open('static/images/icon/' + name[0] + ".png", 'rb')
+        image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
         user_info = {
@@ -1027,9 +1028,10 @@ def profile_collections():
     user_info = ''
     if student:
         name = student.lastname
-        image = open('static/images/icon/' + name[0] + ".png", 'rb')
+        image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
+        avatars = Avatar.query.filter(Avatar.user_id == student.id, Avatar.user_type == 1).all()
         user_info = {
             'email': email,
             'first_name': student.firstname,
@@ -1045,7 +1047,7 @@ def profile_collections():
         }
     elif teacher:
         name = teacher.lastname
-        image = open('static/images/icon/' + name[0] + ".png", 'rb')
+        image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
         user_info = {
@@ -1059,7 +1061,23 @@ def profile_collections():
             'occupation': 'Teacher'
         }
     return render_template('profile_collections.html', user=user_info, skill_list=None,
-                           topic_master=None, score_list=None)
+                           topic_master=None, score_list=None, avatars=avatars)
+
+
+@app.route('/change_photo/<email>', methods=['GET', 'POST'])
+def change_photo(email):
+    from models import db
+    student = Student.query.filter(Student.email == email).first()
+    teacher = Teacher.query.filter(Teacher.email == email).first()
+    if student:
+        student.profile_photo = request.form.get("photo")
+        db.session.add(student)
+        db.session.commit()
+    if teacher:
+        teacher.profile_photo = request.form.get("photo")
+        db.session.add(teacher)
+        db.session.commit()
+    return 'result'
 
 
 @app.route('/grade/<topic_name>', methods=['GET', 'POST'])
@@ -1068,7 +1086,7 @@ def grade(topic_name):
     student = Student.query.filter(Student.email == email).first()
     _, skill_statistic, _ = return_score(student)
     name = student.lastname
-    image = open('static/images/icon/' + name[0] + ".png", 'rb')
+    image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
     img_stream = image.read()
     img_stream = base64.b64encode(img_stream).decode('ascii')
     user_info = {
@@ -1103,9 +1121,6 @@ def grade(topic_name):
                            skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic))
 
 
-@app.route('/testchart', methods=['GET', 'POST'])
-def testchart():
-    return render_template('testchart.html')
 
 
 if __name__ == '__main__':
