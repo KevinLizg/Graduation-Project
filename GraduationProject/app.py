@@ -74,11 +74,11 @@ def index():
     session['EMAIL'] = email
     student_in_db = Student.query.filter(Student.email == email).first()
     teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+    user = ''
     if student_in_db:
         user = student_in_db
     if teacher_in_db:
         user = teacher_in_db
-    print(user.firstname)
     return render_template('index.html', user=user)
 
 
@@ -894,8 +894,8 @@ def user_profile(user_email):
             'password': teacher.password,
             'occupation': 'Teacher'
         }
-    return render_template('user_profile.html', name=name, email=email, user=user_info, skill_list=json.dumps(skill_statistic),
-                           topic_master=topic_master_dict, score_list=score_list, my_info=my_info)
+    return render_template('user_profile.html', name=name, email=email, user_info=user_info, skill_list=json.dumps(skill_statistic),
+                           topic_master=topic_master_dict, score_list=score_list, user=my_info)
 
 
 @app.route('/profile', methods=['GET', 'POST'])
