@@ -38,10 +38,14 @@
                     <div class="card">
                         <div class="card-body">
                             <center class="m-t-30">
+                                {% if user.badge_name %}
                                 <div class="item">
-                                    <img src="../static/images/coins.png" class="notify-badge" width="50px"/>
-                                    <img src="data:;base64,{{ user.profile_pic }}" class="rounded-circle" width="150" />
+                                    <img src="../static/images/coins.png" class="left-notify-badge" width="40px"/>
+                                    <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="100" height="100">
                                 </div>
+                                {% else %}
+                                <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="100" height="100">
+                                {% endif %}
                                 <h4 class="card-title m-t-10">{{ user.first_name }} {{ user.last_name }}</h4>
                                 <h6 class="card-subtitle">{{ user.occupation }}</h6>
                                 <div class="row text-center justify-content-md-center">
@@ -101,7 +105,16 @@
                                     {% for sc in score_list[0:5] %}
                                     <div class="profiletimeline m-t-0">
                                         <div class="sl-item">
-                                            <div class="sl-left"> <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" /> </div>
+                                            {% if user.badge_name %}
+                                            <div class="item sl-left">
+                                                <img src="../static/images/coins.png" class="left-notify-badge" width="30px"/>
+                                                <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="50" height="50">
+                                            </div>
+                                            {% else %}
+                                            <div class="sl-left">
+                                                <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="50" height="50">
+                                            </div>
+                                            {% endif %}
                                             <div class="sl-right">
                                                 <div>I finished the quiz at <span class="sl-date">{{ sc['date'] }}</span>
                                                     <p>The topic is <a href="{{ url_for('topics',topic=sc['topic']) }}">{{ sc['topic'] }}</a>, and the skill is <a href="{{ url_for('skill_details',skill_=sc['skill']) }}">{{ sc['skill'] }}</a></p>

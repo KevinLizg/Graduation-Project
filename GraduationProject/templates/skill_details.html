@@ -79,8 +79,16 @@
                                     <ul class="media-list">
                                         <li class="media">
                                             <div class="post-comment">
-                                                <a class="pull-left" href="{{ url_for('user_profile',user_email=comments[i].user_email) }}">
-                                                    <img src="data:;base64,{{ comments[i].user_img }}" style="border-radius:50% !important;" width="100">
+                                                <a style="float:left; margin-right: 20px" href="{{ url_for('user_profile',user_email=comments[i].user_email) }}">
+{#                                                    <img src="data:;base64,{{ comments[i].user_img }}" style="border-radius:50% !important;" width="100">#}
+                                                    {% if comments[i].badge_name %}
+                                                    <div class="item media-object">
+                                                        <img src="../static/images/coins.png" class="left-notify-badge" width="40px"/>
+                                                        <img src="data:;base64,{{ comments[i].user_img }}" alt="user" style="border-radius:50%;" width="100" height="100">
+                                                    </div>
+                                                    {% else %}
+                                                    <img src="data:;base64,{{ comments[i].user_img }}" alt="user" style="border-radius:50%;" width="100" height="100">
+                                                    {% endif %}
                                                 </a>
                                                 <div class="media-body">
                                                     <span><i class="fa fa-user"></i>Posted by <a href="{{ url_for('user_profile',user_email=comments[i].user_email) }}">{{ comments[i].user_name }}</a></span>
@@ -111,8 +119,16 @@
                                             <div class="parrent">
                                                 <ul class="media-list">
                                                     <li class="post-comment reply">
-                                                        <a class="pull-left" href="{{ url_for('user_profile',user_email=reply.reply_email) }}">
-                                                            <img class="media-object" src="data:;base64,{{ reply.reply_img }}" style="border-radius:50% !important;" width="100">
+                                                        <a style="float:left; margin-right: 20px" href="{{ url_for('user_profile',user_email=reply.reply_email) }}">
+                                                            {% if reply.badge_name %}
+                                                            <div class="item media-object">
+                                                                <img src="../static/images/coins.png" class="left-notify-badge" width="40px"/>
+                                                                <img src="data:;base64,{{ reply.reply_img }}" alt="user" style="border-radius:50%;" width="100" height="100">
+                                                            </div>
+                                                            {% else %}
+                                                            <img src="data:;base64,{{ reply.reply_img }}" alt="user" style="border-radius:50%;" width="100" height="100">
+                                                            {% endif %}
+{#                                                            <img class="media-object" src="data:;base64,{{ reply.reply_img }}" style="border-radius:50% !important;" width="100" height="100">#}
                                                         </a>
                                                         <div class="media-body">
                                                             <span><i class="fa fa-user"></i>Posted by <a href="{{ url_for('user_profile',user_email=reply.reply_email) }}">{{ reply.reply_user_name }}</a></span>

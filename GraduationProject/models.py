@@ -19,6 +19,7 @@ class Student(db.Model):
     address = db.Column(db.String(128))
     school = db.Column(db.String(128))
     profile_photo = db.Column(db.String(128))
+    badge_name = db.Column(db.String(128))
     coins = db.Column(db.Integer(), default=20)
 
 
@@ -31,6 +32,7 @@ class Teacher(db.Model):
     phone = db.Column(db.String(128), index=True, unique=True)
     school = db.Column(db.String(128), index=True, unique=True)
     profile_photo = db.Column(db.String(128))
+    badge_name = db.Column(db.String(128))
     coins = db.Column(db.Integer(), default=300)
 
 

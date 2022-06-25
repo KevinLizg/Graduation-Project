@@ -414,7 +414,8 @@ def skill_details(skill_):
                     'reply_email': reply_user.email,
                     'reply_user_name': reply_user.firstname + ', ' + reply_user.lastname,
                     'reply_time': reply.reply_time,
-                    'reply_img': img_stream
+                    'reply_img': img_stream,
+                    'badge_name': reply_user.badge_name
                 })
             image = open('static/images/icon/' + user.profile_photo + ".png", 'rb')
             img_stream = image.read()
@@ -426,7 +427,8 @@ def skill_details(skill_):
                 'user_email': user.email,
                 'comment_time': comment.comment_time,
                 'replies': reply_list,
-                'user_img': img_stream
+                'user_img': img_stream,
+                'badge_name': user.badge_name
             })
         if replyForm.validate_on_submit():
             reply_add = Reply(reply_content=replyForm.reply.data, comment_id=replyForm.comment_id.data,
@@ -971,6 +973,7 @@ def profile():
             'age': datetime.now().date().year - int(student.dob.split("-")[0]),
             'gender': student.gender,
             'password': student.password,
+            'badge_name': student.badge_name,
             'occupation': 'Student'
         }
         if form.validate_on_submit():
@@ -1002,6 +1005,7 @@ def profile():
             'phone': teacher.phone,
             'school': teacher.school,
             'password': teacher.password,
+            'badge_name': teacher.badge_name,
             'occupation': 'Teacher'
         }
         if form.validate_on_submit():
@@ -1016,6 +1020,7 @@ def profile():
             flash('Information has been updated')
             return redirect(url_for('signin'))
     session['EMAIL'] = email
+    print(user_info['badge_name'])
     return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(skill_statistic),
                            topic_master=topic_master_dict, score_list=score_list)
 
