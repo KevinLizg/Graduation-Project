@@ -37,7 +37,11 @@
                 <div class="col-lg-4 col-xlg-3 col-md-5">
                     <div class="card">
                         <div class="card-body">
-                            <center class="m-t-30"> <img src="data:;base64,{{ user.profile_pic }}" class="rounded-circle" width="150" />
+                            <center class="m-t-30">
+                                <div class="item">
+                                    <img src="../static/images/coins.png" class="notify-badge" width="50px"/>
+                                    <img src="data:;base64,{{ user.profile_pic }}" class="rounded-circle" width="150" />
+                                </div>
                                 <h4 class="card-title m-t-10">{{ user.first_name }} {{ user.last_name }}</h4>
                                 <h6 class="card-subtitle">{{ user.occupation }}</h6>
                                 <div class="row text-center justify-content-md-center">

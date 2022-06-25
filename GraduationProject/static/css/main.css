@@ -11,6 +11,23 @@
   @import url(http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700);
   @import url(http://fonts.googleapis.com/css?family=Noto+Sans:400,700);
 
+    .item{
+      position:relative;
+      padding-top:20px;
+      display:inline-block;
+      }
+    .notify-badge{
+        position: absolute;
+        right:-20px;
+        top:10px;
+        background:gold;
+        text-align: center;
+        border-radius: 30px 30px 30px 30px;
+        color:white;
+        padding:5px 10px;
+        font-size:20px;
+    }
+
   body {
     background: #fff;
     font-family: 'Lato', sans-serif;

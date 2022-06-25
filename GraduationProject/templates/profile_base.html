@@ -6,6 +6,36 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="{{ url_for('static',filename='profile/css/style.min.css') }}" rel="stylesheet">
+    <style>
+    .item{
+        position:relative;
+        {#padding-top:5px;#}
+        display:inline-block;
+        background:gold;
+        border-radius: 50%;
+        padding:5px 5px;
+    }
+    .notify-badge{
+        position: absolute;
+        right:-20px;
+        top:10px;
+        background:gold;
+        text-align: center;
+        border-radius: 30px 30px 30px 30px;
+        color:white;
+        padding:0px 0px;
+    }
+    .left-notify-badge{
+        position: absolute;
+        left:-20px;
+        top:10px;
+        background:gold;
+        text-align: center;
+        border-radius: 10px 30px 30px 30px;
+        color:white;
+        padding:0px 0px;
+    }
+    </style>
 </head>
 
 <body>
@@ -160,7 +190,10 @@
                         <!-- ============================================================== -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="50" height="50">
+                                <div class="item">
+                                    <img src="../static/images/coins.png" class="left-notify-badge" width="40px"/>
+                                    <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="50" height="50">
+                                </div>
                                 <span class="m-l-5 font-medium d-none d-sm-inline-block">{{ user.first_name }} {{ user.last_name }}<i class="mdi mdi-chevron-down"></i></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right user-dd animated flipInY">
@@ -168,7 +201,8 @@
                                     <span class="bg-primary"></span>
                                 </span>
                                 <div class="d-flex no-block align-items-center p-15 bg-primary text-white m-b-10">
-                                    <div class="">
+                                    <div class="item">
+                                        <img src="../static/images/coins.png" class="left-notify-badge" width="40px"/>
                                         <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="60" height="60">
                                     </div>
                                     <div class="m-l-10">
