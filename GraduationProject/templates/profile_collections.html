@@ -32,14 +32,24 @@
                 <div class="row">
                     <div class="col-12">
                         <h4 class="d-inline">Avatar</h4>
-                        <p class="text-muted m-t-0">You can choose your own avatar</p>
+                        <p class="text-muted m-t-0"><code>Change your own avatar</code></p>
                         <!-- Row -->
                         <div class="row">
                             <!-- column -->
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card">
+                                    <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/icon/'+user.last_name[0]+'.png') }}" alt="Card image cap" height="300" width="300">
+                                    <div class="card-body">
+                                        <h4 class="card-title" id="">Default</h4>
+                                        <p class="card-text">Change to your default avatar</p>
+                                        <button onclick="changePhoto('Default')" class="btn btn-primary">Set As Your Avatar</button>
+                                    </div>
+                                </div>
+                            </div>
                             {% for avatar in avatars %}
                             <div class="col-lg-3 col-md-6">
                                 <div class="card">
-                                    <img class="card-img-top img-responsive" src="{{ url_for('static',filename='images/avatar/'+avatar.avatar_name+'.png') }}" alt="Card image cap">
+                                    <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/avatar/'+avatar.avatar_name+'.png') }}" alt="Card image cap" height="300" width="300">
                                     <div class="card-body">
                                         <h4 class="card-title" id="{{  avatar.avatar_name }}">{{  avatar.avatar_name }}</h4>
                                         <p class="card-text">You got this one on {{ avatar.date.date() }}</p>
@@ -57,30 +67,32 @@
                 <div class="row">
                     <div class="col-12 m-t-30">
                         <h4 class="m-b-0">Badge</h4>
-                        <p class="text-muted m-t-0 font-12">Cards include various options for customizing their backgrounds, borders, and color.<code>.card-primary info, warning, danger</code></p>
+                        <p class="text-muted m-t-0 font-12"><code>Change your own badge</code></p>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <div class="card text-white bg-dark">
                             <div class="card-header">
-                                <h4 class="m-b-0 text-white">Card Title</h4></div>
+                                <h4 class="m-b-0 text-white">Default</h4></div>
                             <div class="card-body">
-                                <h3 class="card-title">Special title treatment</h3>
-                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                <a href="javascript:void(0)" class="btn btn-primary">Go somewhere</a>
+                                <img class="card-img-top img-responsive rounded-circle" src="" alt="Card image cap" width="300">
+                                <h3 class="card-title">Change to your default badge</h3>
+                                <button onclick="changeBadge('Default')" class="btn btn-primary">Set as your own badge</button>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    {% for badge in badges %}
+                    <div class="col-md-3">
                         <div class="card text-white bg-info">
                             <div class="card-header">
-                                <h4 class="m-b-0 text-white">Card Title</h4></div>
+                                <h4 class="m-b-0 text-white" id="{{ badge.badge_name }}">{{ badge.badge_name }}</h4></div>
                             <div class="card-body">
-                                <h3 class="card-title">Special title treatment</h3>
-                                <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                <a href="javascript:void(0)" class="btn btn-dark">Go somewhere</a>
+                                <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/badge/'+badge.badge_name+'.png') }}" alt="Card image cap" width="300">
+                                <h3 class="card-title">You got this on {{ badge.date.date() }}</h3>
+                                <button onclick="changeBadge({{ badge.badge_name }})" class="btn btn-dark">Set as your badge</button>
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -92,18 +104,67 @@
     <!-- ============================================================== -->
     <script>
         function changePhoto(photo) {
-            $.ajax({
-                url: '{{ url_for('change_photo',email=user.email) }}',
-                type: 'POST',
-                data: {
-                    photo: photo.id,
-                },
-                success: function (response) {
-                    window.location.reload();
-                },
-                error: function (response) {
-                }
-            });
+            if(photo === 'Default'){
+                $.ajax({
+                    url: '{{ url_for('change_profile',email=user.email) }}',
+                    type: 'POST',
+                    data: {
+                        photo: 'Default',
+                        type: 'photo'
+                    },
+                    success: function (response) {
+                        window.location.reload();
+                    },
+                    error: function (response) {
+                    }
+                });
+            }else{
+                $.ajax({
+                    url: '{{ url_for('change_profile',email=user.email) }}',
+                    type: 'POST',
+                    data: {
+                        photo: photo.id,
+                        type: 'photo'
+                    },
+                    success: function (response) {
+                        window.location.reload();
+                    },
+                    error: function (response) {
+                    }
+                });
+            }
+        }
+
+        function changeBadge(photo) {
+            if(photo === 'Default'){
+                $.ajax({
+                    url: '{{ url_for('change_profile',email=user.email) }}',
+                    type: 'POST',
+                    data: {
+                        photo: 'Default',
+                        type: 'badge'
+                    },
+                    success: function (response) {
+                        window.location.reload();
+                    },
+                    error: function (response) {
+                    }
+                });
+            }else{
+                $.ajax({
+                    url: '{{ url_for('change_profile',email=user.email) }}',
+                    type: 'POST',
+                    data: {
+                        photo: photo.id,
+                        type: 'badge'
+                    },
+                    success: function (response) {
+                        window.location.reload();
+                    },
+                    error: function (response) {
+                    }
+                });
+            }
         }
     </script>
 {% endblock %}

@@ -1,5 +1,24 @@
 {% extends "profile_base.html" %}
 
+<style>
+    .this-item{
+        position:relative;
+        display:inline-block;
+        background: {{ user_info.color }};
+        border-radius: 50%;
+        padding:5px 5px;
+    }
+    .this-left-notify-badge{
+        position: absolute;
+        left:-20px;
+        top:10px;
+        background: {{ user_info.color }};
+        text-align: center;
+        border-radius: 30px 30px 30px 30px;
+        color:white;
+        padding:0px 0px;
+    }
+</style>
 
 {% block mainContent %}
 
@@ -42,7 +61,15 @@
                     <div class="col-lg-4 col-xlg-3 col-md-5">
                         <div class="card">
                             <div class="card-body">
-                                <center class="m-t-30"> <img src="data:;base64,{{ user_info.profile_pic }}" class="rounded-circle" width="150" />
+                                <center class="m-t-30">
+                                    {% if user_info.badge_name %}
+                                    <div class="profile-item">
+                                        <img src="data:;base64,{{ user_info.badge_name }}" class="profile-badge" width="40px"/>
+                                        <img src="data:;base64,{{ user_info.profile_pic }}" alt="user" class="rounded-circle" width="100" height="100">
+                                    </div>
+                                    {% else %}
+                                    <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="100" height="100">
+                                    {% endif %}
                                     <h4 class="card-title m-t-10">{{ user_info.first_name }} {{ user_info.last_name }}</h4>
                                     <h6 class="card-subtitle">{{ user_info.occupation }}</h6>
                                     <div class="row text-center justify-content-md-center">
@@ -99,7 +126,17 @@
                                         {% for sc in score_list[0:5] %}
                                         <div class="profiletimeline m-t-0">
                                             <div class="sl-item">
-                                                <div class="sl-left"> <img src="data:;base64,{{ user_info.profile_pic }}" alt="user" class="rounded-circle" /> </div>
+                                                {% if user_info.badge_name %}
+                                            <div class="profile-item sl-left">
+{#                                                {{ user_info.color }}#}
+                                                <img src="data:;base64,{{ user_info.badge_name }}" class="profile-badge" width="25px"/>
+                                                <img src="data:;base64,{{ user_info.profile_pic }}" class="rounded-circle" width="50" height="50">
+                                            </div>
+                                            {% else %}
+                                            <div class="sl-left">
+                                                <img src="data:;base64,{{ user_info.profile_pic }}" alt="user" class="rounded-circle" width="60" height="50">
+                                            </div>
+                                            {% endif %}
                                                 <div class="sl-right">
                                                     <div>I finished<span class="sl-date">{{ sc['date'] }}</span>
                                                         <p>The topic is <a href="{{ url_for('topics',topic=sc['topic']) }}">{{ sc['topic'] }}</a>, and the skill is <a href="{{ url_for('skill_details',skill_=sc['skill']) }}">{{ sc['skill'] }}</a></p>

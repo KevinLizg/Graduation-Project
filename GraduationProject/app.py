@@ -409,17 +409,31 @@ def skill_details(skill_):
                 image = open('static/images/icon/' + reply_user.profile_photo + ".png", 'rb')
                 img_stream = image.read()
                 img_stream = base64.b64encode(img_stream).decode('ascii')
+                if reply_user.badge_name:
+                    reply_badge = reply_user.badge_name.split('_')[1]
+                    badge = base64.b64encode(open('static/images/badge/' + reply_user.badge_name + ".png", 'rb').read()).decode('ascii')
+                else:
+                    reply_badge = None
+                    badge = None
                 reply_list.append({
                     'reply_content': reply.reply_content,
                     'reply_email': reply_user.email,
                     'reply_user_name': reply_user.firstname + ', ' + reply_user.lastname,
                     'reply_time': reply.reply_time,
                     'reply_img': img_stream,
-                    'badge_name': reply_user.badge_name
+                    'color': reply_badge,
+                    'badge_name': badge
                 })
             image = open('static/images/icon/' + user.profile_photo + ".png", 'rb')
             img_stream = image.read()
             img_stream = base64.b64encode(img_stream).decode('ascii')
+            if user.badge_name:
+                badge_name = user.badge_name.split('_')[1]
+                badge = base64.b64encode(
+                    open('static/images/badge/' + user.badge_name + ".png", 'rb').read()).decode('ascii')
+            else:
+                badge_name = None
+                badge = None
             comments.append({
                 'comment_id': comment.comment_id,
                 'comment': comment.comment,
@@ -428,7 +442,8 @@ def skill_details(skill_):
                 'comment_time': comment.comment_time,
                 'replies': reply_list,
                 'user_img': img_stream,
-                'badge_name': user.badge_name
+                'color': badge_name,
+                'badge_name': badge
             })
         if replyForm.validate_on_submit():
             reply_add = Reply(reply_content=replyForm.reply.data, comment_id=replyForm.comment_id.data,
@@ -470,6 +485,7 @@ def shop():
         session['NAME'] = name
         session['EMAIL'] = email
         avatar_list = []
+        badge_list = []
         student_in_db = Student.query.filter(Student.email == email).first()
         teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
         user = ''
@@ -482,20 +498,33 @@ def shop():
         for avatar_file in os.listdir('static/images/avatar'):
             avatar = Avatar.query.filter(Avatar.user_id == user.id, Avatar.user_type == user_type,
                                          Avatar.avatar_name == avatar_file.split('.')[0]).first()
-            have = False
+            avatar_have = False
             if avatar:
-                have = True
+                avatar_have = True
             avatar_list.append({
-                'have': have,
+                'have': avatar_have,
                 'name': avatar_file.split('.')[0],
                 'price': 100,
                 'image': base64.b64encode(open('static/images/avatar/'+avatar_file,'rb').read()).decode('ascii')
+            })
+        for badge_file in os.listdir('static/images/badge'):
+            badge = Badge.query.filter(Badge.user_id == user.id, Badge.user_type == user_type,
+                                         Badge.badge_name == badge_file.split('.')[0]).first()
+            badge_have = False
+            if badge:
+                badge_have = True
+            print(badge_file.split('.')[0])
+            badge_list.append({
+                'have': badge_have,
+                'name': badge_file.split('.')[0],
+                'price': 50,
+                'image': base64.b64encode(open('static/images/badge/' + badge_file, 'rb').read()).decode('ascii')
             })
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
     return render_template('shop.html', avatar_list=avatar_list,
-                           user=user, coins=user.coins, )
+                           user=user, coins=user.coins, badge_list=badge_list)
 
 
 @app.route('/shop_buy/<price>', methods=['GET', 'POST'])
@@ -505,6 +534,7 @@ def shop_buy(price):
     student = Student.query.filter(Student.email == email).first()
     teacher = Teacher.query.filter(Teacher.email == email).first()
     name = request.form.get("name")
+    type = request.form.get("type")
     user = ''
     user_type = 1
     if student:
@@ -512,13 +542,22 @@ def shop_buy(price):
     if teacher:
         user = teacher
         user_type = 0
-    avatar = Avatar(user_id=user.id, avatar_name=name, user_type=user_type)
-    if user.coins >= int(price):
-        user.coins -= int(price)
-        db.session.add(user)
-        db.session.add(avatar)
-        db.session.commit()
-    return ''
+    if type == 'avatar':
+        avatar = Avatar(user_id=user.id, avatar_name=name, user_type=user_type)
+        if user.coins >= int(price):
+            user.coins -= int(price)
+            db.session.add(user)
+            db.session.add(avatar)
+            db.session.commit()
+    if type == 'badge':
+        print('hello')
+        badge = Badge(user_id=user.id, badge_name=name, user_type=user_type)
+        if user.coins >= int(price):
+            user.coins -= int(price)
+            db.session.add(user)
+            db.session.add(badge)
+            db.session.commit()
+    return 'hello'
 
 
 @app.route('/ready/<skill_>', methods=["GET", "POST"])
@@ -806,8 +845,8 @@ def user_profile(user_email):
     session['NAME'] = name
     session['EMAIL'] = email
     user_email = user_email
-    student = Student.query.filter(Student.email == user_email).first()
-    teacher = Teacher.query.filter(Teacher.email == user_email).first()
+    m_student = Student.query.filter(Student.email == user_email).first()
+    m_teacher = Teacher.query.filter(Teacher.email == user_email).first()
     me_student = Student.query.filter(Student.email == email).first()
     me_teacher = Teacher.query.filter(Teacher.email == email).first()
     me = ''
@@ -818,13 +857,22 @@ def user_profile(user_email):
     me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
     me_img = me_i.read()
     me_img = base64.b64encode(me_img).decode('ascii')
+    if me.badge_name:
+        color = me.badge_name.split('_')[1]
+        badge = base64.b64encode(open('static/images/badge/' + me.badge_name + ".png", 'rb').read()).decode(
+            'ascii')
+    else:
+        color = None
+        badge = None
     my_info = {
-            'email': email,
-            'first_name': me.firstname,
-            'last_name': me.lastname,
-            'profile_pic': me_img,
-        }
-    if student:
+        'email': email,
+        'first_name': me.firstname,
+        'last_name': me.lastname,
+        'color': color,
+        'badge_name': badge,
+        'profile_pic': me_img,
+    }
+    if m_student:
         student = Student.query.filter(Student.email == user_email).first()
         scores = Score.query.filter(Score.student_id == student.id).order_by(Score.date.desc()).all()
         skill_name_dict = {}
@@ -863,10 +911,16 @@ def user_profile(user_email):
             'skill_list': list(skill_name_dict.keys()),
             'skill_value_list': list(skill_name_dict.values()),
         }
-        student_name = student.lastname
         image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
+        if student.badge_name:
+            color = student.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode('ascii')
+        else:
+            color = None
+            badge = None
+        print(color)
         user_info = {
             'email': user_email,
             'first_name': student.firstname,
@@ -878,9 +932,12 @@ def user_profile(user_email):
             'age': datetime.now().date().year - int(student.dob.split("-")[0]),
             'gender': student.gender,
             'password': student.password,
+            'color': color,
+            'badge_name': badge,
             'occupation': 'Student'
         }
-    elif teacher:
+    elif m_teacher:
+        teacher = Teacher.query.filter(Teacher.email == user_email).first()
         skill_statistic = {}
         topic_master_dict = {}
         score_list = []
@@ -889,6 +946,12 @@ def user_profile(user_email):
         image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
+        if teacher.badge_name:
+            color = teacher.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode('ascii')
+        else:
+            color = None
+            badge = None
         user_info = {
             'email': user_email,
             'first_name': teacher.firstname,
@@ -897,6 +960,8 @@ def user_profile(user_email):
             'phone': teacher.phone,
             'school': teacher.school,
             'password': teacher.password,
+            'color': color,
+            'badge_name': badge,
             'occupation': 'Teacher'
         }
     return render_template('user_profile.html', name=name, email=email, user_info=user_info, skill_list=json.dumps(skill_statistic),
@@ -962,6 +1027,12 @@ def profile():
         image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
+        if student.badge_name:
+            color = student.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode('ascii')
+        else:
+            color = None
+            badge = None
         user_info = {
             'email': email,
             'first_name': student.firstname,
@@ -973,7 +1044,8 @@ def profile():
             'age': datetime.now().date().year - int(student.dob.split("-")[0]),
             'gender': student.gender,
             'password': student.password,
-            'badge_name': student.badge_name,
+            'color': color,
+            'badge_name': badge,
             'occupation': 'Student'
         }
         if form.validate_on_submit():
@@ -997,6 +1069,12 @@ def profile():
         image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
+        if teacher.badge_name:
+            color = teacher.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode('ascii')
+        else:
+            color = None
+            badge = None
         user_info = {
             'email': email,
             'first_name': teacher.firstname,
@@ -1005,7 +1083,8 @@ def profile():
             'phone': teacher.phone,
             'school': teacher.school,
             'password': teacher.password,
-            'badge_name': teacher.badge_name,
+            'color': color,
+            'badge_name': badge,
             'occupation': 'Teacher'
         }
         if form.validate_on_submit():
@@ -1020,7 +1099,6 @@ def profile():
             flash('Information has been updated')
             return redirect(url_for('signin'))
     session['EMAIL'] = email
-    print(user_info['badge_name'])
     return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(skill_statistic),
                            topic_master=topic_master_dict, score_list=score_list)
 
@@ -1037,6 +1115,13 @@ def profile_collections():
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
         avatars = Avatar.query.filter(Avatar.user_id == student.id, Avatar.user_type == 1).all()
+        badges = Badge.query.filter(Badge.user_id == student.id, Badge.user_type == 1).all()
+        if student.badge_name:
+            color = student.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode('ascii')
+        else:
+            color = None
+            badge = None
         user_info = {
             'email': email,
             'first_name': student.firstname,
@@ -1048,6 +1133,8 @@ def profile_collections():
             'age': datetime.now().date().year - int(student.dob.split("-")[0]),
             'gender': student.gender,
             'password': student.password,
+            'color': color,
+            'badge_name': badge,
             'occupation': 'Student'
         }
     elif teacher:
@@ -1055,6 +1142,13 @@ def profile_collections():
         image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
+        avatars = Avatar.query.filter(Avatar.user_id == teacher.id, Avatar.user_type == 0).all()
+        if teacher.badge_name:
+            color = teacher.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode('ascii')
+        else:
+            color = None
+            badge = None
         user_info = {
             'email': email,
             'first_name': teacher.firstname,
@@ -1063,25 +1157,58 @@ def profile_collections():
             'phone': teacher.phone,
             'school': teacher.school,
             'password': teacher.password,
+            'color': color,
+            'badge_name': badge,
             'occupation': 'Teacher'
         }
     return render_template('profile_collections.html', user=user_info, skill_list=None,
-                           topic_master=None, score_list=None, avatars=avatars)
+                           topic_master=None, score_list=None, avatars=avatars, badges=badges)
 
 
-@app.route('/change_photo/<email>', methods=['GET', 'POST'])
-def change_photo(email):
+@app.route('/change_profile/<email>', methods=['GET', 'POST'])
+def change_profile(email):
     from models import db
     student = Student.query.filter(Student.email == email).first()
     teacher = Teacher.query.filter(Teacher.email == email).first()
-    if student:
-        student.profile_photo = request.form.get("photo")
-        db.session.add(student)
-        db.session.commit()
-    if teacher:
-        teacher.profile_photo = request.form.get("photo")
-        db.session.add(teacher)
-        db.session.commit()
+    type = request.form.get("type")
+    if type == 'photo':
+        if student:
+            if request.form.get("photo") == 'Default':
+                student.profile_photo = student.lastname[0]
+                db.session.add(student)
+                db.session.commit()
+            else:
+                student.profile_photo = request.form.get("photo")
+                db.session.add(student)
+                db.session.commit()
+        if teacher:
+            if request.form.get("photo") == 'Default':
+                teacher.profile_photo = teacher.lastname[0]
+                db.session.add(teacher)
+                db.session.commit()
+            else:
+                teacher.profile_photo = request.form.get("photo")
+                db.session.add(teacher)
+                db.session.commit()
+    if type == 'badge':
+        if student:
+            if request.form.get("photo") == 'Default':
+                student.badge_name = None
+                db.session.add(student)
+                db.session.commit()
+            else:
+                student.badge_name = request.form.get("photo")
+                db.session.add(student)
+                db.session.commit()
+        if teacher:
+            if request.form.get("photo") == 'Default':
+                teacher.badge_name = None
+                db.session.add(teacher)
+                db.session.commit()
+            else:
+                teacher.badge_name = request.form.get("photo")
+                db.session.add(teacher)
+                db.session.commit()
     return 'result'
 
 
@@ -1094,6 +1221,13 @@ def grade(topic_name):
     image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
     img_stream = image.read()
     img_stream = base64.b64encode(img_stream).decode('ascii')
+    if student.badge_name:
+        color = student.badge_name.split('_')[1]
+        badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+            'ascii')
+    else:
+        color = None
+        badge = None
     user_info = {
         'email': email,
         'first_name': student.firstname,
@@ -1105,6 +1239,8 @@ def grade(topic_name):
         'age': datetime.now().date().year - int(student.dob.split("-")[0]),
         'gender': student.gender,
         'password': student.password,
+        'color': color,
+        'badge_name': badge,
         'occupation': 'Student'
     }
     topic = Topics.query.filter(Topics.topic_name == topic_name).first()
@@ -1124,8 +1260,6 @@ def grade(topic_name):
         })
     return render_template('grade.html', user=user_info, score_list=json.dumps(skill_score_list),
                            skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic))
-
-
 
 
 if __name__ == '__main__':

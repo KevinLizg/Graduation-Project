@@ -11,25 +11,37 @@
         position:relative;
         {#padding-top:5px;#}
         display:inline-block;
-        background:gold;
+        background: {{ user.color }};
         border-radius: 50%;
         padding:5px 5px;
-    }
-    .notify-badge{
-        position: absolute;
-        right:-20px;
-        top:10px;
-        background:gold;
-        text-align: center;
-        border-radius: 30px 30px 30px 30px;
-        color:white;
-        padding:0px 0px;
     }
     .left-notify-badge{
         position: absolute;
         left:-20px;
         top:10px;
-        background:gold;
+        background: {{ user.color }};
+        text-align: center;
+        border-radius: 30px 30px 30px 30px;
+        color:white;
+        padding:0px 0px;
+    }
+    .profile-item{
+        position:relative;
+        {#padding-top:5px;#}
+        display:inline-block;
+        {% if user_info %}
+        background: {{ user_info.color }};
+        {% endif %}
+        border-radius: 50%;
+        padding:5px 5px;
+    }
+    .profile-badge{
+        position: absolute;
+        left:-20px;
+        top:10px;
+        {% if user_info %}
+        background: {{ user_info.color }};
+        {% endif %}
         text-align: center;
         border-radius: 30px 30px 30px 30px;
         color:white;
@@ -192,11 +204,11 @@
                             <a class="nav-link dropdown-toggle waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 {% if user.badge_name %}
                                 <div class="item">
-                                    <img src="../static/images/coins.png" class="left-notify-badge" width="40px"/>
-                                    <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="50" height="50">
+                                    <img src="data:;base64,{{ user.badge_name }}" class="left-notify-badge" width="35px"/>
+                                    <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="60" height="60">
                                 </div>
                                 {% else %}
-                                <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="50" height="50">
+                                <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="60" height="60">
                                 {% endif %}
                                 <span class="m-l-5 font-medium d-none d-sm-inline-block">{{ user.first_name }} {{ user.last_name }}<i class="mdi mdi-chevron-down"></i></span>
                             </a>
@@ -205,10 +217,10 @@
                                     <span class="bg-primary"></span>
                                 </span>
                                 <div class="d-flex no-block align-items-center p-15 bg-primary text-white m-b-10">
-                                    {% if user.badge_name!=None %}
+                                    {% if user.badge_name %}
                                     <div class="item">
-                                        <img src="../static/images/coins.png" class="left-notify-badge" width="40px"/>
-                                        <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="50" height="50">
+                                        <img src="data:;base64,{{ user.badge_name }}" class="left-notify-badge" width="35px"/>
+                                        <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="60" height="60">
                                     </div>
                                     {% else %}
                                     <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="50" height="50">
@@ -289,11 +301,13 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
+                            {% if user.occupation == 'Student' %}
                             <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                                 <i class="mdi mdi-information-outline"></i>
                                 <span class="hide-menu">My Grade Analysis</span>
                                 <span class="badge badge-pill badge-info ml-auto m-r-15">5</span>
                             </a>
+                            {% endif %}
                             <ul aria-expanded="false" class="collapse  first-level">
                                 <li class="sidebar-item">
                                     <a href="{{ url_for('grade',topic_name='Basic Math') }}" class="sidebar-link">

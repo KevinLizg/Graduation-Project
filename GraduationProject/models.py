@@ -90,3 +90,11 @@ class Avatar(db.Model):
     avatar_name = db.Column(db.String(128))
     user_type = db.Column(db.Integer)
     date = db.Column(db.DateTime, index=True, default=datetime.now())
+
+
+class Badge(db.Model):
+    badge_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True)
+    badge_name = db.Column(db.String(128))
+    user_type = db.Column(db.Integer)
+    date = db.Column(db.DateTime, index=True, default=datetime.now())
