@@ -15,7 +15,7 @@
                     <div class="slide-text">
                         <h1>Here Can Help You Study Math</h1>
                         <p>This website could provide you a wonderful journey on studying Math on different fields.</p>
-                        {% if name %}
+                        {% if user %}
                             <a href="{{ url_for('topics',topic='Basic Math') }}" class="btn btn-common">START</a>
                         {% else %}
                             <a href="{{ url_for('signin') }}" class="btn btn-common">SIGN UP</a>
@@ -80,7 +80,7 @@
                         </div>
                         <div class="col-sm-5 text-center wow fadeInRight" data-wow-duration="500ms" data-wow-delay="300ms">
                             <div class="study-button">
-                                <a href="#" class="btn btn-common">Start Study</a>
+                                <a href="{{ url_for('topics',topic='Basic Math') }}" class="btn btn-common">Start Study</a>
                              </div>
                         </div>
                     </div>
