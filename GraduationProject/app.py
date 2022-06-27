@@ -495,6 +495,19 @@ def shop():
         elif teacher_in_db:
             user = teacher_in_db
             user_type = 0
+        time_capsule_list = [{
+            'name': 'Time Capsule Type 1',
+            'price': 80,
+            'description': 'This could help you add more time in the quiz so that you could finish your quiz, this capsule will add 10 seconds for you',
+            'image': 'capsule1',
+            'type': 1
+        },{
+            'name': 'Time_Capsule_Type_2',
+            'price': 120,
+            'description': 'This could help you add more time in the quiz so that you could finish your quiz, this capsule will add 20 seconds for you',
+            'image': 'capsule2',
+            'type': 2
+        }]
         for avatar_file in os.listdir('static/images/avatar'):
             avatar = Avatar.query.filter(Avatar.user_id == user.id, Avatar.user_type == user_type,
                                          Avatar.avatar_name == avatar_file.split('.')[0]).first()
@@ -513,7 +526,6 @@ def shop():
             badge_have = False
             if badge:
                 badge_have = True
-            print(badge_file.split('.')[0])
             badge_list.append({
                 'have': badge_have,
                 'name': badge_file.split('.')[0],
@@ -523,7 +535,7 @@ def shop():
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('shop.html', avatar_list=avatar_list,
+    return render_template('shop.html', avatar_list=avatar_list, time_capsule_list=time_capsule_list,
                            user=user, coins=user.coins, badge_list=badge_list)
 
 
@@ -550,12 +562,21 @@ def shop_buy(price):
             db.session.add(avatar)
             db.session.commit()
     if type == 'badge':
-        print('hello')
         badge = Badge(user_id=user.id, badge_name=name, user_type=user_type)
         if user.coins >= int(price):
             user.coins -= int(price)
             db.session.add(user)
             db.session.add(badge)
+            db.session.commit()
+    num = request.form.get("num")
+    if type == 'capsule':
+        if name == '1':
+            user.time_capsule1 += int(num)
+        if name == '2':
+            user.time_capsule2 += int(num)
+        if user.coins >= int(price):
+            user.coins -= int(price)
+            db.session.add(user)
             db.session.commit()
     return 'hello'
 
@@ -1156,6 +1177,8 @@ def profile_collections():
             'password': student.password,
             'color': color,
             'badge_name': badge,
+            'time_capsule1': student.time_capsule1,
+            'time_capsule2': student.time_capsule2,
             'occupation': 'Student'
         }
     elif teacher:
@@ -1180,10 +1203,13 @@ def profile_collections():
             'password': teacher.password,
             'color': color,
             'badge_name': badge,
+            'time_capsule1': teacher.time_capsule1,
+            'time_capsule2': teacher.time_capsule2,
             'occupation': 'Teacher'
         }
     return render_template('profile_collections.html', user=user_info, skill_list=None,
-                           topic_master=None, score_list=None, avatars=avatars, badges=badges)
+                           topic_master=None, score_list=None, avatars=avatars, badges=badges,
+                           cap1=user_info['time_capsule1'], cap2=user_info['time_capsule2'])
 
 
 @app.route('/change_profile/<email>', methods=['GET', 'POST'])

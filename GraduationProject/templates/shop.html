@@ -30,6 +30,7 @@
                     <li><a class="btn btn-default active" href="#" data-filter="*">All</a></li>
                     <li><a class="btn btn-default" href="#" data-filter=".avatar">Avatar</a></li>
                     <li><a class="btn btn-default" href="#" data-filter=".badgep">Badge</a></li>
+                    <li><a class="btn btn-default" href="#" data-filter=".timecapsule">Time Capsule</a></li>
                     <li><a class="btn btn-default" href="#" data-filter=".theme">Profile Theme</a></li>
                 </ul>
 
@@ -84,6 +85,29 @@
                         </div>
                     </div>
                     {% endfor %}
+                    {% for time_capsule in time_capsule_list %}
+                    <div class="col-xs-6 col-sm-4 col-md-3 portfolio-item timecapsule">
+                        <div class="portfolio-wrapper">
+                            <div class="portfolio-single">
+                                <div class="portfolio-thumb">
+                                    <img src="{{ url_for('static',filename='images/time-capsule/'+time_capsule.image+'.png') }}" style="border-radius:50%" width="250" height="250">
+                                </div>
+                                <div class="portfolio-view">
+                                    <ul class="nav nav-pills">
+                                        <li><p style="color: white">{{ time_capsule.description }}</p></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="portfolio-info ">
+                                <div style="text-align: center"><button class="btn btn-success" onclick="buy_capsule({{ time_capsule.type }})">Buy it!</button>
+                                    <input id="{{ time_capsule.type }}" type="number" class="form-control" style="width: 100px; text-align: center; margin: auto" value="1" min="1">
+                                </div><br>
+                                <img src="{{ url_for('static',filename='images/coins.png') }}" width="15px"> <p id="{{ time_capsule.price }}">{{ time_capsule.price }}</p>
+                                <h2>{{ time_capsule.name }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                     <div class="col-xs-6 col-sm-4 col-md-3 portfolio-item theme">
                         <div class="portfolio-wrapper">
                             <div class="portfolio-single">
@@ -122,6 +146,54 @@
         </div>
     </section>
     <script>
+        function buy_capsule(name) {
+            const num = parseInt(document.getElementById(name).value);
+            if(name===1){
+                let price = num*80;
+                if (price > {{ user.coins }}){
+                    alert("You do not have enough coins!");
+                }else{
+                        $.ajax({
+                        url: 'shop_buy/'+price,
+                        type: 'POST',
+                        data: {
+                            num: num,
+                            name: '1',
+                            type: 'capsule'
+                        },
+                        success: function (response) {
+                            window.location.reload();
+                        },
+                        error: function (response) {
+                            alert("You do not have enough coins!")
+                        }
+                    });
+                }
+            }
+            if(name===2){
+                let price = num*120;
+                if (price > {{ user.coins }}){
+                    alert("You do not have enough coins!");
+                }else{
+                        $.ajax({
+                        url: 'shop_buy/'+price,
+                        type: 'POST',
+                        data: {
+                            num: num,
+                            name: '2',
+                            type: 'capsule'
+                        },
+                        success: function (response) {
+                            window.location.reload();
+                        },
+                        error: function (response) {
+                            alert("You do not have enough coins!")
+                        }
+                    });
+                }
+            }
+        }
+
         function buy_avatar(id, price) {
             if (price > {{ user.coins }}){
                 alert("You do not have enough coins!")

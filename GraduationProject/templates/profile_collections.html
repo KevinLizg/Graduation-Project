@@ -28,6 +28,34 @@
                 <!-- ============================================================== -->
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Time Capsule</h4>
+                                <div class="row m-t-40">
+                                    <!-- Column -->
+                                    <div class="col-md-6 col-lg-3 col-xlg-3">
+                                        <div class="card card-hover">
+                                            <div class="box bg-info text-center">
+                                                <h1 class="font-light text-white">{{ cap1 }}</h1>
+                                                <h6 class="text-white">Capsule Type 1</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3 col-xlg-3">
+                                        <div class="card card-hover">
+                                            <div class="box bg-info text-center">
+                                                <h1 class="font-light text-white">{{ cap2 }}</h1>
+                                                <h6 class="text-white">Capsule Type 2</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Row -->
                 <div class="row">
                     <div class="col-12">
@@ -38,7 +66,7 @@
                             <!-- column -->
                             <div class="col-lg-3 col-md-6">
                                 <div class="card">
-                                    <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/icon/'+user.last_name[0]+'.png') }}" alt="Card image cap" height="300" width="300">
+                                    <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/icon/'+user.last_name[0]+'.png') }}" alt="Card image cap" height="350" width="300">
                                     <div class="card-body">
                                         <h4 class="card-title" id="">Default</h4>
                                         <p class="card-text">Change to your default avatar</p>
@@ -49,7 +77,7 @@
                             {% for avatar in avatars %}
                             <div class="col-lg-3 col-md-6">
                                 <div class="card">
-                                    <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/avatar/'+avatar.avatar_name+'.png') }}" alt="Card image cap" height="300" width="300">
+                                    <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/avatar/'+avatar.avatar_name+'.png') }}" alt="Card image cap" height="350" width="300">
                                     <div class="card-body">
                                         <h4 class="card-title" id="{{  avatar.avatar_name }}">{{  avatar.avatar_name }}</h4>
                                         <p class="card-text">You got this one on {{ avatar.date.date() }}</p>
@@ -74,7 +102,7 @@
                             <div class="card-header">
                                 <h4 class="m-b-0 text-white">Default</h4></div>
                             <div class="card-body">
-                                <img class="card-img-top img-responsive rounded-circle" src="" alt="Card image cap" width="300">
+                                <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/badge/default.png') }}" alt="Card image cap" width="300" height="350">
                                 <h3 class="card-title">Change to your default badge</h3>
                                 <button onclick="changeBadge('Default')" class="btn btn-primary">Set as your own badge</button>
                             </div>
@@ -86,7 +114,7 @@
                             <div class="card-header">
                                 <h4 class="m-b-0 text-white" id="{{ badge.badge_name }}">{{ badge.badge_name }}</h4></div>
                             <div class="card-body">
-                                <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/badge/'+badge.badge_name+'.png') }}" alt="Card image cap" width="300">
+                                <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/badge/'+badge.badge_name+'.png') }}" alt="Card image cap" width="300" height="350">
                                 <h3 class="card-title">You got this on {{ badge.date.date() }}</h3>
                                 <button onclick="changeBadge({{ badge.badge_name }})" class="btn btn-dark">Set as your badge</button>
                             </div>
