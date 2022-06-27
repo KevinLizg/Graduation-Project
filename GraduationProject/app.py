@@ -656,7 +656,6 @@ def query(input, app_id, params=(), **kwargs):
     return doc['queryresult']
 
 
-from collections import Counter
 @app.route('/quiz/<skill_>')
 def quiz(skill_):
     name = session.get('NAME')
@@ -670,6 +669,8 @@ def quiz(skill_):
             user = student
         if teacher:
             user = teacher
+        print(user.time_capsule1)
+        print(user.time_capsule2)
         # skill = Skills.query.filter(Skills.skill_name == skill_).first()
         # list = []
         # skill_dict = {
@@ -740,7 +741,27 @@ def quiz(skill_):
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('quiz.html', num=1*2000, user=user, coins=user.coins, skill_=skill_)
+    return render_template('quiz.html', num=1*120, user=user, coins=user.coins, skill_=skill_,
+                           timeCap1=user.time_capsule1, timeCap2=user.time_capsule2)
+
+
+@app.route('/return_time_capsule', methods=['GET', 'POST'])
+def return_time_capsule():
+    from models import db
+    email = session.get('EMAIL')
+    student = Student.query.filter(Student.email == email).first()
+    teacher = Teacher.query.filter(Teacher.email == email).first()
+    capsule1 = request.form.get("timeCap1")
+    capsule2 = request.form.get("timeCap2")
+    if student:
+        user = student
+    if teacher:
+        user = teacher
+    user.time_capsule1 = capsule1
+    user.time_capsule2 = capsule2
+    db.session.add(user)
+    db.session.commit()
+    return ''
 
 
 @app.route('/return_like', methods=['GET', 'POST'])
@@ -1138,14 +1159,14 @@ def profile_collections():
             'occupation': 'Student'
         }
     elif teacher:
-        name = teacher.lastname
         image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
         avatars = Avatar.query.filter(Avatar.user_id == teacher.id, Avatar.user_type == 0).all()
+        badges = Badge.query.filter(Badge.user_id == teacher.id, Badge.user_type == 0).all()
         if teacher.badge_name:
             color = teacher.badge_name.split('_')[1]
-            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode('ascii')
+            badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode('ascii')
         else:
             color = None
             badge = None

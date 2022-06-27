@@ -21,6 +21,8 @@ class Student(db.Model):
     profile_photo = db.Column(db.String(128))
     badge_name = db.Column(db.String(128))
     coins = db.Column(db.Integer(), default=20)
+    time_capsule1 = db.Column(db.Integer(), default=2)
+    time_capsule2 = db.Column(db.Integer(), default=2)
 
 
 class Teacher(db.Model):
@@ -33,7 +35,9 @@ class Teacher(db.Model):
     school = db.Column(db.String(128), index=True, unique=True)
     profile_photo = db.Column(db.String(128))
     badge_name = db.Column(db.String(128))
-    coins = db.Column(db.Integer(), default=300)
+    coins = db.Column(db.Integer(), default=1000000)
+    time_capsule1 = db.Column(db.Integer(), default=10)
+    time_capsule2 = db.Column(db.Integer(), default=10)
 
 
 class Topics(db.Model):

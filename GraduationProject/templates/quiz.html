@@ -63,9 +63,19 @@
    </section>
     <h1 class="title" style="text-align: center">Just Math It</h1><hr>
     <p id="skill_" hidden>{{ skill_ }}</p>
-    <center><i class="fa fa-pencil fa-2x" title="Edit" ></i>&nbsp;<h2 id="time" style="display: inline;"></h2></center>
+    <center><i class="fa fa-pencil fa-2x" title="Edit" ></i>&nbsp;<h2 id="time" style="display: inline;"></h2>
+    </center>
         <div id="spendtime" style="display: none"></div>
+        <div id="count" style="display: none"></div>
     <div id="el">
+        <center>
+        <button id="addTime1" style="border-radius: 50%;" class="btn btn-info" onclick="timeCount(1)">
+            <img src="../static/images/time-capsule.png" width="25px">
+        </button>&nbsp;&nbsp;&nbsp;&times;<p style="display: inline">^*timeCap1*^</p>
+        <button id="addTime2" style="border-radius: 50%;" class="btn btn-warning" onclick="timeCount(2)">
+            <img src="../static/images/time-capsule.png" width="25px">
+        </button>&nbsp;&nbsp;&nbsp;&times;<p style="display: inline">^*timeCap2*^</p>
+        </center>
         <div class="clients text-center wow fadeInUp" data-wow-duration="500ms" data-wow-delay="300ms">
             <h2 v-if="finish&&score>=80">
                 <div class="feature-inner">
@@ -180,6 +190,8 @@
                 coins: parseInt({{ coins }}),
                 checkSolution: Array(15).fill(false),
                 checkDetail: Array(15).fill(false),
+                timeCap1: parseInt({{ timeCap1 }}),
+                timeCap2: parseInt({{ timeCap2 }})
             },
             methods: {
                 select(k) {
@@ -218,6 +230,7 @@
                     this.select(this.map[this.page]);
                     this.answer = false;
                     this.timu = this.data[this.page];
+                    console.log(vue.timeCap);
                 },
                 submit(){
                     for(let i in this.data){
@@ -226,6 +239,7 @@
                     this.prev();
                     this.next();
                     this.finish = true;
+                    returnResult();
                 }
             },
             created() {
@@ -280,9 +294,47 @@
         function showAlert(){
             document.getElementById("coinsAlert").style.display = "block";
         }
+
+        function timeCount(type){
+            if(type === 1){
+                if (vue.timeCap1 > 0){
+                    vue.timeCap1 -= 1;
+                    returnTimeCap();
+                }
+                else{
+                    alert("You do not have time capsules!");
+                }
+            }
+            if(type === 2){
+                if (vue.timeCap2 > 0){
+                    vue.timeCap2 -= 1;
+                    returnTimeCap();
+                }
+                else{
+                    alert("You do not have time capsules!");
+                }
+            }
+        }
     </script>
 
     <script>
+        function returnTimeCap(){
+            $.ajax({
+                url: '{{ url_for('return_time_capsule') }}',
+                type: 'POST',
+                data: {
+                    timeCap1: vue.timeCap1,
+                    timeCap2: vue.timeCap2,
+                },
+                success: function (response) {
+
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+
         function returnResult() {
             const coins = vue.coins;
             const email = document.getElementById("email").innerText;
