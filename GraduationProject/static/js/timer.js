@@ -39,7 +39,8 @@ $(document).ready(function() {
                 clearInterval(refresh);  // exit refresh loop
                 document.getElementById("time").style.color = "red";
                 vue.submit();
-                $('#addTime').prop('disabled', true);
+                $('#addTime1').prop('disabled', true);
+                $('#addTime2').prop('disabled', true);
             }
         }, 1000);
     }

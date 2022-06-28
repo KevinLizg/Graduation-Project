@@ -150,7 +150,7 @@
                     <button type="button" class="btn btn-info" onclick="showDetails()">More details</button>
                     <hr><button type="button" class="btn btn-warning" id="coinsAlert" style="display: none">You do not have enough coins! Do some quizzes to earn some coins!</button>
                     <div class="analysis" id="detail" style="filter: blur(5px)">
-                        <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length-1)">
+                        <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length)">
                         <img :src="i">
                         </Card>
                     </div>
@@ -158,7 +158,7 @@
 
                 <div v-if="checkDetail[page]===true">
                     <div class="analysis" id="detail">
-                        <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length-1)">
+                        <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length)">
                              <img :src="i">
                         </Card>
                     </div>
@@ -239,6 +239,8 @@
                     this.prev();
                     this.next();
                     this.finish = true;
+                    $('#addTime1').prop('disabled', true);
+                    $('#addTime2').prop('disabled', true);
                     returnResult();
                 }
             },

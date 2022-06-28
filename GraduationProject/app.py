@@ -6,6 +6,7 @@ import urllib
 
 import wolframalpha
 import xmltodict
+# from mathgenerator import mathgen
 from mathgenerator import mathgen
 
 from flask import Flask, render_template, url_for, jsonify, redirect, flash, session, request
@@ -40,6 +41,7 @@ db = SQLAlchemy(app)
 
 ################# Clear Cached ###################
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
 
 @app.after_request
 def add_header(r):
@@ -212,7 +214,6 @@ def change_password(token):
     from models import db
     form = ChangePassword()
     user_type = session.get('ACTOR')
-    print(user_type)
     try:
         email = s.loads(token, salt='email-confirm', max_age=180)
         if form.validate_on_submit() and user_type == 'Student':
@@ -365,7 +366,7 @@ def topics(topic):
 def skill_details(skill_):
     name = session.get('NAME')
     email = session.get('EMAIL')
-    if(name):
+    if (name):
         session['NAME'] = name
         session['EMAIL'] = email
         replyForm = ReplyForm()
@@ -384,7 +385,6 @@ def skill_details(skill_):
         if teacher_in_db:
             user_in_db = teacher_in_db
             user_type = 0
-        print(user_in_db.id)
         like = Like.query.filter(
             Like.user_type == user_type, Like.skill_id == skill.skill_id, Like.user_id == user_in_db.id).first()
         print(like)
@@ -411,7 +411,8 @@ def skill_details(skill_):
                 img_stream = base64.b64encode(img_stream).decode('ascii')
                 if reply_user.badge_name:
                     reply_badge = reply_user.badge_name.split('_')[1]
-                    badge = base64.b64encode(open('static/images/badge/' + reply_user.badge_name + ".png", 'rb').read()).decode('ascii')
+                    badge = base64.b64encode(
+                        open('static/images/badge/' + reply_user.badge_name + ".png", 'rb').read()).decode('ascii')
                 else:
                     reply_badge = None
                     badge = None
@@ -501,7 +502,7 @@ def shop():
             'description': 'This could help you add more time in the quiz so that you could finish your quiz, this capsule will add 10 seconds for you',
             'image': 'capsule1',
             'type': 1
-        },{
+        }, {
             'name': 'Time_Capsule_Type_2',
             'price': 120,
             'description': 'This could help you add more time in the quiz so that you could finish your quiz, this capsule will add 20 seconds for you',
@@ -518,11 +519,11 @@ def shop():
                 'have': avatar_have,
                 'name': avatar_file.split('.')[0],
                 'price': 100,
-                'image': base64.b64encode(open('static/images/avatar/'+avatar_file,'rb').read()).decode('ascii')
+                'image': base64.b64encode(open('static/images/avatar/' + avatar_file, 'rb').read()).decode('ascii')
             })
         for badge_file in os.listdir('static/images/badge'):
             badge = Badge.query.filter(Badge.user_id == user.id, Badge.user_type == user_type,
-                                         Badge.badge_name == badge_file.split('.')[0]).first()
+                                       Badge.badge_name == badge_file.split('.')[0]).first()
             badge_have = False
             if badge:
                 badge_have = True
@@ -598,7 +599,7 @@ def ready(skill_):
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template("ready.html", filename=email+".json", user=user, skill_=skill_)
+    return render_template("ready.html", filename=email + ".json", user=user, skill_=skill_)
 
 
 @app.route('/practice/<skill_>')
@@ -636,9 +637,9 @@ def practice(skill_):
                     img_list.append(sub.img['@src'])
                     solution_list.append(sub.plaintext)
             option_list = []
-            option_list.append(str(random.randint(int(solution)-10,int(solution)-1)))
-            option_list.append(str(random.randint(int(solution)+1,int(solution)+10)))
-            option_list.append(str(random.randint(int(solution)+5,int(solution)+20)))
+            option_list.append(str(random.randint(int(solution) - 10, int(solution) - 1)))
+            option_list.append(str(random.randint(int(solution) + 1, int(solution) + 10)))
+            option_list.append(str(random.randint(int(solution) + 5, int(solution) + 20)))
             option_list.append(solution)
             random.shuffle(option_list)
             answer = ["A", "B", "C", "D"]
@@ -654,12 +655,12 @@ def practice(skill_):
                 'answer': an,
                 'analysis': img_list
             })
-        with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
+        with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
             json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('practice.html', num=1*120, user=user, coins=user.coins, skill_=skill_)
+    return render_template('practice.html', num=1 * 120, user=user, coins=user.coins, skill_=skill_)
 
 
 def query(input, app_id, params=(), **kwargs):
@@ -677,10 +678,14 @@ def query(input, app_id, params=(), **kwargs):
     return doc['queryresult']
 
 
+from collections import Counter
 @app.route('/quiz/<skill_>')
 def quiz(skill_):
     name = session.get('NAME')
     email = session.get('EMAIL')
+    ###########################
+    ### 重复答案的问题需要解决 ###
+    ##########################
     if (name):
         session['NAME'] = name
         session['EMAIL'] = email
@@ -690,79 +695,128 @@ def quiz(skill_):
             user = student
         if teacher:
             user = teacher
-        print(user.time_capsule1)
-        print(user.time_capsule2)
-        # skill = Skills.query.filter(Skills.skill_name == skill_).first()
-        # list = []
-        # skill_dict = {
-        #     1: [0,1],
-        #     2: [2,3],
-        #     3: [6,8],
-        #     4: [13,16,28],
-        #     5: [53],
-        #     6: [11],
-        #     7: [21],
-        #     8: [26],
-        #     9: [24],
-        #     10: [50],
-        #     11: [111],
-        #     12: [18,19,22,25],
-        #     13: [32,33,34,38],
-        #     14: [35,36,37,39],
-        #     15: [112,75,115],
-        #     16: [114],
-        #     17: [30,42],
-        #     18: [59],
-        #     19: [40],
-        #     20: [101,102],
-        #     21: [27],
-        #     22: [55],
-        # }
-        # for i in range(0, 3):
-        #     ran_num = random.randint(0,len(skill_dict[skill.skill_id])-1)
-        #     problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-        #     app_id = 'XQAUEU-WR3AY23332'
-        #     client = wolframalpha.Client(app_id)
-        #     # res = client.query(problem)
-        #     res = query(problem, app_id)
-        #     img_list = []
-        #     solution_list = []
-        #     for pod in res.pods:
-        #         for sub in pod.subpods:
-        #             img_list.append(sub.img['@src'])
-        #             solution_list.append(sub.plaintext)
-        #             print(sub)
-        #     option_list = [solution]
-        #     for j in range(1,4):
-        #         gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-        #         option_list.append(gen_solution)
-        #     # while len(set(option_list)) != len(option_list):
-        #     #     op_dict = dict(Counter(option_list))
-        #     #     for key, value in op_dict.items():
-        #     #         if value > 1:
-        #     #             option_list.remove(key)
-        #     #             gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-        #     #             option_list.append(gen_solution)
-        #     random.shuffle(option_list)
-        #     answer = ["A", "B", "C", "D"]
-        #     idx = 0
-        #     for op in option_list:
-        #         if op == solution:
-        #             an = answer[idx]
-        #         idx += 1
-        #     list.append({
-        #         'id': i,
-        #         'title': problem,
-        #         'option': option_list,
-        #         'answer': an,
-        #         'analysis': img_list
-        #     })
-        # with open('static/json/'+email+'.json', 'w', encoding='utf-8') as f:
-        #     json.dump(list, f, ensure_ascii=False, indent=4)
+        skill = Skills.query.filter(Skills.skill_name == skill_).first()
+        list = []
+        skill_dict = {
+            # Good
+            1: [0, 1],
+            # Good
+            2: [2, 3],
+            # Good
+            3: [6, 8],
+            # Good
+            4: [13, 16, 28],
+            # Good
+            5: [53],
+            # Good
+            6: [11],
+            # Good
+            7: [21],
+            # Good
+            8: [111],
+            # Good
+            9: [24],
+            # Good
+            10: [50],
+            # Good
+            11: [26],
+            # Good
+            12: [18, 19, 22, 25],
+            # Good
+            13: [32, 33, 34, 38],
+            # Good
+            14: [35, 36, 37, 39],
+            # Good
+            15: [112, 75, 115],
+            # Good
+            16: [114],
+            # Not good
+            17: [30, 42],
+            # Good
+            18: [59,124,125],
+            # Good
+            19: [40, 10],
+            # Good
+            20: [101, 102],
+            # Good
+            21: [27],
+            22: [55],
+        }
+        for i in range(0, 1):
+            ran_num = random.randint(0, len(skill_dict[skill.skill_id]) - 1)
+            problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+            app_id = 'XQAUEU-WR3AY23332'
+            client = wolframalpha.Client(app_id)
+            # res = client.query(problem)
+            res = query(problem, app_id)
+            img_list = []
+            solution_list = []
+            for pod in res.pods:
+                for sub in pod.subpods:
+                    img_list.append(sub.img['@src'])
+                    solution_list.append(sub.plaintext)
+            option_list = [solution]
+            if skill_dict[skill.skill_id][ran_num] == 19:
+                for j in range(1, 2):
+                    if solution == 'Exist':
+                        option_list.append('Do not exist')
+                    else:
+                        option_list.append('Exist')
+            if skill_dict[skill.skill_id][ran_num] == 101:
+                for j in range(1, 2):
+                    if solution == 'is a leap year':
+                        option_list.append('is not a leap year')
+                    else:
+                        option_list.append('is a leap year')
+            if skill_dict[skill.skill_id][ran_num] == 55:
+                for j in range(1, 2):
+                    if solution == '>':
+                        option_list.append('<')
+                        option_list.append('=')
+                    if solution == '=':
+                        option_list.append('<')
+                        option_list.append('>')
+                    else:
+                        option_list.append('>')
+                        option_list.append('=')
+            else:
+                for j in range(1, 4):
+                    gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+                    option_list.append(gen_solution)
+                while len(set(option_list)) != len(option_list):
+                    op_dict = dict(Counter(option_list))
+                    for key, value in op_dict.items():
+                        if value > 1:
+                            option_list.remove(key)
+                            gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+                            option_list.append(gen_solution)
+            random.shuffle(option_list)
+            if skill.skill_id == 55:
+                answer = ["A", "B", "C"]
+            if skill_dict[skill.skill_id][ran_num] == 19:
+                answer = ["A", "B"]
+            else:
+                answer = ["A", "B", "C", "D"]
+            idx = 0
+            if skill.skill_id == 10:
+                problem = 'Zero Interval of: '+problem
+            for op in option_list:
+                if op == solution:
+                    an = answer[idx]
+                idx += 1
+            list.append({
+                'id': i,
+                'title': problem,
+                'option': option_list,
+                'answer': an,
+                'analysis': img_list
+            })
+        with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
+            json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('quiz.html', num=1*120, user=user, coins=user.coins, skill_=skill_,
+    return render_template('quiz.html', num=1 * 120, user=user, coins=user.coins, skill_=skill_,
                            timeCap1=user.time_capsule1, timeCap2=user.time_capsule2)
 
 
@@ -800,7 +854,8 @@ def return_like():
     if teacher:
         user = teacher
         user_type = 0
-    like = Like.query.filter(Like.user_type == user_type, Like.skill_id == skill.skill_id, Like.user_id == user.id).first()
+    like = Like.query.filter(Like.user_type == user_type, Like.skill_id == skill.skill_id,
+                             Like.user_id == user.id).first()
     if like:
         skill.like -= 1
         db.session.add(skill)
@@ -850,7 +905,6 @@ def return_result():
         skill = request.form.get("skill")
         score = request.form.get("score")
         time = request.form.get("time")
-        print(coins, email, skill, score, time)
         student = Student.query.filter(Student.email == email).first()
         teacher = Teacher.query.filter(Teacher.email == email).first()
         if student:
@@ -958,11 +1012,11 @@ def user_profile(user_email):
         img_stream = base64.b64encode(img_stream).decode('ascii')
         if student.badge_name:
             color = student.badge_name.split('_')[1]
-            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode('ascii')
+            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
         else:
             color = None
             badge = None
-        print(color)
         user_info = {
             'email': user_email,
             'first_name': student.firstname,
@@ -990,7 +1044,8 @@ def user_profile(user_email):
         img_stream = base64.b64encode(img_stream).decode('ascii')
         if teacher.badge_name:
             color = teacher.badge_name.split('_')[1]
-            badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode('ascii')
+            badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
         else:
             color = None
             badge = None
@@ -1006,7 +1061,8 @@ def user_profile(user_email):
             'badge_name': badge,
             'occupation': 'Teacher'
         }
-    return render_template('user_profile.html', name=name, email=email, user_info=user_info, skill_list=json.dumps(skill_statistic),
+    return render_template('user_profile.html', name=name, email=email, user_info=user_info,
+                           skill_list=json.dumps(skill_statistic),
                            topic_master=topic_master_dict, score_list=score_list, user=my_info)
 
 
@@ -1071,7 +1127,8 @@ def profile():
         img_stream = base64.b64encode(img_stream).decode('ascii')
         if student.badge_name:
             color = student.badge_name.split('_')[1]
-            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode('ascii')
+            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
         else:
             color = None
             badge = None
@@ -1113,7 +1170,8 @@ def profile():
         img_stream = base64.b64encode(img_stream).decode('ascii')
         if teacher.badge_name:
             color = teacher.badge_name.split('_')[1]
-            badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode('ascii')
+            badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
         else:
             color = None
             badge = None
@@ -1160,7 +1218,8 @@ def profile_collections():
         badges = Badge.query.filter(Badge.user_id == student.id, Badge.user_type == 1).all()
         if student.badge_name:
             color = student.badge_name.split('_')[1]
-            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode('ascii')
+            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
         else:
             color = None
             badge = None
@@ -1189,7 +1248,8 @@ def profile_collections():
         badges = Badge.query.filter(Badge.user_id == teacher.id, Badge.user_type == 0).all()
         if teacher.badge_name:
             color = teacher.badge_name.split('_')[1]
-            badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode('ascii')
+            badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
         else:
             color = None
             badge = None
@@ -1294,12 +1354,12 @@ def grade(topic_name):
     skills = Skills.query.filter(Skills.topic_id == topic.topic_id).all()
     skill_score_list = []
     for skill in skills:
-        scores = Score.query.filter(Score.student_id == student.id, Score.skill_id == skill.skill_id).order_by(Score.date.asc()).all()
+        scores = Score.query.filter(Score.student_id == student.id, Score.skill_id == skill.skill_id).order_by(
+            Score.date.asc()).all()
         skill_name = skill.skill_name
         score_list = {}
         for score in scores:
             score_list[str(score.date)] = score.score
-            print(score.date)
         skill_score_list.append({
             'skill_name': skill_name,
             'score_list': list(score_list.values()),
