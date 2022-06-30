@@ -310,7 +310,7 @@
                             {% endif %}
                             <ul aria-expanded="false" class="collapse  first-level">
                                 <li class="sidebar-item">
-                                    <a href="" class="sidebar-link">
+                                    <a href="{{ url_for('unit_grade') }}" class="sidebar-link">
                                         <i class="mdi mdi-album"></i>
                                         <span class="hide-menu"> Units </span>
                                     </a>
@@ -470,8 +470,8 @@
     <script src="{{ url_for('static',filename='profile/js/sidebarmenu.js') }}"></script>
     <script src="{{ url_for('static',filename='profile/js/custom.min.js') }}"></script>
     <script>
-            s = JSON.parse({{ skill_list|tojson }})
             $(function () {
+                s = JSON.parse({{ skill_list|tojson }})
                 // New chart
                 new Chart(document.getElementById("pie-chart"), {
                     type: 'pie',
@@ -509,7 +509,7 @@
                             data: sc[index]['score_list'],
                             label: sc[index]['skill_name'],
                             borderColor: color[index%sc.length],
-                            fill: false
+                            fill: true
                           }
                         ]
                       },
@@ -523,6 +523,32 @@
             }
        });
     </script>
+
+    <script>
+        $(function () {
+            us = JSON.parse({{ unit_score|tojson }});
+            max_len = {{ max_len }}
+            const array = []
+            for(let i = 0; i < max_len; i++){
+                array[i] = i+1;
+            }
+            console.log(max_len);
+            new Chart(document.getElementById('shit'), {
+                  type: 'line',
+                  data: {
+                    labels: array,
+                    datasets: us
+                  },
+                  options: {
+                    title: {
+                      display: true,
+                      text: 'Unit Score Line Chart'
+                    }
+                  }
+            });
+       });
+    </script>
+
     <script src="{{ url_for('static',filename='profile/js/chartjs/Chart.min.js') }}"></script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 import base64
+import collections
 import itertools
 import os
 import random, json
@@ -821,9 +822,71 @@ from collections import Counter
 @app.route('/unit_test_main/')
 def unit_test_main():
     topics = Topics.query.filter().all()
-    return render_template('unit_test_main.html',topics=topics)
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    ###########################
+    ### 重复答案的问题需要解决 ###
+    ##########################
+    if (name):
+        session['NAME'] = name
+        session['EMAIL'] = email
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        if student:
+            user = student
+        if teacher:
+            user = teacher
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('unit_test_main.html', user=user, topics=topics)
 
 
+skill_dict = {
+            # Good
+            1: [0, 1],
+            # Good
+            2: [2, 3],
+            # Good
+            3: [6, 8],
+            # Good
+            4: [13, 16, 28],
+            # Good
+            5: [53],
+            # Good
+            6: [11],
+            # Good
+            7: [21],
+            # Good
+            8: [111],
+            # Good
+            9: [24],
+            # Good
+            10: [50],
+            # Good
+            11: [26],
+            # Good
+            12: [18, 19, 22, 25],
+            # Good
+            13: [32, 33, 34, 38],
+            # Good
+            14: [35, 36, 37, 39],
+            # Good
+            15: [112, 75, 115],
+            # Good
+            16: [114],
+            # Not good
+            17: [30, 42],
+            # Good
+            18: [59,124,125],
+            # Good
+            19: [40, 10],
+            # Good
+            20: [101, 102],
+            # Good
+            21: [27],
+            22: [55],
+}
 @app.route('/unit_test/<topic>')
 def unit_test(topic):
     name = session.get('NAME')
@@ -846,76 +909,77 @@ def unit_test(topic):
         for skill in skills:
             skill_id.append(skill.skill_id)
         list = []
-        # for i in range(0, 10):
-        #     skill_ran_num = skill_id[random.randint(0, len(skill_id)-1)]
-        #     ran_num = random.randint(0, len(skill_dict[skill_ran_num]) - 1)
-        #     problem, solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
-        #     app_id = 'XQAUEU-WR3AY23332'
-        #     client = wolframalpha.Client(app_id)
-        #     # res = client.query(problem)
-        #     res = query(problem, app_id)
-        #     img_list = []
-        #     solution_list = []
-        #     for pod in res.pods:
-        #         for sub in pod.subpods:
-        #             img_list.append(sub.img['@src'])
-        #             solution_list.append(sub.plaintext)
-        #     option_list = [solution]
-        #     if skill_dict[skill_ran_num][ran_num] == 19:
-        #         for j in range(1, 2):
-        #             if solution == 'Exist':
-        #                 option_list.append('Do not exist')
-        #             else:
-        #                 option_list.append('Exist')
-        #     if skill_dict[skill_ran_num][ran_num] == 101:
-        #         if solution == 'is a leap year':
-        #             option_list.append('is not a leap year')
-        #         else:
-        #             option_list.append('is a leap year')
-        #     if skill_dict[skill_ran_num][ran_num] == 55:
-        #         if solution == '>':
-        #             option_list.append('<')
-        #             option_list.append('=')
-        #         if solution == '=':
-        #             option_list.append('<')
-        #             option_list.append('>')
-        #         else:
-        #             option_list.append('>')
-        #             option_list.append('=')
-        #     else:
-        #         for j in range(1, 4):
-        #             gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
-        #             option_list.append(gen_solution)
-        #         while len(set(option_list)) != len(option_list):
-        #             op_dict = dict(Counter(option_list))
-        #             for key, value in op_dict.items():
-        #                 if value > 1:
-        #                     option_list.remove(key)
-        #                     gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
-        #                     option_list.append(gen_solution)
-        #     random.shuffle(option_list)
-        #     if skill_dict[skill_ran_num][ran_num] == 55:
-        #         answer = ["A", "B", "C"]
-        #     if skill_dict[skill_ran_num][ran_num] == 19:
-        #         answer = ["A", "B"]
-        #     else:
-        #         answer = ["A", "B", "C", "D"]
-        #     idx = 0
-        #     if skill_ran_num == 10:
-        #         problem = 'Zero Interval of: ' + problem
-        #     for op in option_list:
-        #         if op == solution:
-        #             an = answer[idx]
-        #         idx += 1
-        #     list.append({
-        #         'id': i,
-        #         'title': problem,
-        #         'option': option_list,
-        #         'answer': an,
-        #         'analysis': img_list
-        #     })
-        # with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
-        #     json.dump(list, f, ensure_ascii=False, indent=4)
+        for i in range(0, 20):
+            skill_ran_num = skill_id[random.randint(0, len(skill_id)-1)]
+            ran_num = random.randint(0, len(skill_dict[skill_ran_num]) - 1)
+            problem, solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
+            print(i, skill_ran_num, ran_num)
+            app_id = 'XQAUEU-WR3AY23332'
+            client = wolframalpha.Client(app_id)
+            # res = client.query(problem)
+            res = query(problem, app_id)
+            img_list = []
+            solution_list = []
+            for pod in res.pods:
+                for sub in pod.subpods:
+                    img_list.append(sub.img['@src'])
+                    solution_list.append(sub.plaintext)
+            option_list = [solution]
+            if skill_dict[skill_ran_num][ran_num] == 19:
+                for j in range(1, 2):
+                    if solution == 'Exist':
+                        option_list.append('Do not exist')
+                    else:
+                        option_list.append('Exist')
+            if skill_dict[skill_ran_num][ran_num] == 101:
+                if solution == 'is a leap year':
+                    option_list.append('is not a leap year')
+                else:
+                    option_list.append('is a leap year')
+            if skill_dict[skill_ran_num][ran_num] == 55:
+                if solution == '>':
+                    option_list.append('<')
+                    option_list.append('=')
+                if solution == '=':
+                    option_list.append('<')
+                    option_list.append('>')
+                else:
+                    option_list.append('>')
+                    option_list.append('=')
+            else:
+                for j in range(1, 4):
+                    gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
+                    option_list.append(gen_solution)
+                while len(set(option_list)) != len(option_list):
+                    op_dict = dict(Counter(option_list))
+                    for key, value in op_dict.items():
+                        if value > 1:
+                            option_list.remove(key)
+                            gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
+                            option_list.append(gen_solution)
+            random.shuffle(option_list)
+            if skill_dict[skill_ran_num][ran_num] == 55:
+                answer = ["A", "B", "C"]
+            if skill_dict[skill_ran_num][ran_num] == 19:
+                answer = ["A", "B"]
+            else:
+                answer = ["A", "B", "C", "D"]
+            idx = 0
+            if skill_ran_num == 10:
+                problem = 'Zero Interval of: ' + problem
+            for op in option_list:
+                if op == solution:
+                    an = answer[idx]
+                idx += 1
+            list.append({
+                'id': i,
+                'title': problem,
+                'option': option_list,
+                'answer': an,
+                'analysis': img_list
+            })
+        with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
+            json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
@@ -1334,7 +1398,7 @@ def profile():
             return redirect(url_for('signin'))
     session['EMAIL'] = email
     return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(skill_statistic),
-                           topic_master=topic_master_dict, score_list=score_list)
+                           topic_master=topic_master_dict, score_list=score_list, unit_score=None)
 
 
 @app.route('/profile_collections', methods=['GET', 'POST'])
@@ -1402,7 +1466,7 @@ def profile_collections():
             'occupation': 'Teacher'
         }
     return render_template('profile_collections.html', user=user_info, skill_list=None,
-                           topic_master=None, score_list=None, avatars=avatars, badges=badges,
+                           topic_master=None, score_list=None, unit_score=None, avatars=avatars, badges=badges,
                            cap1=user_info['time_capsule1'], cap2=user_info['time_capsule2'])
 
 
@@ -1500,7 +1564,65 @@ def grade(topic_name):
             'date': list(score_list.keys())
         })
     return render_template('grade.html', user=user_info, score_list=json.dumps(skill_score_list),
-                           skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic))
+                           skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic), unit_score=None)
+
+
+@app.route('/unit_grade', methods=['GET', 'POST'])
+def unit_grade():
+    email = session.get('EMAIL')
+    student = Student.query.filter(Student.email == email).first()
+    _, skill_statistic, _ = return_score(student)
+    image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
+    img_stream = image.read()
+    img_stream = base64.b64encode(img_stream).decode('ascii')
+    if student.badge_name:
+        color = student.badge_name.split('_')[1]
+        badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+            'ascii')
+    else:
+        color = None
+        badge = None
+    user_info = {
+        'email': email,
+        'first_name': student.firstname,
+        'last_name': student.lastname,
+        'profile_pic': img_stream,
+        'phone': student.phone,
+        'school': student.school,
+        'address': student.address,
+        'age': datetime.now().date().year - int(student.dob.split("-")[0]),
+        'gender': student.gender,
+        'password': student.password,
+        'color': color,
+        'badge_name': badge,
+        'occupation': 'Student'
+    }
+    unit_score = []
+    units = Unit.query.filter(Unit.student_id == student.id).all()
+    print(units)
+    unit_dict = {}
+    topics = Topics.query.filter().all()
+    for topic in topics:
+        unit_dict[topic.topic_name] = collections.deque()
+    for unit in units:
+        topic_name = Topics.query.filter(Topics.topic_id == unit.topic_id).first().topic_name
+        unit_dict[topic_name].append(unit.score)
+        if len(unit_dict[topic_name]) > 3:
+            unit_dict[topic_name].popleft()
+    color = ["#ff6384", "#4bc0c0", "#ffcd56",
+             "#07b107", "#36a2eb"]
+    idx = 0
+    max_len = max([len(l) for l in unit_dict.values()])
+    for unit, score_list in unit_dict.items():
+        unit_score.append({
+            'data': list(score_list),
+            'label': unit,
+            'borderColor': color[idx],
+        })
+        idx+=1
+    print(unit_score)
+    return render_template('unit_grade.html', user=user_info, score_list=None,
+                           skill_score_list=None, skill_list=None, unit_score=json.dumps(unit_score), max_len=max_len)
 
 
 if __name__ == '__main__':
