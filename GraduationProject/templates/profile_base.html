@@ -475,7 +475,8 @@
                             label: "Population (millions)",
                             backgroundColor: ["#ff6384", "#4bc0c0", "#ffcd56",
                                 "#07b107","#FFFAF0","#BBFFFF","#36a2eb",
-                                "#2F4F4F","#54FF9F","#4bc0c0", "#ffcd56"],
+                                "#2F4F4F","#54FF9F","#4bc0c0", "#ffcd56","#6d0000","#ff6384", "#4bc0c0", "#ffcd56",
+                                "#07b107","#FFFAF0","#BBFFFF"],
                             data: s['skill_value_list']
                         }]
                     },
@@ -486,52 +487,13 @@
                         }
                     }
                 });
-
-                new Chart(document.getElementById("line-chart"), {
-                      type: 'line',
-                      data: {
-                        labels: [4500,3500,3200,3050,2700,2450,2200,1750,1499,2050],
-                        datasets: [{
-                            data: [86,114,106,106,107,111,133,221,783,2478],
-                            label: "Africa",
-                            borderColor: "#3e95cd",
-                            fill: false
-                          }, {
-                            data: [282,350,411,502,635,809,947,1402,3700,5267],
-                            label: "Asia",
-                            borderColor: "#36a2eb",
-                            fill: false
-                          }, {
-                            data: [168,170,178,190,203,276,408,547,675,734],
-                            label: "Europe",
-                            borderColor: "#07b107",
-                            fill: false
-                          }, {
-                            data: [40,20,10,16,24,38,74,167,508,784],
-                            label: "Latin America",
-                            borderColor: "#ff6384",
-                            fill: false
-                          }, {
-                            data: [6,3,2,2,7,26,82,172,312,433],
-                            label: "North America",
-                            borderColor: "#4bc0c0",
-                            fill: false
-                          }
-                        ]
-                      },
-                      options: {
-                        title: {
-                          display: true,
-                          text: 'World population per region (in millions)'
-                        }
-                      }
-                });
             });
     </script>
     <script>
       $(function () {
             sc = JSON.parse({{ score_list|tojson }});
-            color = ["#ff6384", "#4bc0c0", "#ffcd56", "#07b107","#FFFAF0","#BBFFFF","#36a2eb", "#2F4F4F","#54FF9F","#4bc0c0", "#ffcd56"]
+            color = ["#ff6384", "#4bc0c0", "#ffcd56",
+                                "#07b107","#36a2eb","#6d0000"]
             for(let index in sc){
                 new Chart(document.getElementById('skill'+index), {
                       type: 'line',

@@ -742,7 +742,7 @@ def quiz(skill_):
             21: [27],
             22: [55],
         }
-        for i in range(0, 1):
+        for i in range(0, 10):
             ran_num = random.randint(0, len(skill_dict[skill.skill_id]) - 1)
             problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
             app_id = 'XQAUEU-WR3AY23332'
