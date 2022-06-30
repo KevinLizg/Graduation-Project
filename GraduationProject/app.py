@@ -757,28 +757,25 @@ def quiz(skill_):
                     solution_list.append(sub.plaintext)
             option_list = [solution]
             if skill_dict[skill.skill_id][ran_num] == 19:
-                for j in range(1, 2):
-                    if solution == 'Exist':
-                        option_list.append('Do not exist')
-                    else:
-                        option_list.append('Exist')
+                if solution == 'Exist':
+                    option_list.append('Do not exist')
+                else:
+                    option_list.append('Exist')
             if skill_dict[skill.skill_id][ran_num] == 101:
-                for j in range(1, 2):
-                    if solution == 'is a leap year':
-                        option_list.append('is not a leap year')
-                    else:
-                        option_list.append('is a leap year')
+                if solution == 'is a leap year':
+                    option_list.append('is not a leap year')
+                else:
+                    option_list.append('is a leap year')
             if skill_dict[skill.skill_id][ran_num] == 55:
-                for j in range(1, 2):
-                    if solution == '>':
-                        option_list.append('<')
-                        option_list.append('=')
-                    if solution == '=':
-                        option_list.append('<')
-                        option_list.append('>')
-                    else:
-                        option_list.append('>')
-                        option_list.append('=')
+                if solution == '>':
+                    option_list.append('<')
+                    option_list.append('=')
+                if solution == '=':
+                    option_list.append('<')
+                    option_list.append('>')
+                else:
+                    option_list.append('>')
+                    option_list.append('=')
             else:
                 for j in range(1, 4):
                     gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
@@ -791,7 +788,7 @@ def quiz(skill_):
                             gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
                             option_list.append(gen_solution)
             random.shuffle(option_list)
-            if skill.skill_id == 55:
+            if skill_dict[skill.skill_id][ran_num] == 55:
                 answer = ["A", "B", "C"]
             if skill_dict[skill.skill_id][ran_num] == 19:
                 answer = ["A", "B"]
@@ -829,8 +826,101 @@ def unit_test_main():
 
 @app.route('/unit_test/<topic>')
 def unit_test(topic):
-    print(topic)
-    return render_template('unit_test.html')
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    ###########################
+    ### 重复答案的问题需要解决 ###
+    ##########################
+    if (name):
+        session['NAME'] = name
+        session['EMAIL'] = email
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        if student:
+            user = student
+        if teacher:
+            user = teacher
+        topic = Topics.query.filter(Topics.topic_name == topic).first()
+        skills = Skills.query.filter(Skills.topic_id == topic.topic_id).all()
+        skill_id = []
+        for skill in skills:
+            skill_id.append(skill.skill_id)
+        list = []
+        for i in range(0, 10):
+            skill_ran_num = skill_id[random.randint(0, len(skill_id)-1)]
+            ran_num = random.randint(0, len(skill_dict[skill_ran_num]) - 1)
+            problem, solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
+            app_id = 'XQAUEU-WR3AY23332'
+            client = wolframalpha.Client(app_id)
+            # res = client.query(problem)
+            res = query(problem, app_id)
+            img_list = []
+            solution_list = []
+            for pod in res.pods:
+                for sub in pod.subpods:
+                    img_list.append(sub.img['@src'])
+                    solution_list.append(sub.plaintext)
+            option_list = [solution]
+            if skill_dict[skill_ran_num][ran_num] == 19:
+                for j in range(1, 2):
+                    if solution == 'Exist':
+                        option_list.append('Do not exist')
+                    else:
+                        option_list.append('Exist')
+            if skill_dict[skill_ran_num][ran_num] == 101:
+                if solution == 'is a leap year':
+                    option_list.append('is not a leap year')
+                else:
+                    option_list.append('is a leap year')
+            if skill_dict[skill_ran_num][ran_num] == 55:
+                if solution == '>':
+                    option_list.append('<')
+                    option_list.append('=')
+                if solution == '=':
+                    option_list.append('<')
+                    option_list.append('>')
+                else:
+                    option_list.append('>')
+                    option_list.append('=')
+            else:
+                for j in range(1, 4):
+                    gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
+                    option_list.append(gen_solution)
+                while len(set(option_list)) != len(option_list):
+                    op_dict = dict(Counter(option_list))
+                    for key, value in op_dict.items():
+                        if value > 1:
+                            option_list.remove(key)
+                            gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
+                            option_list.append(gen_solution)
+            random.shuffle(option_list)
+            if skill_dict[skill_ran_num][ran_num] == 55:
+                answer = ["A", "B", "C"]
+            if skill_dict[skill_ran_num][ran_num] == 19:
+                answer = ["A", "B"]
+            else:
+                answer = ["A", "B", "C", "D"]
+            idx = 0
+            if skill_ran_num == 10:
+                problem = 'Zero Interval of: ' + problem
+            for op in option_list:
+                if op == solution:
+                    an = answer[idx]
+                idx += 1
+            list.append({
+                'id': i,
+                'title': problem,
+                'option': option_list,
+                'answer': an,
+                'analysis': img_list
+            })
+        with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
+            json.dump(list, f, ensure_ascii=False, indent=4)
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('unit_test.html', num=1 * 120, user=user, coins=user.coins,
+                           timeCap1=user.time_capsule1, timeCap2=user.time_capsule2, topic=topic)
 
 
 @app.route('/return_time_capsule', methods=['GET', 'POST'])
