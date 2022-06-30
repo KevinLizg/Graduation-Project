@@ -10,7 +10,11 @@ $(document).ready(function() {
             seconds = seconds < 10 ? "0" + seconds : seconds;
 
             var output = minutes + " : " + seconds;
-            display.text(output);
+            if (timer < 20) {
+                display.text("Hurry up! You have "+output+" left!");
+            }else{
+                display.text(output);
+            }
 
             spendtime.text(duration-timer);
             count.text(timer);

@@ -139,7 +139,7 @@
                                             {% endif %}
                                                 <div class="sl-right">
                                                     <div>I finished<span class="sl-date">{{ sc['date'] }}</span>
-                                                        <p>The topic is <a href="{{ url_for('topics',topic=sc['topic']) }}">{{ sc['topic'] }}</a>, and the skill is <a href="{{ url_for('skill_details',skill_=sc['skill']) }}">{{ sc['skill'] }}</a></p>
+                                                        <p>The topic is <a href="{{ url_for('topics',topic=sc['topics']) }}">{{ sc['topics'] }}</a>, and the skill is <a href="{{ url_for('skill_details',skill_=sc['skill']) }}">{{ sc['skill'] }}</a></p>
                                                         <p>The score is {{ sc['score'] }}</p>
                                                         <div class="row">
                                                             <div class="col-lg-3 col-md-6 m-b-20"><img src="{{ url_for('static',filename='images/skills/'+sc['skill']+'.png') }}" class="img-fluid rounded" /></div>

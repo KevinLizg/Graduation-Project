@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends "base.html" %}
+
+{% block mainContent %}
+
+    <section id="page-breadcrumb">
+        <div class="vertical-center sun">
+             <div class="container">
+                <div class="row">
+                    <div class="action">
+                        <div class="col-sm-12">
+                            <h1 class="title">Unit Test
+                            </h1>
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   </section>
+    <!--/#page-breadcrumb-->
+
+    <section id="blog" class="padding-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 col-sm-12">
+                    <div class="row">
+
+                    </div>
+                    <div class="pagination_page">
+                        <ul class="pagination">
+                        {% for topic in topics %}
+                             <div class="col-sm-12 col-md-12">
+                                <div class="single-blog single-column">
+                                    <div class="post-thumb">
+                                        <a href="{{ url_for('unit_test', topic=topic.topic_name ) }}"><img src="../static/images/topics/{{ topic.topic_name }}.png" class="img-responsive" style="margin: auto; width: 300px"></a>
+                                        <div class="post-overlay">
+                                           <span class="uppercase"><a href="{{ url_for('unit_test', topic=topic.topic_name ) }}">St<br><small>art</small></a></span>
+                                       </div>
+                                    </div>
+                                    <div class="post-content overflow">
+                                        <h2 class="post-title bold"><a href="{{ url_for('unit_test', topic=topic.topic_name ) }}">{{ topic.topic_name }}</a></h2>
+                                        <h3 class="post-author"><a onclick="false">Introduction</a></h3>
+                                        <p>{{ topic.topic_introduction }}</p>
+                                        <div class="post-bottom overflow">
+                                            <ul class="nav navbar-nav post-nav">
+{#                                                <li><a href="#"><i class="fa fa-tag"></i>Creative</a></li>#}
+{#                                                <li><a href="#"><i class="fa fa-heart"></i>{{ skills[i].like }} Love</a></li>#}
+{#                                                <li><a href="#"><i class="fa fa-comments"></i>{{ info[i].comment }} Comments</a></li>#}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                 </div>
+{#                <div class="col-md-3 col-sm-5">#}
+{#                    <div class="sidebar blog-sidebar">#}
+{#                        <div class="sidebar-item  recent">#}
+{#                            <h3>Comments or Questions</h3>#}
+{#                        {% if comment_info|length == 0  %}#}
+{#                            <div class="media">#}
+{#                                <div class="media-body">#}
+{#                                    <h4><a onclick="false">No comments yet</a></h4>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        {% else %}#}
+{#                            {% for comment in comment_info %}#}
+{#                            <div class="media">#}
+{#                                <div class="media-body">#}
+{#                                    <h4><a href="{{ url_for('skill_details',skill_=comment.skill_name) }}">{{ comment.comment.comment }}</a></h4>#}
+{#                                    <p>posted on {{ comment.comment.comment_time }}</p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            {% endfor %}#}
+{#                        {% endif %}#}
+{#                        </div>#}
+{#                        <div class="sidebar-item categories">#}
+{#                            <h3>Topics</h3>#}
+{#                            <ul class="nav navbar-stacked">#}
+{#                                <ul class="nav navbar-stacked">#}
+{#                                    {% for tp in all_topic %}#}
+{#                                    <li><a href="{{ url_for('topics',topics=tp.topic_name) }}">{{ tp.topic_name }}<span class="pull-right">({{ tp.skill_count }})</span></a></li>#}
+{#                                    {% endfor %}#}
+{#                                </ul>#}
+{#                            </ul>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+            </div>
+        </div>
+    </section>
+
+</html>
+
+{% endblock %}

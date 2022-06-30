@@ -678,26 +678,7 @@ def query(input, app_id, params=(), **kwargs):
     return doc['queryresult']
 
 
-from collections import Counter
-@app.route('/quiz/<skill_>')
-def quiz(skill_):
-    name = session.get('NAME')
-    email = session.get('EMAIL')
-    ###########################
-    ### 重复答案的问题需要解决 ###
-    ##########################
-    if (name):
-        session['NAME'] = name
-        session['EMAIL'] = email
-        student = Student.query.filter(Student.email == email).first()
-        teacher = Teacher.query.filter(Teacher.email == email).first()
-        if student:
-            user = student
-        if teacher:
-            user = teacher
-        skill = Skills.query.filter(Skills.skill_name == skill_).first()
-        list = []
-        skill_dict = {
+skill_dict = {
             # Good
             1: [0, 1],
             # Good
@@ -741,7 +722,26 @@ def quiz(skill_):
             # Good
             21: [27],
             22: [55],
-        }
+}
+from collections import Counter
+@app.route('/quiz/<skill_>')
+def quiz(skill_):
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    ###########################
+    ### 重复答案的问题需要解决 ###
+    ##########################
+    if (name):
+        session['NAME'] = name
+        session['EMAIL'] = email
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        if student:
+            user = student
+        if teacher:
+            user = teacher
+        skill = Skills.query.filter(Skills.skill_name == skill_).first()
+        list = []
         for i in range(0, 10):
             ran_num = random.randint(0, len(skill_dict[skill.skill_id]) - 1)
             problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
@@ -818,6 +818,19 @@ def quiz(skill_):
         return redirect(url_for('signin'))
     return render_template('quiz.html', num=1 * 120, user=user, coins=user.coins, skill_=skill_,
                            timeCap1=user.time_capsule1, timeCap2=user.time_capsule2)
+
+
+from collections import Counter
+@app.route('/unit_test_main/')
+def unit_test_main():
+    topics = Topics.query.filter().all()
+    return render_template('unit_test_main.html',topics=topics)
+
+
+@app.route('/unit_test/<topic>')
+def unit_test(topic):
+    print(topic)
+    return render_template('unit_test.html')
 
 
 @app.route('/return_time_capsule', methods=['GET', 'POST'])
@@ -984,7 +997,7 @@ def user_profile(user_email):
             score_list.append({
                 'score': score.score,
                 'date': score.date,
-                'topic': t_name,
+                'topics': t_name,
                 'skill': s_name,
                 'comment': comment,
                 'like': skill.like
@@ -1081,7 +1094,7 @@ def return_score(student):
         score_list.append({
             'score': score.score,
             'date': score.date,
-            'topic': t_name,
+            'topics': t_name,
             'skill': s_name,
             'comment': comment,
             'like': skill.like
