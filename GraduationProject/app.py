@@ -846,76 +846,76 @@ def unit_test(topic):
         for skill in skills:
             skill_id.append(skill.skill_id)
         list = []
-        for i in range(0, 10):
-            skill_ran_num = skill_id[random.randint(0, len(skill_id)-1)]
-            ran_num = random.randint(0, len(skill_dict[skill_ran_num]) - 1)
-            problem, solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
-            app_id = 'XQAUEU-WR3AY23332'
-            client = wolframalpha.Client(app_id)
-            # res = client.query(problem)
-            res = query(problem, app_id)
-            img_list = []
-            solution_list = []
-            for pod in res.pods:
-                for sub in pod.subpods:
-                    img_list.append(sub.img['@src'])
-                    solution_list.append(sub.plaintext)
-            option_list = [solution]
-            if skill_dict[skill_ran_num][ran_num] == 19:
-                for j in range(1, 2):
-                    if solution == 'Exist':
-                        option_list.append('Do not exist')
-                    else:
-                        option_list.append('Exist')
-            if skill_dict[skill_ran_num][ran_num] == 101:
-                if solution == 'is a leap year':
-                    option_list.append('is not a leap year')
-                else:
-                    option_list.append('is a leap year')
-            if skill_dict[skill_ran_num][ran_num] == 55:
-                if solution == '>':
-                    option_list.append('<')
-                    option_list.append('=')
-                if solution == '=':
-                    option_list.append('<')
-                    option_list.append('>')
-                else:
-                    option_list.append('>')
-                    option_list.append('=')
-            else:
-                for j in range(1, 4):
-                    gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
-                    option_list.append(gen_solution)
-                while len(set(option_list)) != len(option_list):
-                    op_dict = dict(Counter(option_list))
-                    for key, value in op_dict.items():
-                        if value > 1:
-                            option_list.remove(key)
-                            gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
-                            option_list.append(gen_solution)
-            random.shuffle(option_list)
-            if skill_dict[skill_ran_num][ran_num] == 55:
-                answer = ["A", "B", "C"]
-            if skill_dict[skill_ran_num][ran_num] == 19:
-                answer = ["A", "B"]
-            else:
-                answer = ["A", "B", "C", "D"]
-            idx = 0
-            if skill_ran_num == 10:
-                problem = 'Zero Interval of: ' + problem
-            for op in option_list:
-                if op == solution:
-                    an = answer[idx]
-                idx += 1
-            list.append({
-                'id': i,
-                'title': problem,
-                'option': option_list,
-                'answer': an,
-                'analysis': img_list
-            })
-        with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
-            json.dump(list, f, ensure_ascii=False, indent=4)
+        # for i in range(0, 10):
+        #     skill_ran_num = skill_id[random.randint(0, len(skill_id)-1)]
+        #     ran_num = random.randint(0, len(skill_dict[skill_ran_num]) - 1)
+        #     problem, solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
+        #     app_id = 'XQAUEU-WR3AY23332'
+        #     client = wolframalpha.Client(app_id)
+        #     # res = client.query(problem)
+        #     res = query(problem, app_id)
+        #     img_list = []
+        #     solution_list = []
+        #     for pod in res.pods:
+        #         for sub in pod.subpods:
+        #             img_list.append(sub.img['@src'])
+        #             solution_list.append(sub.plaintext)
+        #     option_list = [solution]
+        #     if skill_dict[skill_ran_num][ran_num] == 19:
+        #         for j in range(1, 2):
+        #             if solution == 'Exist':
+        #                 option_list.append('Do not exist')
+        #             else:
+        #                 option_list.append('Exist')
+        #     if skill_dict[skill_ran_num][ran_num] == 101:
+        #         if solution == 'is a leap year':
+        #             option_list.append('is not a leap year')
+        #         else:
+        #             option_list.append('is a leap year')
+        #     if skill_dict[skill_ran_num][ran_num] == 55:
+        #         if solution == '>':
+        #             option_list.append('<')
+        #             option_list.append('=')
+        #         if solution == '=':
+        #             option_list.append('<')
+        #             option_list.append('>')
+        #         else:
+        #             option_list.append('>')
+        #             option_list.append('=')
+        #     else:
+        #         for j in range(1, 4):
+        #             gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
+        #             option_list.append(gen_solution)
+        #         while len(set(option_list)) != len(option_list):
+        #             op_dict = dict(Counter(option_list))
+        #             for key, value in op_dict.items():
+        #                 if value > 1:
+        #                     option_list.remove(key)
+        #                     gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
+        #                     option_list.append(gen_solution)
+        #     random.shuffle(option_list)
+        #     if skill_dict[skill_ran_num][ran_num] == 55:
+        #         answer = ["A", "B", "C"]
+        #     if skill_dict[skill_ran_num][ran_num] == 19:
+        #         answer = ["A", "B"]
+        #     else:
+        #         answer = ["A", "B", "C", "D"]
+        #     idx = 0
+        #     if skill_ran_num == 10:
+        #         problem = 'Zero Interval of: ' + problem
+        #     for op in option_list:
+        #         if op == solution:
+        #             an = answer[idx]
+        #         idx += 1
+        #     list.append({
+        #         'id': i,
+        #         'title': problem,
+        #         'option': option_list,
+        #         'answer': an,
+        #         'analysis': img_list
+        #     })
+        # with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
+        #     json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
@@ -1014,6 +1014,37 @@ def return_result():
             skill = Skills.query.filter(Skills.skill_name == skill).first()
             score_add = Score(student_id=student.id, skill_id=skill.skill_id, score=score, time=time)
             db.session.add(score_add)
+            db.session.commit()
+            student.coins = int(coins)
+            db.session.add(student)
+            db.session.commit()
+        if teacher:
+            print('This is a teacher')
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return 'result'
+
+
+@app.route('/return_unit_result', methods=['GET', 'POST'])
+def return_unit_result():
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    if (name):
+        session['NAME'] = name
+        session['EMAIL'] = email
+        from models import db
+        coins = request.form.get("coins")
+        email = request.form.get("email")
+        topic_name = request.form.get("topic")
+        score = request.form.get("score")
+        time = request.form.get("time")
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        if student:
+            topic = Topics.query.filter(Topics.topic_name == topic_name).first()
+            unit_add = Unit(student_id=student.id, topic_id=topic.topic_id, score=score, time=time)
+            db.session.add(unit_add)
             db.session.commit()
             student.coins = int(coins)
             db.session.add(student)

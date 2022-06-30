@@ -82,6 +82,15 @@ class Score(db.Model):
     time = db.Column(db.String(128), nullable=True)
 
 
+class Unit(db.Model):
+    unit_id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    topic_id = db.Column(db.Integer, db.ForeignKey('topics.topic_id'))
+    score = db.Column(db.Integer)
+    date = db.Column(db.DateTime, index=True, default=datetime.now())
+    time = db.Column(db.String(128), nullable=True)
+
+
 class Like(db.Model):
     like_id = db.Column(db.Integer, primary_key=True)
     skill_id = db.Column(db.Integer, db.ForeignKey('skills.skill_id'))

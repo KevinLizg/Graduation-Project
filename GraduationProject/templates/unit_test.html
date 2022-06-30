@@ -61,7 +61,7 @@
             </div>
         </div>
    </section>
-    <h1 class="title" style="text-align: center">{{ topic.topic_name }}</h1><hr>
+    <h1 class="title" style="text-align: center" id="topic">{{ topic.topic_name }}</h1><hr>
 {#    <p id="skill_" hidden>{{ skill_ }}</p>#}
     <center><i class="fa fa-pencil fa-2x" title="Edit" ></i>&nbsp;<h2 id="time" style="display: inline;"></h2>
     </center>
@@ -148,6 +148,7 @@
 
                 <div v-if="checkDetail[page]===false">
                     <button type="button" class="btn btn-info" onclick="showDetails()">More details</button>
+                    <img style="display: inline" src="{{ url_for('static',filename='images/coins.png') }}" width="15px"/> 5 Coins
                     <hr><button type="button" class="btn btn-warning" id="coinsAlert" style="display: none">You do not have enough coins! Do some quizzes to earn some coins!</button>
                     <div class="analysis" id="detail" style="filter: blur(5px)">
                         <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length)">
@@ -166,7 +167,7 @@
             </div>
 
         </Card>
-        <i-button class="huida" size="large" :disabled="finish" @click="submit" onclick="returnResult()" small id="finish"><i class="fa fa-trophy"></i> Finish</i-button>
+        <i-button class="huida" size="large" :disabled="finish" @click="submit" small id="finish"><i class="fa fa-trophy"></i> Finish</i-button>
     </div>
 
     <script>
@@ -278,12 +279,12 @@
         }
 
         function showDetails() {
-            if(vue.coins < 5){
+            if(vue.coins < 10){
                 this.showAlert();
             }
             else{
-                alert("Five coins have been deducted");
-                vue.coins = vue.coins - 5;
+                alert("Ten coins have been deducted");
+                vue.coins = vue.coins - 10;
                 vue.checkDetail[vue.page] = true;
                 document.getElementById("detail").style.filter = "blur(0px)";
                 vue.next();
@@ -319,63 +320,63 @@
     </script>
 
     <script>
-        {#function returnTimeCap(){#}
-        {#    $.ajax({#}
-        {#        url: '{{ url_for('return_time_capsule') }}',#}
-        {#        type: 'POST',#}
-        {#        data: {#}
-        {#            timeCap1: vue.timeCap1,#}
-        {#            timeCap2: vue.timeCap2,#}
-        {#        },#}
-        {#        success: function (response) {#}
-        {##}
-        {#        },#}
-        {#        error: function (response) {#}
-        {##}
-        {#        }#}
-        {#    });#}
-        {#}#}
-        {##}
-        {#function returnResult() {#}
-        {#    const coins = vue.coins;#}
-        {#    const email = document.getElementById("email").innerText;#}
-        {#    const score = vue.score;#}
-        {#    const skill = document.getElementById("skill_").innerText;#}
-        {#    const time = document.getElementById("spendtime").innerText;#}
-        {#    $.ajax({#}
-        {#        url: '{{ url_for('return_result') }}',#}
-        {#        type: 'POST',#}
-        {#        data: {#}
-        {#            coins: coins,#}
-        {#            email: email,#}
-        {#            score: score,#}
-        {#            skill: skill,#}
-        {#            time: time#}
-        {#        },#}
-        {#        success: function (response) {#}
-        {##}
-        {#        },#}
-        {#        error: function (response) {#}
-        {##}
-        {#        }#}
-        {#    });#}
-        {#}#}
-        {##}
-        {#function returnCoins() {#}
-        {#    const coins = vue.coins;#}
-        {#    $.ajax({#}
-        {#        url: '{{ url_for('return_coins') }}',#}
-        {#        type: 'POST',#}
-        {#        data: {#}
-        {#            coins: coins,#}
-        {#        },#}
-        {#        success: function (response) {#}
-        {##}
-        {#        },#}
-        {#        error: function (response) {#}
-        {#        }#}
-        {#    });#}
-        {#}#}
+        function returnTimeCap(){
+            $.ajax({
+                url: '{{ url_for('return_time_capsule') }}',
+                type: 'POST',
+                data: {
+                    timeCap1: vue.timeCap1,
+                    timeCap2: vue.timeCap2,
+                },
+                success: function (response) {
+
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+
+        function returnResult() {
+            const coins = vue.coins;
+            const email = document.getElementById("email").innerText;
+            const topic = document.getElementById("topic").innerText;
+            const score = vue.score;
+            const time = document.getElementById("spendtime").innerText;
+            $.ajax({
+                url: '{{ url_for('return_unit_result') }}',
+                type: 'POST',
+                data: {
+                    coins: coins,
+                    email: email,
+                    score: score,
+                    topic: topic,
+                    time: time,
+                },
+                success: function (response) {
+
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+
+        function returnCoins() {
+            const coins = vue.coins;
+            $.ajax({
+                url: '{{ url_for('return_coins') }}',
+                type: 'POST',
+                data: {
+                    coins: coins,
+                },
+                success: function (response) {
+
+                },
+                error: function (response) {
+                }
+            });
+        }
     </script>
 </body>
 
