@@ -664,75 +664,75 @@ def practice(skill_):
             user = teacher_in_db
         skill = Skills.query.filter(Skills.skill_name == skill_).first()
         list = []
-        # for i in range(0, 5):
-        #     ran_num = random.randint(0, len(skill_dict[skill.skill_id]) - 1)
-        #     problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-        #     app_id = 'XQAUEU-WR3AY23332'
-        #     client = wolframalpha.Client(app_id)
-        #     # res = client.query(problem)
-        #     res = query(problem, app_id)
-        #     img_list = []
-        #     solution_list = []
-        #     for pod in res.pods:
-        #         for sub in pod.subpods:
-        #             img_list.append(sub.img['@src'])
-        #             solution_list.append(sub.plaintext)
-        #     option_list = [solution]
-        #     if skill_dict[skill.skill_id][ran_num] == 19:
-        #         if solution == 'Exist':
-        #             option_list.append('Do not exist')
-        #         else:
-        #             option_list.append('Exist')
-        #     if skill_dict[skill.skill_id][ran_num] == 101:
-        #         if solution == 'is a leap year':
-        #             option_list.append('is not a leap year')
-        #         else:
-        #             option_list.append('is a leap year')
-        #     if skill_dict[skill.skill_id][ran_num] == 55:
-        #         if solution == '>':
-        #             option_list.append('<')
-        #             option_list.append('=')
-        #         elif solution == '=':
-        #             option_list.append('<')
-        #             option_list.append('>')
-        #         else:
-        #             option_list.append('>')
-        #             option_list.append('=')
-        #     if skill_dict[skill.skill_id][ran_num] != 19 and skill_dict[skill.skill_id][ran_num] != 101 and skill_dict[skill.skill_id][ran_num] != 55:
-        #         for j in range(1, 4):
-        #             gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-        #             option_list.append(gen_solution)
-        #         while len(set(option_list)) != len(option_list):
-        #             op_dict = dict(Counter(option_list))
-        #             for key, value in op_dict.items():
-        #                 if value > 1:
-        #                     option_list.remove(key)
-        #                     gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
-        #                     option_list.append(gen_solution)
-        #     random.shuffle(option_list)
-        #     if skill_dict[skill.skill_id][ran_num] == 19:
-        #         answer = ["A", "B"]
-        #     if skill_dict[skill.skill_id][ran_num] == 55:
-        #         answer = ["A", "B", "C"]
-        #     if skill_dict[skill.skill_id][ran_num] != 55 and skill_dict[skill.skill_id][ran_num] != 19:
-        #         answer = ["A", "B", "C", "D"]
-        #     idx = 0
-        #     if skill.skill_id == 10:
-        #         problem = 'Zero Interval of: ' + problem
-        #     for op in option_list:
-        #         if op == solution:
-        #             an = answer[idx]
-        #         idx += 1
-        #     list.append({
-        #         'id': i,
-        #         'title': problem,
-        #         'option': option_list,
-        #         'answer': an,
-        #         'analysis': img_list,
-        #         'skill': skill.skill_name
-        #     })
-        # with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
-        #     json.dump(list, f, ensure_ascii=False, indent=4)
+        for i in range(0, 5):
+            ran_num = random.randint(0, len(skill_dict[skill.skill_id]) - 1)
+            problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+            app_id = 'XQAUEU-WR3AY23332'
+            client = wolframalpha.Client(app_id)
+            # res = client.query(problem)
+            res = query(problem, app_id)
+            img_list = []
+            solution_list = []
+            for pod in res.pods:
+                for sub in pod.subpods:
+                    img_list.append(sub.img['@src'])
+                    solution_list.append(sub.plaintext)
+            option_list = [solution]
+            if skill_dict[skill.skill_id][ran_num] == 19:
+                if solution == 'Exist':
+                    option_list.append('Do not exist')
+                else:
+                    option_list.append('Exist')
+            if skill_dict[skill.skill_id][ran_num] == 101:
+                if solution == 'is a leap year':
+                    option_list.append('is not a leap year')
+                else:
+                    option_list.append('is a leap year')
+            if skill_dict[skill.skill_id][ran_num] == 55:
+                if solution == '>':
+                    option_list.append('<')
+                    option_list.append('=')
+                elif solution == '=':
+                    option_list.append('<')
+                    option_list.append('>')
+                else:
+                    option_list.append('>')
+                    option_list.append('=')
+            if skill_dict[skill.skill_id][ran_num] != 19 and skill_dict[skill.skill_id][ran_num] != 101 and skill_dict[skill.skill_id][ran_num] != 55:
+                for j in range(1, 4):
+                    gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+                    option_list.append(gen_solution)
+                while len(set(option_list)) != len(option_list):
+                    op_dict = dict(Counter(option_list))
+                    for key, value in op_dict.items():
+                        if value > 1:
+                            option_list.remove(key)
+                            gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+                            option_list.append(gen_solution)
+            random.shuffle(option_list)
+            if skill_dict[skill.skill_id][ran_num] == 19:
+                answer = ["A", "B"]
+            if skill_dict[skill.skill_id][ran_num] == 55:
+                answer = ["A", "B", "C"]
+            if skill_dict[skill.skill_id][ran_num] != 55 and skill_dict[skill.skill_id][ran_num] != 19:
+                answer = ["A", "B", "C", "D"]
+            idx = 0
+            if skill.skill_id == 10:
+                problem = 'Zero Interval of: ' + problem
+            for op in option_list:
+                if op == solution:
+                    an = answer[idx]
+                idx += 1
+            list.append({
+                'id': i,
+                'title': problem,
+                'option': option_list,
+                'answer': an,
+                'analysis': img_list,
+                'skill': skill.skill_name
+            })
+        with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
+            json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
@@ -740,9 +740,13 @@ def practice(skill_):
 
 
 from os.path import exists
-@app.route('/wrong_topic_add/<question_id>', methods=["GET", "POST"])
-def wrong_topic_add(question_id):
+
+
+@app.route('/wrong_problem_add/<question_id>', methods=["GET", "POST"])
+def wrong_problem_add(question_id):
     email = request.form.get("email")
+    check = request.form.get("check")
+    print(check)
     with open('static/json/' + email + '.json', 'r', encoding='utf-8') as f:
         question_list = json.load(f)
     for question in question_list:
@@ -757,6 +761,7 @@ def wrong_topic_add(question_id):
                         'option': question['option'],
                         'answer': question['answer'],
                         'skill': question['skill'],
+                        'check': check
                     })
                     f.close()
             else:
@@ -782,13 +787,78 @@ def wrong_topic_add(question_id):
                                 'option': question['option'],
                                 'answer': question['answer'],
                                 'skill': question['skill'],
+                                'check': check
                             })
                             f.close()
     with open('static/json/wrong/' + email + '.json', 'w', encoding='utf-8') as f:
         json.dump(wrong_question_list, f, ensure_ascii=False, indent=4)
         f.close()
-    print('Add Ok')
-    return 'hello'
+    return 'wrong_problem_add'
+
+
+@app.route('/wrong_problem_update/<question_id>', methods=["GET", "POST"])
+def wrong_problem_update(question_id):
+    email = request.form.get("email")
+    check = request.form.get("check")
+    with open('static/json/wrong/' + email + '.json', 'r', encoding='utf-8') as f:
+        wrong_question_list = json.load(f)
+    for wrong_question in wrong_question_list:
+        if wrong_question['id'] == int(question_id):
+            wrong_question['check'] = check
+    with open('static/json/wrong/' + email + '.json', 'w', encoding='utf-8') as f:
+        json.dump(wrong_question_list, f, ensure_ascii=False, indent=4)
+        f.close()
+    return 'wrong_problem_update'
+
+
+@app.route('/wrong_problem_delete/<question_id>', methods=["GET", "POST"])
+def wrong_problem_delete(question_id):
+    email = request.form.get("email")
+    with open('static/json/wrong/' + email + '.json', 'r', encoding='utf-8') as f:
+        wrong_question_list = json.load(f)
+    for wrong_question in wrong_question_list:
+        if wrong_question['id'] == int(question_id):
+            del wrong_question_list[int(question_id)]
+    for idx in range(1,len(wrong_question_list)):
+        wrong_question_list[idx]['id'] = idx
+    with open('static/json/wrong/' + email + '.json', 'w', encoding='utf-8') as f:
+        json.dump(wrong_question_list, f, ensure_ascii=False, indent=4)
+        f.close()
+    return 'wrong_problem_update'
+
+
+@app.route('/wrong_collection', methods=["GET", "POST"])
+def wrong_collection():
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    if (name):
+        session['NAME'] = name
+        session['EMAIL'] = email
+        student_in_db = Student.query.filter(Student.email == email).first()
+        teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+        user = ''
+        if student_in_db:
+            user = student_in_db
+        if teacher_in_db:
+            user = teacher_in_db
+    filename = email+'.json'
+    if not exists('static/json/wrong/' + filename):
+        filename = None
+    else:
+        with open('static/json/wrong/' + filename, 'r', encoding='utf-8') as f:
+            question_list = json.load(f)
+        for question in question_list[1:]:
+            app_id = 'XQAUEU-WR3AY23332'
+            res = query(question['title'], app_id)
+            img_list = []
+            for pod in res.pods:
+                for sub in pod.subpods:
+                    img_list.append(sub.img['@src'])
+            question['analysis'] = img_list
+        with open('static/json/wrong/' + email + '.json', 'w', encoding='utf-8') as f:
+            json.dump(question_list, f, ensure_ascii=False, indent=4)
+            f.close()
+    return render_template('wrong_collection.html', user=user, filename=filename, question_list=question_list)
 
 
 def query(input, app_id, params=(), **kwargs):
