@@ -8,14 +8,26 @@
     },
     {
         "id": 1,
-        "title": "31+43=",
+        "title": "35-1=",
         "option": [
-            "40",
-            "51",
-            "74",
-            "29"
+            "86",
+            "34",
+            "17",
+            "0"
         ],
-        "answer": "C",
+        "answer": "B",
+        "skill": "Addition, Subtraction"
+    },
+    {
+        "id": 2,
+        "title": "35-1=",
+        "option": [
+            "86",
+            "34",
+            "17",
+            "0"
+        ],
+        "answer": "B",
         "skill": "Addition, Subtraction"
     }
 ]

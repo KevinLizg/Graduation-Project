@@ -55,7 +55,7 @@
 {#             <div class="container">#}
 {#                <div class="row">#}
 {#                    <div class="action">#}
-                        <div id="email" style="display: none">{{ email }}</div>
+                        <div id="email" style="display: none">{{ user.email }}</div>
 {#                    </div>#}
 {#                </div>#}
 {#            </div>#}
@@ -128,6 +128,7 @@
             <hr>
             <div class="bs-example" v-if='checkList[page]!==0'>
                 <button type="button" class="btn btn-success" onclick="showSolution()"><i class="fa fa-cog"></i> Check solution</button>
+                <button type="button" class="btn ivu-btn-loading" v-if='addWrong[page]==false' onclick="addWrongProblem()"><i class="fa fa-briefcase"></i> Add to Wrong Questions Collection</button>
             </div>
 
 
@@ -185,6 +186,7 @@
                 coins: {{ coins }},
                 checkSolution: [false, false, false, false, false],
                 checkDetail: [false, false, false, false, false],
+                addWrong: [false, false, false, false, false]
             },
             methods: {
                 select(k) {
@@ -310,6 +312,26 @@
                 type: 'POST',
                 data: {
                     coins: coins,
+                },
+                success: function (response) {
+
+                },
+                error: function (response) {
+                }
+            });
+        }
+
+        function addWrongProblem() {
+            const question_id = vue.page;
+            const email = document.getElementById("email").innerText;
+            vue.addWrong[vue.page] = true;
+            vue.next();
+            vue.prev();
+            $.ajax({
+                url: '../wrong_topic_add/'+question_id,
+                type: 'POST',
+                data: {
+                    email: email
                 },
                 success: function (response) {
 
