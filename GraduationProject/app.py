@@ -603,82 +603,6 @@ def ready(skill_):
     return render_template("ready.html", filename=email + ".json", user=user, skill_=skill_)
 
 
-@app.route('/practice/<skill_>')
-def practice(skill_):
-    name = session.get('NAME')
-    email = session.get('EMAIL')
-    if (name):
-        session['NAME'] = name
-        session['EMAIL'] = email
-        student_in_db = Student.query.filter(Student.email == email).first()
-        teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
-        user = ''
-        if student_in_db:
-            user = student_in_db
-        if teacher_in_db:
-            user = teacher_in_db
-        skill = Skills.query.filter(Skills.skill_name == skill_).first()
-        list = []
-        for i in range(0, 5):
-            problem = ''
-            solution = ''
-            if skill.skill_id == 1:
-                ran_num = random.randint(0, 1)
-                if ran_num == 0:
-                    problem, solution = mathgen.genById(0)
-                else:
-                    problem, solution = mathgen.genById(1)
-            app_id = 'XQAUEU-WR3AY23332'
-            client = wolframalpha.Client(app_id)
-            res = client.query(problem)
-            img_list = []
-            solution_list = []
-            for pod in res.pods:
-                for sub in pod.subpods:
-                    img_list.append(sub.img['@src'])
-                    solution_list.append(sub.plaintext)
-            option_list = []
-            option_list.append(str(random.randint(int(solution) - 10, int(solution) - 1)))
-            option_list.append(str(random.randint(int(solution) + 1, int(solution) + 10)))
-            option_list.append(str(random.randint(int(solution) + 5, int(solution) + 20)))
-            option_list.append(solution)
-            random.shuffle(option_list)
-            answer = ["A", "B", "C", "D"]
-            idx = 0
-            for op in option_list:
-                if op == solution:
-                    an = answer[idx]
-                idx += 1
-            list.append({
-                'id': i,
-                'title': problem,
-                'option': option_list,
-                'answer': an,
-                'analysis': img_list
-            })
-        with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
-            json.dump(list, f, ensure_ascii=False, indent=4)
-    else:
-        flash("Please sign in first")
-        return redirect(url_for('signin'))
-    return render_template('practice.html', num=1 * 120, user=user, coins=user.coins, skill_=skill_)
-
-
-def query(input, app_id, params=(), **kwargs):
-    data = dict(
-        input=input,
-        appid=app_id,
-    )
-    data = itertools.chain(params, data.items(), kwargs.items())
-    query = urllib.parse.urlencode(tuple(data))
-    url = 'https://api.wolframalpha.com/v2/query?' + query + '&podstate=Step-by-step%20solution'
-    resp = urllib.request.urlopen(url)
-    assert resp.headers.get_content_type() == 'text/xml'
-    assert resp.headers.get_param('charset') == 'utf-8'
-    doc = xmltodict.parse(resp, postprocessor=wolframalpha.Document.make)
-    return doc['queryresult']
-
-
 skill_dict = {
             # Good
             1: [0, 1],
@@ -724,6 +648,112 @@ skill_dict = {
             21: [27],
             22: [55],
 }
+@app.route('/practice/<skill_>')
+def practice(skill_):
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    if (name):
+        session['NAME'] = name
+        session['EMAIL'] = email
+        student_in_db = Student.query.filter(Student.email == email).first()
+        teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+        user = ''
+        if student_in_db:
+            user = student_in_db
+        if teacher_in_db:
+            user = teacher_in_db
+        skill = Skills.query.filter(Skills.skill_name == skill_).first()
+        list = []
+        for i in range(0, 5):
+            ran_num = random.randint(0, len(skill_dict[skill.skill_id]) - 1)
+            problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+            app_id = 'XQAUEU-WR3AY23332'
+            client = wolframalpha.Client(app_id)
+            # res = client.query(problem)
+            res = query(problem, app_id)
+            img_list = []
+            solution_list = []
+            for pod in res.pods:
+                for sub in pod.subpods:
+                    img_list.append(sub.img['@src'])
+                    solution_list.append(sub.plaintext)
+            option_list = [solution]
+            if skill_dict[skill.skill_id][ran_num] == 19:
+                if solution == 'Exist':
+                    option_list.append('Do not exist')
+                else:
+                    option_list.append('Exist')
+            if skill_dict[skill.skill_id][ran_num] == 101:
+                if solution == 'is a leap year':
+                    option_list.append('is not a leap year')
+                else:
+                    option_list.append('is a leap year')
+            if skill_dict[skill.skill_id][ran_num] == 55:
+                if solution == '>':
+                    option_list.append('<')
+                    option_list.append('=')
+                elif solution == '=':
+                    option_list.append('<')
+                    option_list.append('>')
+                else:
+                    option_list.append('>')
+                    option_list.append('=')
+            if skill_dict[skill.skill_id][ran_num] != 19 and skill_dict[skill.skill_id][ran_num] != 101 and skill_dict[skill.skill_id][ran_num] != 55:
+                for j in range(1, 4):
+                    gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+                    option_list.append(gen_solution)
+                while len(set(option_list)) != len(option_list):
+                    op_dict = dict(Counter(option_list))
+                    for key, value in op_dict.items():
+                        if value > 1:
+                            option_list.remove(key)
+                            gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
+                            option_list.append(gen_solution)
+            random.shuffle(option_list)
+            if skill_dict[skill.skill_id][ran_num] == 19:
+                answer = ["A", "B"]
+            if skill_dict[skill.skill_id][ran_num] == 55:
+                answer = ["A", "B", "C"]
+            if skill_dict[skill.skill_id][ran_num] != 55 and skill_dict[skill.skill_id][ran_num] != 19:
+                answer = ["A", "B", "C", "D"]
+            idx = 0
+            if skill.skill_id == 10:
+                problem = 'Zero Interval of: ' + problem
+            for op in option_list:
+                if op == solution:
+                    an = answer[idx]
+                idx += 1
+            list.append({
+                'id': i,
+                'title': problem,
+                'option': option_list,
+                'answer': an,
+                'analysis': img_list,
+                'skill': skill.skill_name
+            })
+        with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
+            json.dump(list, f, ensure_ascii=False, indent=4)
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('practice.html', user=user, coins=user.coins, skill_=skill_)
+
+
+def query(input, app_id, params=(), **kwargs):
+    data = dict(
+        input=input,
+        appid=app_id,
+    )
+    data = itertools.chain(params, data.items(), kwargs.items())
+    query = urllib.parse.urlencode(tuple(data))
+    url = 'https://api.wolframalpha.com/v2/query?' + query + '&podstate=Step-by-step%20solution'
+    resp = urllib.request.urlopen(url)
+    assert resp.headers.get_content_type() == 'text/xml'
+    assert resp.headers.get_param('charset') == 'utf-8'
+    doc = xmltodict.parse(resp, postprocessor=wolframalpha.Document.make)
+    return doc['queryresult']
+
+
 from collections import Counter
 @app.route('/quiz/<skill_>')
 def quiz(skill_):
@@ -771,13 +801,13 @@ def quiz(skill_):
                 if solution == '>':
                     option_list.append('<')
                     option_list.append('=')
-                if solution == '=':
+                elif solution == '=':
                     option_list.append('<')
                     option_list.append('>')
                 else:
                     option_list.append('>')
                     option_list.append('=')
-            else:
+            if skill_dict[skill.skill_id][ran_num] != 19 and skill_dict[skill.skill_id][ran_num] != 101 and skill_dict[skill.skill_id][ran_num] != 55:
                 for j in range(1, 4):
                     gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
                     option_list.append(gen_solution)
@@ -793,7 +823,7 @@ def quiz(skill_):
                 answer = ["A", "B", "C"]
             if skill_dict[skill.skill_id][ran_num] == 19:
                 answer = ["A", "B"]
-            else:
+            if skill_dict[skill.skill_id][ran_num] != 55 and skill_dict[skill.skill_id][ran_num] != 19:
                 answer = ["A", "B", "C", "D"]
             idx = 0
             if skill.skill_id == 10:
@@ -842,51 +872,6 @@ def unit_test_main():
     return render_template('unit_test_main.html', user=user, topics=topics)
 
 
-skill_dict = {
-            # Good
-            1: [0, 1],
-            # Good
-            2: [2, 3],
-            # Good
-            3: [6, 8],
-            # Good
-            4: [13, 16, 28],
-            # Good
-            5: [53],
-            # Good
-            6: [11],
-            # Good
-            7: [21],
-            # Good
-            8: [111],
-            # Good
-            9: [24],
-            # Good
-            10: [50],
-            # Good
-            11: [26],
-            # Good
-            12: [18, 19, 22, 25],
-            # Good
-            13: [32, 33, 34, 38],
-            # Good
-            14: [35, 36, 37, 39],
-            # Good
-            15: [112, 75, 115],
-            # Good
-            16: [114],
-            # Not good
-            17: [30, 42],
-            # Good
-            18: [59,124,125],
-            # Good
-            19: [40, 10],
-            # Good
-            20: [101, 102],
-            # Good
-            21: [27],
-            22: [55],
-}
 @app.route('/unit_test/<topic>')
 def unit_test(topic):
     name = session.get('NAME')
@@ -940,13 +925,13 @@ def unit_test(topic):
                 if solution == '>':
                     option_list.append('<')
                     option_list.append('=')
-                if solution == '=':
+                elif solution == '=':
                     option_list.append('<')
                     option_list.append('>')
                 else:
                     option_list.append('>')
                     option_list.append('=')
-            else:
+            if skill_dict[skill_ran_num][ran_num] != 19 and skill_dict[skill_ran_num][ran_num] != 101 and skill_dict[skill_ran_num][ran_num] != 55:
                 for j in range(1, 4):
                     gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
                     option_list.append(gen_solution)
@@ -962,7 +947,7 @@ def unit_test(topic):
                 answer = ["A", "B", "C"]
             if skill_dict[skill_ran_num][ran_num] == 19:
                 answer = ["A", "B"]
-            else:
+            if skill_dict[skill_ran_num][ran_num] != 55 and skill_dict[skill_ran_num][ran_num] != 19:
                 answer = ["A", "B", "C", "D"]
             idx = 0
             if skill_ran_num == 10:
@@ -985,6 +970,53 @@ def unit_test(topic):
         return redirect(url_for('signin'))
     return render_template('unit_test.html', num=1 * 120, user=user, coins=user.coins,
                            timeCap1=user.time_capsule1, timeCap2=user.time_capsule2, topic=topic)
+
+
+from os.path import exists
+@app.route('/wrong_topic_add/<question_id>')
+def wrong_topic_collection(question_id):
+    with open('static/json/' + '1575631865@qq.com' + '.json', 'r', encoding='utf-8') as f:
+        question_list = json.load(f)
+    for question in question_list:
+        if question['id'] == int(question_id):
+            if exists('static/json/wrong/' + '1575631865@qq.com'+'.json'):
+                with open('static/json/wrong/' + '1575631865@qq.com' + '.json', 'r', encoding='utf-8') as f:
+                    wrong_question_list = json.load(f)
+                    new_id = len(wrong_question_list)
+                    wrong_question_list.append({
+                        'id': new_id,
+                        'title': question['title'],
+                        'option': question['option'],
+                        'answer': question['answer'],
+                        'skill': question['skill'],
+                    })
+            else:
+                wrong_question_list = []
+                wrong_question_list.append({
+                    'id': 0,
+                    'title': '',
+                    'option': '',
+                    'answer': '',
+                    'skill': '',
+                })
+                with open('static/json/wrong/' + '1575631865@qq.com' + '.json', 'w', encoding='utf-8') as f:
+                    json.dump(wrong_question_list, f, ensure_ascii=False, indent=4)
+                    f.close()
+                for question in question_list:
+                    if question['id'] == int(question_id):
+                        with open('static/json/wrong/' + '1575631865@qq.com' + '.json', 'r', encoding='utf-8') as f:
+                            wrong_question_list = json.load(f)
+                            new_id = len(wrong_question_list)
+                            wrong_question_list.append({
+                                'id': new_id,
+                                'title': question['title'],
+                                'option': question['option'],
+                                'answer': question['answer'],
+                                'skill': question['skill'],
+                            })
+    with open('static/json/wrong/' + '1575631865@qq.com' + '.json', 'w', encoding='utf-8') as f:
+        json.dump(wrong_question_list, f, ensure_ascii=False, indent=4)
+    return ''
 
 
 @app.route('/return_time_capsule', methods=['GET', 'POST'])

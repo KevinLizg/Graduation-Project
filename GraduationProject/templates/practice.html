@@ -41,7 +41,7 @@
           <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script>
-      var Seconds = {{ num }};
+      {#var Seconds = {{ num }};#}
     </script>
 </head>
 
@@ -63,7 +63,9 @@
 {#   </section>#}
     <h1 class="title" style="text-align: center">Just Math It</h1><hr>
     <p id="skill_" hidden>{{ skill_ }}</p>
-    <center><i class="fa fa-pencil fa-2x" title="Edit" ></i>&nbsp;<h2 id="time" style="display: inline;"></h2></center>
+    <center><i class="fa fa-pencil fa-2x" title="Edit" ></i>&nbsp;
+{#        <h2 id="time" style="display: inline;"></h2>#}
+    </center>
     <div id="el">
         <div class="clients text-center wow fadeInUp" data-wow-duration="500ms" data-wow-delay="300ms">
             <h1 v-if="finish&&score>=80">
