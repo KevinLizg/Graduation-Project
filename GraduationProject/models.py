@@ -9,6 +9,7 @@ db = SQLAlchemy(app)
 
 class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teacher.id'))
     email = db.Column(db.String(128), index=True, unique=True)
     firstname = db.Column(db.String(128))
     lastname = db.Column(db.String(128))

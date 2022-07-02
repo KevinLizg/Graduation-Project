@@ -88,7 +88,7 @@ def index():
 app.config["MAIL_SERVER"] = 'smtp.qq.com'
 app.config["MAIL_PORT"] = 465
 app.config["MAIL_USERNAME"] = '1575631865@qq.com'
-app.config['MAIL_PASSWORD'] = 'tdquheqqcyuhidcf'
+app.config['MAIL_PASSWORD'] = 'edhkaigxljyubaaa'
 app.config['MAIL_DEFAULT_SENDER'] = '1575631865@qq.com'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
@@ -133,7 +133,7 @@ def email_varification():
 @app.route('/teacher_email_verification', methods=['GET', 'POST'])
 def teacher_email_verification():
     form = TeacherEmailVeriForm()
-    if form.validate_on_submit() and form.token.data == '123':
+    if form.validate_on_submit() and form.token.data == 'TCSNUP':
         email = form.email.data
         user_in_db = Teacher.query.filter(Teacher.email == email).first()
         student_in_db = Student.query.filter(Student.email == email).first()
@@ -158,7 +158,7 @@ def teacher_email_verification():
         else:
             flash('This Email has been registered')
         session['EMAIL'] = email
-    elif form.token.data != '123':
+    elif form.token.data != 'TCSNUP':
         flash('The token is not correct')
     return render_template('teacher_email_verification.html', form=form)
 
@@ -1471,6 +1471,8 @@ def profile():
                 flash('Information has been updated')
                 return redirect(url_for('signin'))
         elif teacher:
+            students = Student.query.filter(Student.teacher_id == teacher.id).all()
+            print(students)
             skill_statistic = {}
             topic_master_dict = {}
             score_list = []
