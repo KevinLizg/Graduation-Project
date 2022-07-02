@@ -1,0 +1,147 @@
+{% extends "user_profile_base.html" %}
+
+{% block mainContent %}
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-5 align-self-center">
+                        <h4 class="page-title">Collections</h4>
+                    </div>
+                    <div class="col-7 align-self-center">
+                        <div class="d-flex align-items-center justify-content-end">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">
+                                        <a href="#">Home</a>
+                                    </li>
+                                    <li class="breadcrumb-item active" aria-current="page">Collections</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Time Capsule</h4>
+                                <div class="row m-t-40">
+                                    <!-- Column -->
+                                    <div class="col-md-6 col-lg-3 col-xlg-3">
+                                        <div class="card card-hover">
+                                            <div class="box bg-info text-center">
+                                                <h1 class="font-light text-white">{{ cap1 }}</h1>
+                                                <h6 class="text-white">Capsule Type 1</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3 col-xlg-3">
+                                        <div class="card card-hover">
+                                            <div class="box bg-info text-center">
+                                                <h1 class="font-light text-white">{{ cap2 }}</h1>
+                                                <h6 class="text-white">Capsule Type 2</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Coins</h4>
+                                <div class="row m-t-40">
+                                    <!-- Column -->
+                                    <div class="col-md-6 col-lg-3 col-xlg-3">
+                                        <div class="card card-hover">
+                                            <div class="box bg-info text-center">
+                                                <img src="../static/images/coins.png" style="width: 25px"/>
+                                                <h1 class="font-light text-white">{{ user_info.coins }}</h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Row -->
+                <div class="row">
+                    <div class="col-12">
+                        <h4 class="d-inline">Avatar</h4>
+                        <p class="text-muted m-t-0"><code>Change your own avatar</code></p>
+                        <!-- Row -->
+                        <div class="row">
+                            <!-- column -->
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card">
+                                    <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/icon/'+user_info.last_name[0]+'.png') }}" alt="Card image cap" height="350" width="300">
+                                    <div class="card-body">
+                                        <h4 class="card-title" id="">Default</h4>
+                                        <p class="card-text">Change to your default avatar</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% for avatar in avatars %}
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card">
+                                    <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/avatar/'+avatar.avatar_name+'.png') }}" alt="Card image cap" height="350" width="300">
+                                    <div class="card-body">
+                                        <h4 class="card-title" id="{{  avatar.avatar_name }}">{{  avatar.avatar_name }}</h4>
+                                        <p class="card-text">You got this one on {{ avatar.date.date() }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-12 m-t-30">
+                        <h4 class="m-b-0">Badge</h4>
+                        <p class="text-muted m-t-0 font-12"><code>Change your own badge</code></p>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-white bg-dark">
+                            <div class="card-header">
+                                <h4 class="m-b-0 text-white">Default</h4></div>
+                            <div class="card-body">
+                                <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/badge/default.png') }}" alt="Card image cap" width="300" height="350">
+                                <h3 class="card-title">Change to your default badge</h3>
+                            </div>
+                        </div>
+                    </div>
+                    {% for badge in badges %}
+                    <div class="col-md-3">
+                        <div class="card text-white bg-info">
+                            <div class="card-header">
+                                <h4 class="m-b-0 text-white" id="{{ badge.badge_name }}">{{ badge.badge_name }}</h4></div>
+                            <div class="card-body">
+                                <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/badge/'+badge.badge_name+'.png') }}" alt="Card image cap" width="300" height="350">
+                                <h3 class="card-title">You got this on {{ badge.date.date() }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- customizer Panel -->
+    <!-- ============================================================== -->
+{% endblock %}
