@@ -34,14 +34,14 @@
                                 {% for error in form.firstname.errors %}
                                 <p class="text-success">{{ error }}</p>
                                 {% endfor %}
-                                <div class="form-group col-md-6">
+                                <div class="form-group">
                                     {{ form.firstname(class="form-control") }}
                                 </div>
 
                                 {% for error in form.lastname.errors %}
                                 <p class="text-success">{{ error }}</p>
                                 {% endfor %}
-                                <div class="form-group col-md-6">
+                                <div class="form-group">
                                     {{ form.lastname(class="form-control") }}
                                 </div>
 
@@ -73,6 +73,7 @@
                                 {% for error in form.teacher.errors %}
                                 <p class="text-success">{{ error }}</p>
                                 {% endfor %}
+                                <p>Choose your teacher</p>
                                 <div class="form-group">
                                     {{ form.teacher(class="form-control") }}
                                 </div>

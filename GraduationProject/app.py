@@ -244,12 +244,17 @@ def change_password(token):
 @app.route('/signup/<token>', methods=['GET', 'POST'])
 def signup(token):
     form = SignupForm()
+    teachers = Teacher.query.all()
+    teacher_list = []
+    for teacher in teachers:
+        teacher_list.append(teacher.firstname+teacher.lastname+" from "+teacher.school)
+    form.teacher.choices = teacher_list
     try:
         email = s.loads(token, salt='email-confirm', max_age=180)
         if form.validate_on_submit():
             if form.firstname.data.isalpha() and form.lastname.data.isalpha():
                 passw_hash = generate_password_hash(form.password.data)
-                student = Student(email=email, firstname=form.firstname.data, lastname=form.lastname.data,
+                student = Student(email=email, teacher_id=form.teacher.data, firstname=form.firstname.data, lastname=form.lastname.data,
                                   password=passw_hash, gender=form.gender.data, phone=form.phone.data,
                                   school=form.school.data, dob=form.dob.data, address=form.address.data,
                                   profile_photo=form.lastname.data[0])
@@ -262,6 +267,7 @@ def signup(token):
                 flash('Your name could only contain letter of alphabet')
     except SignatureExpired:
         flash('Token is expired, please resend an email to sign up')
+        return redirect(url_for('email_varification'))
     return render_template('signup.html', form=form)
 
 
@@ -285,6 +291,7 @@ def signup_teacher(token):
                 flash('Your name could only contain letter of alphabet')
     except SignatureExpired:
         flash('Token is expired, please resend an email to sign up')
+        return redirect(url_for('teacher_email_verification'))
     return render_template('signup_teacher.html', form=form)
 
 
