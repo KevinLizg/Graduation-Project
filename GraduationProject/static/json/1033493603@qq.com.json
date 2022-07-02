@@ -1,0 +1,162 @@
+[
+    {
+        "id": 0,
+        "title": "Mean of the data: [45, 18, 9, 47, 15, 44, 9, 38, 45, 32, 42, 41, 39, 28, 29]",
+        "option": [
+            "The Mean is 24.27",
+            "The Mean is 29.53",
+            "The Mean is 32.07",
+            "The Mean is 24.73"
+        ],
+        "answer": "C",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP21221hf029c20b1ah78d00004417di172g7a56bi?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP21231hf029c20b1ah78d00002e9739f91fhedaba?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP21241hf029c20b1ah78d00005h91g314gi343h6g?MSPStoreType=image/gif&s=12"
+        ]
+    },
+    {
+        "id": 1,
+        "title": "Standard Deviation of the data: [13, 5, 38, 31, 34, 42, 23, 47, 45, 7, 14, 25, 37, 28, 28]",
+        "option": [
+            "The Standard Deviation is 14.18",
+            "The Standard Deviation is 10.0",
+            "The Standard Deviation is 13.35",
+            "The Standard Deviation is 14.13"
+        ],
+        "answer": "C",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP15851h5ba99b8ccfe9c500002487de56c6e4bfd4?MSPStoreType=image/gif&s=10",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP15861h5ba99b8ccfe9c5000010g0fbgiegc73c67?MSPStoreType=image/gif&s=10",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP15871h5ba99b8ccfe9c5000069ahf8f897880g83?MSPStoreType=image/gif&s=10"
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Variance of the data: [24, 42, 12, 43, 41, 29, 18, 34, 37, 31, 39, 48, 8, 40, 40]",
+        "option": [
+            "The variance is 212.07",
+            "The variance is 143.4",
+            "The variance is 117.07",
+            "The variance is 153.35"
+        ],
+        "answer": "B",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP230523hf3ce66d685h2g00005agge6gd8fa357ea?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP230623hf3ce66d685h2g00002b8b8e8ff3h6b909?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP230723hf3ce66d685h2g000016780481b2824i8g?MSPStoreType=image/gif&s=3"
+        ]
+    },
+    {
+        "id": 3,
+        "title": "Variance of the data: [46, 47, 38, 38, 45, 49, 43, 33, 11, 5, 14, 5, 40, 21, 28]",
+        "option": [
+            "The variance is 195.4",
+            "The variance is 163.4",
+            "The variance is 192.07",
+            "The variance is 248.41"
+        ],
+        "answer": "D",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP5531h2g58a4e0b30d9e000051a03a0575egh32b?MSPStoreType=image/gif&s=9",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP5541h2g58a4e0b30d9e000052aeh07f02iae8c8?MSPStoreType=image/gif&s=9",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP5551h2g58a4e0b30d9e00004egb933922iga2g4?MSPStoreType=image/gif&s=9"
+        ]
+    },
+    {
+        "id": 4,
+        "title": "Mean of the data: [13, 6, 22, 36, 37, 44, 14, 7, 41, 47, 10, 46, 41, 21, 27]",
+        "option": [
+            "The Mean is 21.4",
+            "The Mean is 27.33",
+            "The Mean is 26.6",
+            "The Mean is 27.47"
+        ],
+        "answer": "D",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP48781gg8i0ghbdiehb8g00003b1499dh1h666id2?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP48791gg8i0ghbdiehb8g00005c41b76854ec0ab4?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP48801gg8i0ghbdiehb8g0000424369i7e4ad85d6?MSPStoreType=image/gif&s=6"
+        ]
+    },
+    {
+        "id": 5,
+        "title": "Standard Deviation of the data: [45, 6, 29, 31, 32, 38, 30, 6, 15, 44, 44, 24, 7, 7, 23]",
+        "option": [
+            "The Standard Deviation is 14.37",
+            "The Standard Deviation is 12.37",
+            "The Standard Deviation is 12.31",
+            "The Standard Deviation is 15.2"
+        ],
+        "answer": "A",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP17931gg8i9h373813bee000033e30fbhb37h7h2g?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP17941gg8i9h373813bee00004h948c2f56ead9if?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP17951gg8i9h373813bee000046d2e31bed995431?MSPStoreType=image/gif&s=6"
+        ]
+    },
+    {
+        "id": 6,
+        "title": "Variance of the data: [16, 15, 19, 23, 43, 40, 18, 50, 48, 24, 28, 25, 10, 34, 18]",
+        "option": [
+            "The variance is 151.24",
+            "The variance is 164.03",
+            "The variance is 160.83",
+            "The variance is 219.7"
+        ],
+        "answer": "C",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP22441h5ba812gfdibc2e000041d17habih57b8b2?MSPStoreType=image/gif&s=10",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP22451h5ba812gfdibc2e00005bc89g6aff7c34ae?MSPStoreType=image/gif&s=10",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP22461h5ba812gfdibc2e00001b901ag3d3gfcbb9?MSPStoreType=image/gif&s=10"
+        ]
+    },
+    {
+        "id": 7,
+        "title": "Standard Deviation of the data: [29, 30, 36, 9, 50, 16, 29, 10, 36, 34, 7, 49, 24, 6, 34]",
+        "option": [
+            "The Standard Deviation is 14.32",
+            "The Standard Deviation is 11.65",
+            "The Standard Deviation is 15.63",
+            "The Standard Deviation is 12.82"
+        ],
+        "answer": "A",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP52821h5b9i5ihh48ab670000653e3f0e6hfhie10?MSPStoreType=image/gif&s=10",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP52831h5b9i5ihh48ab6700003aa7fb8cf7dgefgd?MSPStoreType=image/gif&s=10",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP52841h5b9i5ihh48ab67000012e1d24e4d1bacb9?MSPStoreType=image/gif&s=10"
+        ]
+    },
+    {
+        "id": 8,
+        "title": "Standard Deviation of the data: [20, 25, 23, 44, 44, 42, 36, 38, 10, 45, 46, 8, 49, 36, 44]",
+        "option": [
+            "The Standard Deviation is 12.63",
+            "The Standard Deviation is 14.69",
+            "The Standard Deviation is 13.44",
+            "The Standard Deviation is 14.8"
+        ],
+        "answer": "C",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP25612020bd720dcb5hca000026ee0e375e4a7926?MSPStoreType=image/gif&s=2",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP25622020bd720dcb5hca00003ifi8ida70h079a0?MSPStoreType=image/gif&s=2",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP25632020bd720dcb5hca0000243232if3d72eidi?MSPStoreType=image/gif&s=2"
+        ]
+    },
+    {
+        "id": 9,
+        "title": "Variance of the data: [27, 43, 50, 48, 26, 32, 36, 45, 17, 47, 5, 31, 50, 6, 31]",
+        "option": [
+            "The variance is 222.5",
+            "The variance is 175.41",
+            "The variance is 162.38",
+            "The variance is 120.24"
+        ],
+        "answer": "A",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51361hf021ad331b9de100003g266g3b2g51i260?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51371hf021ad331b9de100000ffc9i6gciciie6b?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51381hf021ad331b9de1000017f3aa810919gi1g?MSPStoreType=image/gif&s=12"
+        ]
+    }
+]

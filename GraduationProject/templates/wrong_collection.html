@@ -58,14 +58,18 @@
 {#            </div>#}
 {#        </div>#}
 {#   </section>#}
-    <h1 class="title" style="text-align: center">Just Math It</h1><hr>
+    <h1 class="title" style="text-align: center">Wrong Questions Collection</h1><hr>
     <p id="skill_" hidden>{{ skill_ }}</p>
+    {% if filename == None or question_list|length <= 1 %}
+        <center><i class="fa fa-pencil fa-2x" title="Edit" >You have no wrong questions! Go to practice and add some into collection</i>&nbsp;
+        </center>
+        <div id="el">
+            <img src="../static/images/no-questions.png" style="display: block; margin-left: auto; margin-right: auto;"/>
+        </div>
+    {% else %}
     <center><i class="fa fa-pencil fa-2x" title="Edit" ></i>&nbsp;
         <h2 id="filename" style="display: none;">{{ filename }}</h2>
     </center>
-    {% if filename == None %}
-        <div>Hello</div>
-    {% else %}
     <div id="el">
         <div class="clients text-center wow fadeInUp" data-wow-duration="500ms" data-wow-delay="300ms">
             <h1 v-if="finish&&score>=80">
@@ -126,17 +130,17 @@
 
             <div v-if='checkList[page]!==0' class="answer">Answer is：^*timu.answer*^</div>
             <hr>
-            <div class="bs-example" v-if='checkList[page]!==0'>
-                <button type="button" class="btn btn-success" onclick="showSolution()"><i class="fa fa-cog"></i> Check solution</button>
-{#                <button type="button" class="btn ivu-btn-loading" v-if='addWrong[page]==false' onclick="addWrongProblem()"><i class="fa fa-briefcase"></i> Add to Wrong Questions Collection</button>#}
-            </div>
-
             <p>
                 This is from topic <a class='type' v-bind:href="'/practice/'+skillList[page]">^*data[page]['skill']*^</a>, click to pratice more exercises like this.
             </p>
             <p>
                 <a class='type' style="background: red; color: white" onclick="deleteWrongProblem()">Remove this</a>, click to remove this question from wrong problems collection.
             </p>
+
+            <div class="bs-example" v-if='checkList[page]!==0'>
+                <button type="button" class="btn btn-success" onclick="showSolution()"><i class="fa fa-cog"></i> Check solution</button>
+{#                <button type="button" class="btn ivu-btn-loading" v-if='addWrong[page]==false' onclick="addWrongProblem()"><i class="fa fa-briefcase"></i> Add to Wrong Questions Collection</button>#}
+            </div>
 
 
             <div class="analysis" id="solution" v-if="checkSolution[page]">
@@ -152,7 +156,7 @@
                     <img style="display: inline" src="{{ url_for('static',filename='images/coins.png') }}" width="15px"/> 5 Coins
                     <hr><button type="button" class="btn btn-warning" id="coinsAlert" style="display: none">You do not have enough coins! Do some quizzes to earn some coins!</button>
                     <div class="analysis" id="detail" style="filter: blur(5px)">
-                        <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length-1)">
+                        <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length)">
                         <img :src="i">
                         </Card>
                     </div>
@@ -160,7 +164,7 @@
 
                 <div v-if="checkDetail[page]==='true' || checkDetail[page]===true">
                     <div class="analysis" id="detail">
-                        <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length-1)">
+                        <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length)">
                              <img :src="i">
                         </Card>
                     </div>

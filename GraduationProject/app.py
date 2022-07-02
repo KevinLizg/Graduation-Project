@@ -858,6 +858,7 @@ def wrong_collection():
         with open('static/json/wrong/' + email + '.json', 'w', encoding='utf-8') as f:
             json.dump(question_list, f, ensure_ascii=False, indent=4)
             f.close()
+    print(len(question_list))
     return render_template('wrong_collection.html', user=user, filename=filename, question_list=question_list)
 
 
@@ -1713,7 +1714,9 @@ def unit_grade():
     for unit in units:
         topic_name = Topics.query.filter(Topics.topic_id == unit.topic_id).first().topic_name
         unit_dict[topic_name].append(unit.score)
-        if len(unit_dict[topic_name]) > 3:
+        if len(unit_dict[topic_name]) < 6:
+            unit_dict[topic_name].appendleft(0)
+        if len(unit_dict[topic_name]) >= 6:
             unit_dict[topic_name].popleft()
     color = ["#ff6384", "#4bc0c0", "#ffcd56",
              "#07b107", "#36a2eb"]
