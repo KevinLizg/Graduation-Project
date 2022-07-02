@@ -1243,129 +1243,133 @@ def test():
 def user_profile(user_email):
     name = session.get('NAME')
     email = session.get('EMAIL')
-    session['NAME'] = name
-    session['EMAIL'] = email
-    user_email = user_email
-    m_student = Student.query.filter(Student.email == user_email).first()
-    m_teacher = Teacher.query.filter(Teacher.email == user_email).first()
-    me_student = Student.query.filter(Student.email == email).first()
-    me_teacher = Teacher.query.filter(Teacher.email == email).first()
-    me = ''
-    if me_student:
-        me = me_student
-    if me_teacher:
-        me = me_teacher
-    me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
-    me_img = me_i.read()
-    me_img = base64.b64encode(me_img).decode('ascii')
-    if me.badge_name:
-        color = me.badge_name.split('_')[1]
-        badge = base64.b64encode(open('static/images/badge/' + me.badge_name + ".png", 'rb').read()).decode(
-            'ascii')
+    if name:
+        session['NAME'] = name
+        session['EMAIL'] = email
+        user_email = user_email
+        m_student = Student.query.filter(Student.email == user_email).first()
+        m_teacher = Teacher.query.filter(Teacher.email == user_email).first()
+        me_student = Student.query.filter(Student.email == email).first()
+        me_teacher = Teacher.query.filter(Teacher.email == email).first()
+        me = ''
+        if me_student:
+            me = me_student
+        if me_teacher:
+            me = me_teacher
+        me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
+        me_img = me_i.read()
+        me_img = base64.b64encode(me_img).decode('ascii')
+        if me.badge_name:
+            color = me.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + me.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
+        else:
+            color = None
+            badge = None
+        my_info = {
+            'email': email,
+            'first_name': me.firstname,
+            'last_name': me.lastname,
+            'color': color,
+            'badge_name': badge,
+            'profile_pic': me_img,
+        }
+        if m_student:
+            student = Student.query.filter(Student.email == user_email).first()
+            scores = Score.query.filter(Score.student_id == student.id).order_by(Score.date.desc()).all()
+            skill_name_dict = {}
+            topic_master_dict = {}
+            topic_master_count = {}
+            score_list = []
+            for score in scores:
+                skill = Skills.query.filter(Skills.skill_id == score.skill_id).first()
+                topic = Topics.query.filter(Topics.topic_id == skill.topic_id).first()
+                comment = Comments.query.filter(Comments.skill_id == skill.skill_id).count()
+                t_name = topic.topic_name
+                s_name = skill.skill_name
+                score_list.append({
+                    'score': score.score,
+                    'date': score.date,
+                    'topics': t_name,
+                    'skill': s_name,
+                    'comment': comment,
+                    'like': skill.like
+                })
+                if skill_name_dict.get(s_name) is None:
+                    skill_name_dict[s_name] = 1
+                else:
+                    skill_name_dict[s_name] += 1
+                if topic_master_count.get(t_name) is None:
+                    topic_master_count[t_name] = 1
+                else:
+                    topic_master_count[t_name] += 1
+                if topic_master_dict.get(t_name) is None:
+                    topic_master_dict[t_name] = int(score.score)
+                else:
+                    topic_master_dict[t_name] += int(score.score)
+            for k in topic_master_dict.keys():
+                topic_master_dict[k] = int(topic_master_dict[k] / topic_master_count[k])
+            skill_statistic = {
+                'skill_list': list(skill_name_dict.keys()),
+                'skill_value_list': list(skill_name_dict.values()),
+            }
+            image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
+            img_stream = image.read()
+            img_stream = base64.b64encode(img_stream).decode('ascii')
+            if student.badge_name:
+                color = student.badge_name.split('_')[1]
+                badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+                    'ascii')
+            else:
+                color = None
+                badge = None
+            user_info = {
+                'email': user_email,
+                'first_name': student.firstname,
+                'last_name': student.lastname,
+                'profile_pic': img_stream,
+                'phone': student.phone,
+                'school': student.school,
+                'address': student.address,
+                'age': datetime.now().date().year - int(student.dob.split("-")[0]),
+                'gender': student.gender,
+                'password': student.password,
+                'color': color,
+                'badge_name': badge,
+                'occupation': 'Student'
+            }
+        elif m_teacher:
+            teacher = Teacher.query.filter(Teacher.email == user_email).first()
+            skill_statistic = {}
+            topic_master_dict = {}
+            score_list = []
+            form = TeacherUpdateInfo()
+            name = teacher.lastname
+            image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
+            img_stream = image.read()
+            img_stream = base64.b64encode(img_stream).decode('ascii')
+            if teacher.badge_name:
+                color = teacher.badge_name.split('_')[1]
+                badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
+                    'ascii')
+            else:
+                color = None
+                badge = None
+            user_info = {
+                'email': user_email,
+                'first_name': teacher.firstname,
+                'last_name': teacher.lastname,
+                'profile_pic': img_stream,
+                'phone': teacher.phone,
+                'school': teacher.school,
+                'password': teacher.password,
+                'color': color,
+                'badge_name': badge,
+                'occupation': 'Teacher'
+            }
     else:
-        color = None
-        badge = None
-    my_info = {
-        'email': email,
-        'first_name': me.firstname,
-        'last_name': me.lastname,
-        'color': color,
-        'badge_name': badge,
-        'profile_pic': me_img,
-    }
-    if m_student:
-        student = Student.query.filter(Student.email == user_email).first()
-        scores = Score.query.filter(Score.student_id == student.id).order_by(Score.date.desc()).all()
-        skill_name_dict = {}
-        topic_master_dict = {}
-        topic_master_count = {}
-        score_list = []
-        for score in scores:
-            skill = Skills.query.filter(Skills.skill_id == score.skill_id).first()
-            topic = Topics.query.filter(Topics.topic_id == skill.topic_id).first()
-            comment = Comments.query.filter(Comments.skill_id == skill.skill_id).count()
-            t_name = topic.topic_name
-            s_name = skill.skill_name
-            score_list.append({
-                'score': score.score,
-                'date': score.date,
-                'topics': t_name,
-                'skill': s_name,
-                'comment': comment,
-                'like': skill.like
-            })
-            if skill_name_dict.get(s_name) is None:
-                skill_name_dict[s_name] = 1
-            else:
-                skill_name_dict[s_name] += 1
-            if topic_master_count.get(t_name) is None:
-                topic_master_count[t_name] = 1
-            else:
-                topic_master_count[t_name] += 1
-            if topic_master_dict.get(t_name) is None:
-                topic_master_dict[t_name] = int(score.score)
-            else:
-                topic_master_dict[t_name] += int(score.score)
-        for k in topic_master_dict.keys():
-            topic_master_dict[k] = int(topic_master_dict[k] / topic_master_count[k])
-        skill_statistic = {
-            'skill_list': list(skill_name_dict.keys()),
-            'skill_value_list': list(skill_name_dict.values()),
-        }
-        image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
-        img_stream = image.read()
-        img_stream = base64.b64encode(img_stream).decode('ascii')
-        if student.badge_name:
-            color = student.badge_name.split('_')[1]
-            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
-                'ascii')
-        else:
-            color = None
-            badge = None
-        user_info = {
-            'email': user_email,
-            'first_name': student.firstname,
-            'last_name': student.lastname,
-            'profile_pic': img_stream,
-            'phone': student.phone,
-            'school': student.school,
-            'address': student.address,
-            'age': datetime.now().date().year - int(student.dob.split("-")[0]),
-            'gender': student.gender,
-            'password': student.password,
-            'color': color,
-            'badge_name': badge,
-            'occupation': 'Student'
-        }
-    elif m_teacher:
-        teacher = Teacher.query.filter(Teacher.email == user_email).first()
-        skill_statistic = {}
-        topic_master_dict = {}
-        score_list = []
-        form = TeacherUpdateInfo()
-        name = teacher.lastname
-        image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
-        img_stream = image.read()
-        img_stream = base64.b64encode(img_stream).decode('ascii')
-        if teacher.badge_name:
-            color = teacher.badge_name.split('_')[1]
-            badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
-                'ascii')
-        else:
-            color = None
-            badge = None
-        user_info = {
-            'email': user_email,
-            'first_name': teacher.firstname,
-            'last_name': teacher.lastname,
-            'profile_pic': img_stream,
-            'phone': teacher.phone,
-            'school': teacher.school,
-            'password': teacher.password,
-            'color': color,
-            'badge_name': badge,
-            'occupation': 'Teacher'
-        }
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
     return render_template('user_profile.html', name=name, email=email, user_info=user_info,
                            skill_list=json.dumps(skill_statistic),
                            topic_master=topic_master_dict, score_list=score_list, user=my_info)
@@ -1416,93 +1420,98 @@ def return_score(student):
 def profile():
     from models import db
     email = session.get('EMAIL')
-    student = Student.query.filter(Student.email == email).first()
-    teacher = Teacher.query.filter(Teacher.email == email).first()
-    if student:
-        score_list, skill_statistic, topic_master_dict = return_score(student)
-        form = UpdateInfo()
-        # if student.agent_photo != None:
-        #     image = open(os.path.join(app.config['UPLOAD_PATH'], student.agent_photo), 'rb')
-        #     img_stream = image.read()
-        #     img_stream = base64.b64encode(img_stream).decode('ascii')
-        # else:
-        name = student.lastname
-        image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
-        img_stream = image.read()
-        img_stream = base64.b64encode(img_stream).decode('ascii')
-        if student.badge_name:
-            color = student.badge_name.split('_')[1]
-            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
-                'ascii')
-        else:
-            color = None
-            badge = None
-        user_info = {
-            'email': email,
-            'first_name': student.firstname,
-            'last_name': student.lastname,
-            'profile_pic': img_stream,
-            'phone': student.phone,
-            'school': student.school,
-            'address': student.address,
-            'age': datetime.now().date().year - int(student.dob.split("-")[0]),
-            'gender': student.gender,
-            'password': student.password,
-            'color': color,
-            'badge_name': badge,
-            'occupation': 'Student'
-        }
-        if form.validate_on_submit():
-            student_in_db = Student.query.filter(Student.email == email).first()
-            student_in_db.firstname = form.firstname.data
-            student_in_db.lastname = form.lastname.data
-            student_in_db.phone = form.phone.data
-            student_in_db.address = form.address.data
-            student_in_db.school = form.school.data
-            db.session.add(student_in_db)
-            db.session.commit()
-            session.clear()
-            flash('Information has been updated')
-            return redirect(url_for('signin'))
-    elif teacher:
-        skill_statistic = {}
-        topic_master_dict = {}
-        score_list = []
-        form = TeacherUpdateInfo()
-        name = teacher.lastname
-        image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
-        img_stream = image.read()
-        img_stream = base64.b64encode(img_stream).decode('ascii')
-        if teacher.badge_name:
-            color = teacher.badge_name.split('_')[1]
-            badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
-                'ascii')
-        else:
-            color = None
-            badge = None
-        user_info = {
-            'email': email,
-            'first_name': teacher.firstname,
-            'last_name': teacher.lastname,
-            'profile_pic': img_stream,
-            'phone': teacher.phone,
-            'school': teacher.school,
-            'password': teacher.password,
-            'color': color,
-            'badge_name': badge,
-            'occupation': 'Teacher'
-        }
-        if form.validate_on_submit():
-            teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
-            teacher_in_db.firstname = form.firstname.data
-            teacher_in_db.lastname = form.lastname.data
-            teacher_in_db.phone = form.phone.data
-            teacher_in_db.school = form.school.data
-            db.session.add(teacher_in_db)
-            db.session.commit()
-            session.clear()
-            flash('Information has been updated')
-            return redirect(url_for('signin'))
+    print(email)
+    if email:
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        if student:
+            score_list, skill_statistic, topic_master_dict = return_score(student)
+            form = UpdateInfo()
+            # if student.agent_photo != None:
+            #     image = open(os.path.join(app.config['UPLOAD_PATH'], student.agent_photo), 'rb')
+            #     img_stream = image.read()
+            #     img_stream = base64.b64encode(img_stream).decode('ascii')
+            # else:
+            name = student.lastname
+            image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
+            img_stream = image.read()
+            img_stream = base64.b64encode(img_stream).decode('ascii')
+            if student.badge_name:
+                color = student.badge_name.split('_')[1]
+                badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+                    'ascii')
+            else:
+                color = None
+                badge = None
+            user_info = {
+                'email': email,
+                'first_name': student.firstname,
+                'last_name': student.lastname,
+                'profile_pic': img_stream,
+                'phone': student.phone,
+                'school': student.school,
+                'address': student.address,
+                'age': datetime.now().date().year - int(student.dob.split("-")[0]),
+                'gender': student.gender,
+                'password': student.password,
+                'color': color,
+                'badge_name': badge,
+                'occupation': 'Student'
+            }
+            if form.validate_on_submit():
+                student_in_db = Student.query.filter(Student.email == email).first()
+                student_in_db.firstname = form.firstname.data
+                student_in_db.lastname = form.lastname.data
+                student_in_db.phone = form.phone.data
+                student_in_db.address = form.address.data
+                student_in_db.school = form.school.data
+                db.session.add(student_in_db)
+                db.session.commit()
+                session.clear()
+                flash('Information has been updated')
+                return redirect(url_for('signin'))
+        elif teacher:
+            skill_statistic = {}
+            topic_master_dict = {}
+            score_list = []
+            form = TeacherUpdateInfo()
+            name = teacher.lastname
+            image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
+            img_stream = image.read()
+            img_stream = base64.b64encode(img_stream).decode('ascii')
+            if teacher.badge_name:
+                color = teacher.badge_name.split('_')[1]
+                badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
+                    'ascii')
+            else:
+                color = None
+                badge = None
+            user_info = {
+                'email': email,
+                'first_name': teacher.firstname,
+                'last_name': teacher.lastname,
+                'profile_pic': img_stream,
+                'phone': teacher.phone,
+                'school': teacher.school,
+                'password': teacher.password,
+                'color': color,
+                'badge_name': badge,
+                'occupation': 'Teacher'
+            }
+            if form.validate_on_submit():
+                teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+                teacher_in_db.firstname = form.firstname.data
+                teacher_in_db.lastname = form.lastname.data
+                teacher_in_db.phone = form.phone.data
+                teacher_in_db.school = form.school.data
+                db.session.add(teacher_in_db)
+                db.session.commit()
+                session.clear()
+                flash('Information has been updated')
+                return redirect(url_for('signin'))
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
     session['EMAIL'] = email
     return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(skill_statistic),
                            topic_master=topic_master_dict, score_list=score_list, unit_score=None)
@@ -1530,6 +1539,7 @@ def profile_collections():
             badge = None
         user_info = {
             'email': email,
+            'coins': student.coins,
             'first_name': student.firstname,
             'last_name': student.lastname,
             'profile_pic': img_stream,
@@ -1561,6 +1571,7 @@ def profile_collections():
         user_info = {
             'email': email,
             'first_name': teacher.firstname,
+            'coins': teacher.coins,
             'last_name': teacher.lastname,
             'profile_pic': img_stream,
             'phone': teacher.phone,
