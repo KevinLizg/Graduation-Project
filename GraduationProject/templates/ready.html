@@ -56,7 +56,7 @@
     <p id="skill_" hidden>{{ skill_ }}</p>
     <div id="el">
         <div class="typeList">
-            <div v-for="i in typeList" @click='goNext(i.id)'>
+            <div v-for="i in typeList" @click='goNext(i.id)' onclick="swalFunc()">
                 <Card class="timu">
                     ^*i.name*^
                 </Card>
@@ -79,23 +79,65 @@
                     name: "Start your pratice!"
                 },
                 {
-                    id: "/quiz/",
+                    id: "quiz",
                     name: "Start your quiz!"
                 }
                 ]
             },
             methods: {
                 goNext(id) {
-                    console.log('file:'+document.getElementById("filename").innerText);
-                    console.log('href:'+document.getElementById("skill_").innerText);
-                    if(id === "practice"){
+                    document.addEventListener("click", handler, true);
+
+                    function handler(e) {
+                      e.stopPropagation();
+                      e.preventDefault();
+                    }
+                    if (id === "practice") {
+                        let timerInterval
+                        Swal.fire({
+                          title: 'Preparing your questions',
+                          html: 'About <b></b> seconds left.',
+                          timer: 20000,
+                          timerProgressBar: true,
+                          didOpen: () => {
+                            Swal.showLoading()
+                            const b = Swal.getHtmlContainer().querySelector('b')
+                            timerInterval = setInterval(() => {
+                              b.textContent = parseInt(Swal.getTimerLeft()/1000)
+                            }, 100)
+                          },
+                          willClose: () => {
+                            clearInterval(timerInterval)
+                          }
+                        }).then((result) => {
+
+                        })
                         sessionStorage.type = id;
                         sessionStorage.file = document.getElementById("filename").innerText;
-                        window.location.href = "/practice/"+document.getElementById("skill_").innerText;
-                    }else{
+                        window.location.href = "/practice/" + document.getElementById("skill_").innerText;
+                    } else {
+                        let timerInterval
+                        Swal.fire({
+                          title: 'Preparing your questions',
+                          html: 'About <b></b> seconds left.',
+                          timer: 40000,
+                          timerProgressBar: true,
+                          didOpen: () => {
+                            Swal.showLoading()
+                            const b = Swal.getHtmlContainer().querySelector('b')
+                            timerInterval = setInterval(() => {
+                              b.textContent = parseInt(Swal.getTimerLeft()/1000)
+                            }, 100)
+                          },
+                          willClose: () => {
+                            clearInterval(timerInterval)
+                          }
+                        }).then((result) => {
+
+                        })
                         sessionStorage.type = id;
                         sessionStorage.file = document.getElementById("filename").innerText;
-                        window.location.href = "/quiz/"+document.getElementById("skill_").innerText;
+                        window.location.href = "/quiz/" + document.getElementById("skill_").innerText;
                     }
                 }
             }

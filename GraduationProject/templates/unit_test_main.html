@@ -35,13 +35,13 @@
                              <div class="col-sm-12 col-md-12">
                                 <div class="single-blog single-column">
                                     <div class="post-thumb">
-                                        <a href="{{ url_for('unit_test', topic=topic.topic_name ) }}"><img src="../static/images/topics/{{ topic.topic_name }}.png" class="img-responsive" style="margin: auto; width: 300px"></a>
+                                        <a href="{{ url_for('unit_test', topic=topic.topic_name ) }}" onclick="loading()"><img src="../static/images/topics/{{ topic.topic_name }}.png" class="img-responsive" style="margin: auto; width: 300px"></a>
                                         <div class="post-overlay">
-                                           <span class="uppercase"><a href="{{ url_for('unit_test', topic=topic.topic_name ) }}">St<br><small>art</small></a></span>
+                                           <span class="uppercase"><a href="{{ url_for('unit_test', topic=topic.topic_name ) }}" onclick="loading()">St<br><small>art</small></a></span>
                                        </div>
                                     </div>
                                     <div class="post-content overflow">
-                                        <h2 class="post-title bold"><a href="{{ url_for('unit_test', topic=topic.topic_name ) }}">{{ topic.topic_name }}</a></h2>
+                                        <h2 class="post-title bold"><a href="{{ url_for('unit_test', topic=topic.topic_name ) }}" onclick="loading()">{{ topic.topic_name }}</a></h2>
                                         <h3 class="post-author"><a onclick="false">Introduction</a></h3>
                                         <p>{{ topic.topic_introduction }}</p>
                                         <div class="post-bottom overflow">
@@ -96,5 +96,35 @@
     </section>
 
 </html>
+
+    <script>
+        function loading(){
+            document.addEventListener("click", handler, true);
+
+            function handler(e) {
+              e.stopPropagation();
+              e.preventDefault();
+            }
+            let timerInterval
+            Swal.fire({
+              title: 'Preparing your questions',
+              html: 'About <b></b> seconds left.',
+              timer: 60000,
+              timerProgressBar: true,
+              didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                  b.textContent = parseInt(Swal.getTimerLeft()/1000)
+                }, 100)
+              },
+              willClose: () => {
+                clearInterval(timerInterval)
+              }
+            }).then((result) => {
+
+            })
+        }
+    </script>
 
 {% endblock %}

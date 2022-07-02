@@ -1020,7 +1020,6 @@ def unit_test(topic):
             skill_ran_num = skill_id[random.randint(0, len(skill_id)-1)]
             ran_num = random.randint(0, len(skill_dict[skill_ran_num]) - 1)
             problem, solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
-            print(i, skill_ran_num, ran_num)
             app_id = 'XQAUEU-WR3AY23332'
             client = wolframalpha.Client(app_id)
             # res = client.query(problem)
