@@ -78,7 +78,7 @@
                 <div class="row">
                     <div class="col-12">
                         <h4 class="d-inline">Avatar</h4>
-                        <p class="text-muted m-t-0"><code>Change your own avatar</code></p>
+                        <p class="text-muted m-t-0"><code>His avatar</code></p>
                         <!-- Row -->
                         <div class="row">
                             <!-- column -->
@@ -87,7 +87,7 @@
                                     <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/icon/'+user_info.last_name[0]+'.png') }}" alt="Card image cap" height="350" width="300">
                                     <div class="card-body">
                                         <h4 class="card-title" id="">Default</h4>
-                                        <p class="card-text">Change to your default avatar</p>
+                                        <p class="card-text">His default avatar</p>
                                     </div>
                                 </div>
                             </div>
@@ -97,7 +97,7 @@
                                     <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/avatar/'+avatar.avatar_name+'.png') }}" alt="Card image cap" height="350" width="300">
                                     <div class="card-body">
                                         <h4 class="card-title" id="{{  avatar.avatar_name }}">{{  avatar.avatar_name }}</h4>
-                                        <p class="card-text">You got this one on {{ avatar.date.date() }}</p>
+                                        <p class="card-text">He got this one on {{ avatar.date.date() }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +119,7 @@
                                 <h4 class="m-b-0 text-white">Default</h4></div>
                             <div class="card-body">
                                 <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/badge/default.png') }}" alt="Card image cap" width="300" height="350">
-                                <h3 class="card-title">Change to your default badge</h3>
+                                <h3 class="card-title">His default badge</h3>
                             </div>
                         </div>
                     </div>
@@ -130,7 +130,7 @@
                                 <h4 class="m-b-0 text-white" id="{{ badge.badge_name }}">{{ badge.badge_name }}</h4></div>
                             <div class="card-body">
                                 <img class="card-img-top img-responsive rounded-circle" src="{{ url_for('static',filename='images/badge/'+badge.badge_name+'.png') }}" alt="Card image cap" width="300" height="350">
-                                <h3 class="card-title">You got this on {{ badge.date.date() }}</h3>
+                                <h3 class="card-title">He got this on {{ badge.date.date() }}</h3>
                             </div>
                         </div>
                     </div>

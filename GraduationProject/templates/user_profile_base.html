@@ -316,37 +316,37 @@
                             {% endif %}
                             <ul aria-expanded="false" class="collapse  first-level">
                                 <li class="sidebar-item">
-                                    <a href="{{ url_for('unit_grade') }}" class="sidebar-link">
+                                    <a href="{{ url_for('user_unit_grade', user_email=user_info.email) }}" class="sidebar-link">
                                         <i class="mdi mdi-album"></i>
-                                        <span class="hide-menu"> Units </span>
+                                        <span class="hide-menu"> Unit </span>
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a href="{{ url_for('grade',topic_name='Basic Math') }}" class="sidebar-link">
+                                    <a href="{{ url_for('user_grade',user_email=user_info.email,topic_name='Basic Math') }}" class="sidebar-link">
                                         <i class="mdi mdi-math-compass"></i>
                                         <span class="hide-menu"> Basic Math </span>
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a href="{{ url_for('grade',topic_name='Algebra') }}" class="sidebar-link">
+                                    <a href="{{ url_for('user_grade',user_email=user_info.email,topic_name='Algebra') }}" class="sidebar-link">
                                         <i class="mdi mdi-format-list-numbers"></i>
                                         <span class="hide-menu"> Algebra </span>
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a href="{{ url_for('grade',topic_name='Geometry') }}" class="sidebar-link">
+                                    <a href="{{ url_for('user_grade',user_email=user_info.email,topic_name='Geometry') }}" class="sidebar-link">
                                         <i class="mdi mdi-shape-square-plus"></i>
                                         <span class="hide-menu"> Geometry </span>
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a href="{{ url_for('grade',topic_name='Statistic') }}" class="sidebar-link">
+                                    <a href="{{ url_for('user_grade',user_email=user_info.email,topic_name='Statistic') }}" class="sidebar-link">
                                         <i class="mdi mdi-access-point-network"></i>
                                         <span class="hide-menu"> Statistic </span>
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a href="{{ url_for('grade',topic_name='Misc') }}" class="sidebar-link">
+                                    <a href="{{ url_for('user_grade',user_email=user_info.email,topic_name='Misc') }}" class="sidebar-link">
                                         <i class="mdi mdi-school"></i>
                                         <span class="hide-menu"> Misc </span>
                                     </a>

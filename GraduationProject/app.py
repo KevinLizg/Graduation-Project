@@ -247,7 +247,7 @@ def signup(token):
     teachers = Teacher.query.all()
     teacher_list = []
     for teacher in teachers:
-        teacher_list.append(teacher.firstname+teacher.lastname+" from "+teacher.school)
+        teacher_list.append((teacher.id, teacher.firstname+" "+teacher.lastname+" from "+teacher.school))
     form.teacher.choices = teacher_list
     try:
         email = s.loads(token, salt='email-confirm', max_age=180)
@@ -1707,6 +1707,7 @@ def user_collections(user_email):
                            topic_master=None, score_list=None, unit_score=None, avatars=avatars, badges=badges,
                            cap1=user_info['time_capsule1'], cap2=user_info['time_capsule2'])
 
+
 @app.route('/change_profile/<email>', methods=['GET', 'POST'])
 def change_profile(email):
     from models import db
@@ -1759,7 +1760,6 @@ def grade(topic_name):
     email = session.get('EMAIL')
     student = Student.query.filter(Student.email == email).first()
     _, skill_statistic, _ = return_score(student)
-    name = student.lastname
     image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
     img_stream = image.read()
     img_stream = base64.b64encode(img_stream).decode('ascii')
@@ -1801,6 +1801,91 @@ def grade(topic_name):
             'date': list(score_list.keys())
         })
     return render_template('grade.html', user=user_info, score_list=json.dumps(skill_score_list),
+                           skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic), unit_score=None)
+
+
+@app.route('/user_grade/<user_email>/<topic_name>', methods=['GET', 'POST'])
+def user_grade(user_email, topic_name):
+    email = session.get('EMAIL')
+    name = session.get('NAME')
+    if name:
+        session['NAME'] = name
+        session['EMAIL'] = email
+        me_student = Student.query.filter(Student.email == email).first()
+        me_teacher = Teacher.query.filter(Teacher.email == email).first()
+        me = ''
+        if me_student:
+            me = me_student
+            occupation = 'Student'
+        if me_teacher:
+            me = me_teacher
+            occupation = 'Teacher'
+        me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
+        me_img = me_i.read()
+        me_img = base64.b64encode(me_img).decode('ascii')
+        if me.badge_name:
+            color = me.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + me.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
+        else:
+            color = None
+            badge = None
+        my_info = {
+            'email': email,
+            'first_name': me.firstname,
+            'last_name': me.lastname,
+            'color': color,
+            'badge_name': badge,
+            'profile_pic': me_img,
+            'occupation': occupation
+        }
+        student = Student.query.filter(Student.email == user_email).first()
+        _, skill_statistic, _ = return_score(student)
+        image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
+        img_stream = image.read()
+        img_stream = base64.b64encode(img_stream).decode('ascii')
+        if student.badge_name:
+            color = student.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
+        else:
+            color = None
+            badge = None
+        user_info = {
+            'email': user_email,
+            'first_name': student.firstname,
+            'last_name': student.lastname,
+            'profile_pic': img_stream,
+            'phone': student.phone,
+            'school': student.school,
+            'address': student.address,
+            'age': datetime.now().date().year - int(student.dob.split("-")[0]),
+            'gender': student.gender,
+            'password': student.password,
+            'color': color,
+            'badge_name': badge,
+            'occupation': 'Student'
+        }
+        topic = Topics.query.filter(Topics.topic_name == topic_name).first()
+        skills = Skills.query.filter(Skills.topic_id == topic.topic_id).all()
+        skill_score_list = []
+        for skill in skills:
+            scores = Score.query.filter(Score.student_id == student.id, Score.skill_id == skill.skill_id).order_by(
+                Score.date.asc()).all()
+            skill_name = skill.skill_name
+            score_list = {}
+            for score in scores:
+                score_list[str(score.date)] = score.score
+            skill_score_list.append({
+                'skill_name': skill_name,
+                'score_list': list(score_list.values()),
+                'date': list(score_list.keys())
+            })
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    print(user_info['email'])
+    return render_template('user_grade.html', user=my_info, user_info=user_info, score_list=json.dumps(skill_score_list),
                            skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic), unit_score=None)
 
 
@@ -1862,6 +1947,102 @@ def unit_grade():
     print(unit_score)
     return render_template('unit_grade.html', user=user_info, score_list=None,
                            skill_score_list=None, skill_list=None, unit_score=json.dumps(unit_score), max_len=max_len)
+
+@app.route('/user_unit_grade/<user_email>', methods=['GET', 'POST'])
+def user_unit_grade(user_email):
+    email = session.get('EMAIL')
+    name = session.get('NAME')
+    if name:
+        session['NAME'] = name
+        session['EMAIL'] = email
+        me_student = Student.query.filter(Student.email == email).first()
+        me_teacher = Teacher.query.filter(Teacher.email == email).first()
+        me = ''
+        if me_student:
+            me = me_student
+            occupation = 'Student'
+        if me_teacher:
+            me = me_teacher
+            occupation = 'Teacher'
+        me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
+        me_img = me_i.read()
+        me_img = base64.b64encode(me_img).decode('ascii')
+        if me.badge_name:
+            color = me.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + me.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
+        else:
+            color = None
+            badge = None
+        my_info = {
+            'email': email,
+            'first_name': me.firstname,
+            'last_name': me.lastname,
+            'color': color,
+            'badge_name': badge,
+            'profile_pic': me_img,
+            'occupation': occupation
+        }
+        user_unit_score = []
+        user_student = Student.query.filter(Student.email == user_email).first()
+        image = open('static/images/icon/' + user_student.profile_photo + ".png", 'rb')
+        img_stream = image.read()
+        img_stream = base64.b64encode(img_stream).decode('ascii')
+
+        if user_student.badge_name:
+            color = user_student.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + user_student.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
+        else:
+            color = None
+            badge = None
+        user_info = {
+            'email': user_email,
+            'coins': user_student.coins,
+            'first_name': user_student.firstname,
+            'last_name': user_student.lastname,
+            'profile_pic': img_stream,
+            'phone': user_student.phone,
+            'school': user_student.school,
+            'address': user_student.address,
+            'age': datetime.now().date().year - int(user_student.dob.split("-")[0]),
+            'gender': user_student.gender,
+            'password': user_student.password,
+            'color': color,
+            'badge_name': badge,
+            'time_capsule1': user_student.time_capsule1,
+            'time_capsule2': user_student.time_capsule2,
+            'occupation': 'Student'
+        }
+        units = Unit.query.filter(Unit.student_id == user_student.id).all()
+        unit_dict = {}
+        topics = Topics.query.filter().all()
+        for topic in topics:
+            unit_dict[topic.topic_name] = collections.deque()
+        for unit in units:
+            topic_name = Topics.query.filter(Topics.topic_id == unit.topic_id).first().topic_name
+            unit_dict[topic_name].append(unit.score)
+            if len(unit_dict[topic_name]) < 6:
+                unit_dict[topic_name].appendleft(0)
+            if len(unit_dict[topic_name]) >= 6:
+                unit_dict[topic_name].popleft()
+        color = ["#ff6384", "#4bc0c0", "#ffcd56",
+                 "#07b107", "#36a2eb"]
+        idx = 0
+        max_len = max([len(l) for l in unit_dict.values()])
+        for unit, score_list in unit_dict.items():
+            user_unit_score.append({
+                'data': list(score_list),
+                'label': unit,
+                'borderColor': color[idx],
+            })
+            idx+=1
+        print(user_info)
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('user_unit_grade.html', user=my_info, user_info=user_info, score_list=None,
+                           skill_score_list=None, skill_list=None, unit_score=json.dumps(user_unit_score), max_len=max_len)
 
 
 if __name__ == '__main__':

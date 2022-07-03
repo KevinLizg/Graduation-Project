@@ -1,0 +1,38 @@
+{% extends "user_profile_base.html" %}
+
+
+{% block mainContent %}
+        <div class="page-wrapper">
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- column -->
+                    {% for index in range(skill_score_list|length) %}
+                        <div class="col-lg-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="card-title">{{ skill_score_list[index]['skill_name'] }}</h4>
+                                    <div>
+                                        <canvas id="skill{{ index }}" height="150"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="page-wrapper">
+            <footer class="footer text-center">
+                All Rights Reserved by Nice admin. Designed and Developed by
+                <a href="https://wrappixel.com">WrapPixel</a>.
+            </footer>
+        </div>
+    </div>
+
+{% endblock %}
+</body>
+
+</html>
