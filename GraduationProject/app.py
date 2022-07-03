@@ -1438,6 +1438,8 @@ def profile():
         student = Student.query.filter(Student.email == email).first()
         teacher = Teacher.query.filter(Teacher.email == email).first()
         if student:
+            subscribers = Follow.query.filter(Follow.user_id == student.id, Follow.user_type == 1).count()
+            following = Follow.query.filter(Follow.follower_id == student.id, Follow.follower_type == 1).count()
             score_list, skill_statistic, topic_master_dict = return_score(student)
             form = UpdateInfo()
             image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
@@ -1487,6 +1489,8 @@ def profile():
                 return redirect(url_for('signin'))
         elif teacher:
             students = Student.query.filter(Student.teacher_id == teacher.id).all()
+            subscribers = Follow.query.filter(Follow.user_id == teacher.id, Follow.user_type == 0).count()
+            following = Follow.query.filter(Follow.follower_id == teacher.id, Follow.follower_type == 0).count()
             skill_statistic = {}
             topic_master_dict = {}
             score_list = []
@@ -1537,7 +1541,8 @@ def profile():
         return redirect(url_for('signin'))
     session['EMAIL'] = email
     return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(skill_statistic),
-                           topic_master=topic_master_dict, score_list=score_list, unit_score=None, likes=like_list)
+                           topic_master=topic_master_dict, score_list=score_list, unit_score=None, likes=like_list,
+                           subscribers=subscribers, following=following)
 
 
 @app.route('/profile_collections', methods=['GET', 'POST'])

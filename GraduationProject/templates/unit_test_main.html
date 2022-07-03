@@ -58,39 +58,6 @@
                         </ul>
                     </div>
                  </div>
-{#                <div class="col-md-3 col-sm-5">#}
-{#                    <div class="sidebar blog-sidebar">#}
-{#                        <div class="sidebar-item  recent">#}
-{#                            <h3>Comments or Questions</h3>#}
-{#                        {% if comment_info|length == 0  %}#}
-{#                            <div class="media">#}
-{#                                <div class="media-body">#}
-{#                                    <h4><a onclick="false">No comments yet</a></h4>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        {% else %}#}
-{#                            {% for comment in comment_info %}#}
-{#                            <div class="media">#}
-{#                                <div class="media-body">#}
-{#                                    <h4><a href="{{ url_for('skill_details',skill_=comment.skill_name) }}">{{ comment.comment.comment }}</a></h4>#}
-{#                                    <p>posted on {{ comment.comment.comment_time }}</p>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                            {% endfor %}#}
-{#                        {% endif %}#}
-{#                        </div>#}
-{#                        <div class="sidebar-item categories">#}
-{#                            <h3>Topics</h3>#}
-{#                            <ul class="nav navbar-stacked">#}
-{#                                <ul class="nav navbar-stacked">#}
-{#                                    {% for tp in all_topic %}#}
-{#                                    <li><a href="{{ url_for('topics',topics=tp.topic_name) }}">{{ tp.topic_name }}<span class="pull-right">({{ tp.skill_count }})</span></a></li>#}
-{#                                    {% endfor %}#}
-{#                                </ul>#}
-{#                            </ul>#}
-{#                        </div>#}
-{#                    </div>#}
-{#                </div>#}
             </div>
         </div>
     </section>

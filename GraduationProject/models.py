@@ -95,7 +95,7 @@ class Unit(db.Model):
 class Like(db.Model):
     like_id = db.Column(db.Integer, primary_key=True)
     skill_id = db.Column(db.Integer, db.ForeignKey('skills.skill_id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('student.id'))
+    user_id = db.Column(db.Integer)
     user_type = db.Column(db.Integer)
 
 
@@ -113,3 +113,11 @@ class Badge(db.Model):
     badge_name = db.Column(db.String(128))
     user_type = db.Column(db.Integer)
     date = db.Column(db.DateTime, index=True, default=datetime.now())
+
+
+class Follow(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
+    user_type = db.Column(db.Integer)
+    follower_id = db.Column(db.Integer)
+    follower_type = db.Column(db.Integer)
