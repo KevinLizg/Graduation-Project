@@ -142,7 +142,7 @@
 
                 <div v-if="checkDetail[page]===false">
                     <button type="button" class="btn btn-info" onclick="showDetails()">More details</button>
-                    <img style="display: inline" src="{{ url_for('static',filename='images/coins.png') }}" width="15px"/> 5 Coins
+                    <img style="display: inline" src="{{ url_for('static',filename='images/coins.png') }}" width="15px"/> 2 Coins
                     <hr><button type="button" class="btn btn-warning" id="coinsAlert" style="display: none">You do not have enough coins! Do some quizzes to earn some coins!</button>
                     <div class="analysis" id="detail" style="filter: blur(5px)">
                         <Card class="timu" v-for="i in timu.analysis.slice(2,timu.analysis.length)">

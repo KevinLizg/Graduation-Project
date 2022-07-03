@@ -1,182 +1,102 @@
 [
     {
         "id": 0,
-        "title": "4x + 6 = 7, x=?",
+        "title": "Factor: x^2+18x+81",
         "option": [
-            "1/4",
-            "2/7",
-            "2/3",
-            "0"
+            "(x+9)(x+9)",
+            "(x+3)(x-6)",
+            "(x+2)(x-4)",
+            "(x-4)(x-3)"
         ],
         "answer": "A",
         "analysis": [
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP44211dca6cg86efe3hg20000492772900d6ahee6?MSPStoreType=image/gif&s=17",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP44221dca6cg86efe3hg200002g4bc8g70c52hi89?MSPStoreType=image/gif&s=17",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP44231dca6cg86efe3hg200002de98g4h13cac7gg?MSPStoreType=image/gif&s=17",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP44241dca6cg86efe3hg2000011h86c48e3df7h9d?MSPStoreType=image/gif&s=17",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP44251dca6cg86efe3hg2000048ei885b7c5a2d16?MSPStoreType=image/gif&s=17"
-        ]
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP195127cd8fh2b37die70000319h51c2hg4ci5hg?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP196127cd8fh2b37die7000013c7a19eg6g80e43?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP197127cd8fh2b37die700005g0fdiide8ghh0f0?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP198127cd8fh2b37die700003g81i7ifedd305c6?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP199127cd8fh2b37die700004fa3h0d62c792ga6?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP200127cd8fh2b37die700001ehd24ia36d1hh7a?MSPStoreType=image/gif&s=1"
+        ],
+        "skill": "Factoring Quadratic"
     },
     {
         "id": 1,
-        "title": "3x + 3 = 9, x=?",
+        "title": "Factor: x^2+11x+10",
         "option": [
-            "6",
-            "2/9",
-            "2/3",
-            "0"
+            "(x+6)(x-4)",
+            "(x-10)(x+5)",
+            "(x+10)(x+1)",
+            "(x+10)(x-7)"
         ],
-        "answer": "A",
+        "answer": "C",
         "analysis": [
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7161h2gaa1h6c1da7f3000044h81a43fgc0028b?MSPStoreType=image/gif&s=9",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7171h2gaa1h6c1da7f300004hfd63aai55hfh30?MSPStoreType=image/gif&s=9",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7181h2gaa1h6c1da7f300005b5a44faaghbc8af?MSPStoreType=image/gif&s=9",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7191h2gaa1h6c1da7f300001h712ad390e121h7?MSPStoreType=image/gif&s=9",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7201h2gaa1h6c1da7f3000020cai4039d091h90?MSPStoreType=image/gif&s=9"
-        ]
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP22561hf07c72g435d42f00000i014ie4f40798eb?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP22571hf07c72g435d42f00003bc0e5g4a13d6153?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP22581hf07c72g435d42f00006090e56c37d25a3c?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP22591hf07c72g435d42f00005371d7h9e136h72h?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP22601hf07c72g435d42f000031360ga9ibeig0f8?MSPStoreType=image/gif&s=12",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP22611hf07c72g435d42f00000e7fc6de06ec292c?MSPStoreType=image/gif&s=12"
+        ],
+        "skill": "Factoring Quadratic"
     },
     {
         "id": 2,
-        "title": "2x + 8 = 8, x=?",
+        "title": "Factor: x^2+13x+40",
         "option": [
-            "2/3",
-            "0",
-            "5/9",
-            "1/3"
+            "(x+10)(x+4)",
+            "(x-10)(x+1)",
+            "(x+5)(x+8)",
+            "(x+10)(x-5)"
         ],
-        "answer": "B",
+        "answer": "C",
         "analysis": [
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP31761gg947h8cgidaigi000048i0ei0hda43h029?MSPStoreType=image/gif&s=6",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP31771gg947h8cgidaigi00001h15ed84f8h7c2ib?MSPStoreType=image/gif&s=6",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP31781gg947h8cgidaigi0000681b0e1f1975fg2g?MSPStoreType=image/gif&s=6",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP31791gg947h8cgidaigi00000hbf48a286ci0ahf?MSPStoreType=image/gif&s=6",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP31801gg947h8cgidaigi0000686bg33825681c7d?MSPStoreType=image/gif&s=6"
-        ]
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP1020225723e1b3638h4e000041dgh213b2be36i4?MSPStoreType=image/gif&s=15",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP1021225723e1b3638h4e0000110855ha1di805ig?MSPStoreType=image/gif&s=15",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP1022225723e1b3638h4e000024776i262i62g99f?MSPStoreType=image/gif&s=15",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP1023225723e1b3638h4e000037b92fh50i3df853?MSPStoreType=image/gif&s=15",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP1024225723e1b3638h4e00006625f0g00903i1hb?MSPStoreType=image/gif&s=15",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP1025225723e1b3638h4e0000607b17g65bc3dh4b?MSPStoreType=image/gif&s=15"
+        ],
+        "skill": "Factoring Quadratic"
     },
     {
         "id": 3,
-        "title": "4x + 3 = 10, x=?",
+        "title": "Factor: x^2-2x-3",
         "option": [
-            "4/3",
-            "0",
-            "4/5",
-            "7/4"
-        ],
-        "answer": "D",
-        "analysis": [
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP830148447f5iiec2c3g000034fb96672f70c441?MSPStoreType=image/gif&s=16",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP831148447f5iiec2c3g0000484dfc965b3ehde9?MSPStoreType=image/gif&s=16",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP832148447f5iiec2c3g00002iheh5f50e5d0500?MSPStoreType=image/gif&s=16",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP833148447f5iiec2c3g00005h5h2h8eg708aac1?MSPStoreType=image/gif&s=16",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP834148447f5iiec2c3g00000h6if47d7gi1h4cb?MSPStoreType=image/gif&s=16"
-        ]
-    },
-    {
-        "id": 4,
-        "title": "5x + 1 = 4, x=?",
-        "option": [
-            "4/9",
-            "3/5",
-            "4",
-            "2/5"
+            "(x+5)(x+1)",
+            "(x-3)(x+1)",
+            "(x+5)(x+2)",
+            "(x-3)(x-10)"
         ],
         "answer": "B",
         "analysis": [
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP259148448gf576bcdad00001adcah81b26fab6f?MSPStoreType=image/gif&s=16",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP260148448gf576bcdad000025h8f61df09d5984?MSPStoreType=image/gif&s=16",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP261148448gf576bcdad00001448g639e9970429?MSPStoreType=image/gif&s=16",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP262148448gf576bcdad000019ge3b64a9ddf9f7?MSPStoreType=image/gif&s=16",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP263148448gf576bcdad000010a1i5350c2ab0fc?MSPStoreType=image/gif&s=16"
-        ]
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP23601dca6i07h9ab75460000491fb2f8ca0fecd9?MSPStoreType=image/gif&s=17",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP23611dca6i07h9ab75460000581g4043759c7e44?MSPStoreType=image/gif&s=17",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP23621dca6i07h9ab7546000019eg7ehd6h9edffg?MSPStoreType=image/gif&s=17",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP23631dca6i07h9ab75460000240ghe99bi750eii?MSPStoreType=image/gif&s=17",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP23641dca6i07h9ab754600004h13f1g81hh4icfe?MSPStoreType=image/gif&s=17",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP23651dca6i07h9ab7546000010hah08hf84gfgd1?MSPStoreType=image/gif&s=17"
+        ],
+        "skill": "Factoring Quadratic"
     },
     {
-        "id": 5,
-        "title": "7x + 1 = 5, x=?",
+        "id": 4,
+        "title": "Factor: x^2-100",
         "option": [
-            "4",
-            "8",
-            "5/9",
-            "4/7"
+            "(x+5)(x-10)",
+            "(x-8)(x-8)",
+            "(x+7)(x+1)",
+            "(x-10)(x+10)"
         ],
         "answer": "D",
         "analysis": [
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP33471gg947af794bi6ci000054d1e8ga7254c02i?MSPStoreType=image/gif&s=6",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP33481gg947af794bi6ci00001d67dg335774afee?MSPStoreType=image/gif&s=6",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP33491gg947af794bi6ci0000305097fcbgcd6e50?MSPStoreType=image/gif&s=6",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP33501gg947af794bi6ci00005e453dhbebdb3ieg?MSPStoreType=image/gif&s=6",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP33511gg947af794bi6ci0000551f21g59fihcdb3?MSPStoreType=image/gif&s=6"
-        ]
-    },
-    {
-        "id": 6,
-        "title": "10x + 6 = 8, x=?",
-        "option": [
-            "6",
-            "0",
-            "1/5",
-            "1"
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP10051h5bfcg3ai151h1f00005g0a0eddbhgeag6f?MSPStoreType=image/gif&s=10",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP10061h5bfcg3ai151h1f000032500ec0i114bahc?MSPStoreType=image/gif&s=10",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP10071h5bfcg3ai151h1f00005caca9fid1c7g7i5?MSPStoreType=image/gif&s=10",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP10081h5bfcg3ai151h1f000065f07fhd83d44bc7?MSPStoreType=image/gif&s=10",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP10091h5bfcg3ai151h1f00005396722f385ba3be?MSPStoreType=image/gif&s=10",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP10101h5bfcg3ai151h1f00005g5e32707ff60968?MSPStoreType=image/gif&s=10"
         ],
-        "answer": "C",
-        "analysis": [
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4039144hcgfe4474540000000eh9841fe93i1i6h?MSPStoreType=image/gif&s=11",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4040144hcgfe44745400000065gcff4db05a7400?MSPStoreType=image/gif&s=11",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4041144hcgfe4474540000005142eb32hbgg87ie?MSPStoreType=image/gif&s=11",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4042144hcgfe4474540000005ahh1eedia0fc6a4?MSPStoreType=image/gif&s=11",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4043144hcgfe4474540000000g62242h1624fhi7?MSPStoreType=image/gif&s=11"
-        ]
-    },
-    {
-        "id": 7,
-        "title": "10x + 7 = 10, x=?",
-        "option": [
-            "4",
-            "4/5",
-            "3/10",
-            "0"
-        ],
-        "answer": "C",
-        "analysis": [
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7123hf90a48eie037h0000277c98b6ce224886?MSPStoreType=image/gif&s=3",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7223hf90a48eie037h00000i322ef7d7ac4f45?MSPStoreType=image/gif&s=3",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7323hf90a48eie037h0000511a1b4cee90i78i?MSPStoreType=image/gif&s=3",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7423hf90a48eie037h0000508b7gha8aif6f36?MSPStoreType=image/gif&s=3",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7523hf90a48eie037h00003f811g9gidbe28gg?MSPStoreType=image/gif&s=3"
-        ]
-    },
-    {
-        "id": 8,
-        "title": "3x + 10 = 10, x=?",
-        "option": [
-            "0",
-            "4/5",
-            "3",
-            "2"
-        ],
-        "answer": "A",
-        "analysis": [
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29271hf0797851g2774a000049443d9ed445gcaf?MSPStoreType=image/gif&s=12",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29281hf0797851g2774a00000g6bh5288ead1i72?MSPStoreType=image/gif&s=12",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29291hf0797851g2774a00001b6fa1cf1hi3d67e?MSPStoreType=image/gif&s=12",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29301hf0797851g2774a000017013db0b98995da?MSPStoreType=image/gif&s=12",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29311hf0797851g2774a000038hei89801794c8i?MSPStoreType=image/gif&s=12"
-        ]
-    },
-    {
-        "id": 9,
-        "title": "2x + 8 = 9, x=?",
-        "option": [
-            "1/4",
-            "1/8",
-            "1/2",
-            "0"
-        ],
-        "answer": "C",
-        "analysis": [
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7351875bd1gifhcghhg00004cidi29f3fe44id4?MSPStoreType=image/gif&s=13",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7361875bd1gifhcghhg000062aadb60dc2b7c35?MSPStoreType=image/gif&s=13",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7371875bd1gifhcghhg00005ch32ic288hc9a30?MSPStoreType=image/gif&s=13",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7381875bd1gifhcghhg00004gb9bgba35i673a6?MSPStoreType=image/gif&s=13",
-            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP7391875bd1gifhcghhg00000eg97g8hadg5728i?MSPStoreType=image/gif&s=13"
-        ]
+        "skill": "Factoring Quadratic"
     }
 ]
