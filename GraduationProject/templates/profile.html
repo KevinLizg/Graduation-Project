@@ -87,6 +87,9 @@
                                 <a class="nav-link active" id="pills-timeline-tab" data-toggle="pill" href="#history" role="tab" aria-controls="pills-timeline" aria-selected="true">History</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" id="pills-timeline-tab" data-toggle="pill" href="#like" role="tab" aria-controls="pills-timeline" aria-selected="true">Favorite Skills</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</a>
                             </li>
                             <li class="nav-item">
@@ -127,6 +130,34 @@
                                             </div>
                                         </div>
                                         <hr>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="like" role="tabpanel" aria-labelledby="pills-timeline-tab">
+                                <div class="card-body">
+                                    {% for like in likes %}
+                                    <div class="profiletimeline m-t-0">
+                                        <div class="sl-item">
+                                            {% if user.badge_name %}
+                                            <div class="item sl-left">
+                                                <img src="data:;base64,{{ user.badge_name }}" class="left-notify-badge" width="25px"/>
+                                                <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="60" height="50">
+                                            </div>
+                                            {% else %}
+                                            <div class="sl-left">
+                                                <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="60" height="50">
+                                            </div>
+                                            {% endif %}
+                                            <div class="sl-right">
+                                                <div>The skill is <a href="{{ url_for('skill_details',skill_=like.skill_name) }}">{{ like.skill_name }}</a>, <span class="sl-date">click to get more information about this skill.</span>
+                                                    <div class="row">
+                                                        <div class="col-lg-3 col-md-6 m-b-20"><img src="{{ url_for('static',filename='images/skills/'+like.skill_name+'.png') }}" class="img-fluid rounded" /></div>
+                                                    </div>
+                                                    <div class="like-comm"> <a href="{{ url_for('skill_details',skill_=like.skill_name) }}" class="link m-r-10"><i class="fa fa-heart text-danger"></i> {{ like.like_num }} Love</a> </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     {% endfor %}
                                 </div>

@@ -1,0 +1,53 @@
+[
+    {
+        "id": 0,
+        "title": "",
+        "option": "",
+        "answer": "",
+        "skill": ""
+    },
+    {
+        "id": 1,
+        "title": "74-11=",
+        "option": [
+            "63",
+            "11",
+            "21",
+            "55"
+        ],
+        "answer": "A",
+        "skill": "Addition, Subtraction",
+        "check": "false",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP35871ch3ad3i276i97g0000067iigidghf8c8dfd?MSPStoreType=image/gif&s=19",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP35881ch3ad3i276i97g000005h6g8ie53d9ah7hd?MSPStoreType=image/gif&s=19",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP35891ch3ad3i276i97g00000287g0ic83aaha8ba?MSPStoreType=image/gif&s=19",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP35901ch3ad3i276i97g00000187bd3g71a407994?MSPStoreType=image/gif&s=19",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP35911ch3ad3i276i97g0000028ga8809cf29925a?MSPStoreType=image/gif&s=19",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP35921ch3ad3i276i97g000001g217h10i4b4ef4c?MSPStoreType=image/gif&s=19",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP35931ch3ad3i276i97g000005e0b7c5e5cf9e242?MSPStoreType=image/gif&s=19"
+        ]
+    },
+    {
+        "id": 2,
+        "title": "79-7=",
+        "option": [
+            "92",
+            "34",
+            "66",
+            "72"
+        ],
+        "answer": "D",
+        "skill": "Addition, Subtraction",
+        "check": "false",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29721875b5g913f7e5900000491c43b91iha8ig9?MSPStoreType=image/gif&s=13",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29731875b5g913f7e59000001175gh8a7dcaf71e?MSPStoreType=image/gif&s=13",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29741875b5g913f7e5900000416gi76dedb53749?MSPStoreType=image/gif&s=13",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29751875b5g913f7e59000004bhc7ihbdda481g9?MSPStoreType=image/gif&s=13",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29761875b5g913f7e59000004ai5h6a37e463h47?MSPStoreType=image/gif&s=13",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29771875b5g913f7e590000033h0795g8150a1d2?MSPStoreType=image/gif&s=13",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP29781875b5g913f7e590000038f8a4189ci8418d?MSPStoreType=image/gif&s=13"
+        ]
+    }
+]

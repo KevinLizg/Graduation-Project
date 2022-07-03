@@ -851,6 +851,7 @@ def wrong_collection():
     filename = email+'.json'
     if not exists('static/json/wrong/' + filename):
         filename = None
+        question_list = None
     else:
         with open('static/json/wrong/' + filename, 'r', encoding='utf-8') as f:
             question_list = json.load(f)
@@ -865,7 +866,6 @@ def wrong_collection():
         with open('static/json/wrong/' + email + '.json', 'w', encoding='utf-8') as f:
             json.dump(question_list, f, ensure_ascii=False, indent=4)
             f.close()
-    print(len(question_list))
     return render_template('wrong_collection.html', user=user, filename=filename, question_list=question_list)
 
 
@@ -1440,12 +1440,6 @@ def profile():
         if student:
             score_list, skill_statistic, topic_master_dict = return_score(student)
             form = UpdateInfo()
-            # if student.agent_photo != None:
-            #     image = open(os.path.join(app.config['UPLOAD_PATH'], student.agent_photo), 'rb')
-            #     img_stream = image.read()
-            #     img_stream = base64.b64encode(img_stream).decode('ascii')
-            # else:
-            name = student.lastname
             image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
             img_stream = image.read()
             img_stream = base64.b64encode(img_stream).decode('ascii')
@@ -1471,6 +1465,14 @@ def profile():
                 'badge_name': badge,
                 'occupation': 'Student'
             }
+            likes = Like.query.filter(Like.user_id == student.id, Like.user_type == 1).all()
+            like_list = []
+            for like in likes:
+                skill = Skills.query.filter(Skills.skill_id == like.skill_id).first()
+                like_list.append({
+                    'skill_name': skill.skill_name,
+                    'like_num': skill.like
+                })
             if form.validate_on_submit():
                 student_in_db = Student.query.filter(Student.email == email).first()
                 student_in_db.firstname = form.firstname.data
@@ -1485,12 +1487,10 @@ def profile():
                 return redirect(url_for('signin'))
         elif teacher:
             students = Student.query.filter(Student.teacher_id == teacher.id).all()
-            print(students)
             skill_statistic = {}
             topic_master_dict = {}
             score_list = []
             form = TeacherUpdateInfo()
-            name = teacher.lastname
             image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
             img_stream = image.read()
             img_stream = base64.b64encode(img_stream).decode('ascii')
@@ -1513,6 +1513,14 @@ def profile():
                 'badge_name': badge,
                 'occupation': 'Teacher'
             }
+            likes = Like.query.filter(Like.user_id == teacher.id, Like.user_type == 0).all()
+            like_list = []
+            for like in likes:
+                skill = Skills.query.filter(Skills.skill_id == like.skill_id).first()
+                like_list.append({
+                    'skill_name': skill.skill_name,
+                    'like_num': skill.like
+                })
             if form.validate_on_submit():
                 teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
                 teacher_in_db.firstname = form.firstname.data
@@ -1529,7 +1537,7 @@ def profile():
         return redirect(url_for('signin'))
     session['EMAIL'] = email
     return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(skill_statistic),
-                           topic_master=topic_master_dict, score_list=score_list, unit_score=None)
+                           topic_master=topic_master_dict, score_list=score_list, unit_score=None, likes=like_list)
 
 
 @app.route('/profile_collections', methods=['GET', 'POST'])

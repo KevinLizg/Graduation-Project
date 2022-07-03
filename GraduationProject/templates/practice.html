@@ -285,12 +285,22 @@
         }
 
         function showDetails() {
-            if(vue.coins < 5){
-                this.showAlert();
+            if(vue.coins < 2){
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'You do not have enough coins!',
+                  footer: '<a href="">Do some quizes to win the coins</a>'
+                })
             }
             else{
-                $("#tip").fadeIn("3000");
-                vue.coins = vue.coins - 5;
+                Swal.fire({
+                  title: 'Two coins have been deducted',
+                  icon: 'warning',
+                  confirmButtonText: 'Got it',
+                  showCloseButton: true
+                })
+                vue.coins = vue.coins - 2;
                 vue.checkDetail[vue.page] = true;
                 document.getElementById("detail").style.filter = "blur(0px)";
                 vue.next();

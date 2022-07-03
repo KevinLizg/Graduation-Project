@@ -281,10 +281,20 @@
 
         function showDetails() {
             if(vue.coins < 5){
-                this.showAlert();
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'You do not have enough coins!',
+                  footer: '<a href="">Do some quizes to win the coins</a>'
+                })
             }
             else{
-                alert("Five coins have been deducted");
+                Swal.fire({
+                  title: 'Five coins have been deducted',
+                  icon: 'warning',
+                  confirmButtonText: 'Got it',
+                  showCloseButton: true
+                })
                 vue.coins = vue.coins - 5;
                 vue.checkDetail[vue.page] = true;
                 document.getElementById("detail").style.filter = "blur(0px)";
@@ -305,7 +315,12 @@
                     returnTimeCap();
                 }
                 else{
-                    alert("You do not have time capsules!");
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'You do not have enough time capsules!',
+                      footer: '<a href="">Do some quizes to win the coins</a>'
+                    })
                 }
             }
             if(type === 2){
@@ -314,7 +329,12 @@
                     returnTimeCap();
                 }
                 else{
-                    alert("You do not have time capsules!");
+                    Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'You do not have enough time capsules!',
+                      footer: '<a href="">Do some quizes to win the coins</a>'
+                    })
                 }
             }
         }
