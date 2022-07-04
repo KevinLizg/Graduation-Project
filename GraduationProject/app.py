@@ -24,6 +24,7 @@ from models import *
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
+from collections import Counter
 
 ################# Wolfram Query ###################
 # app_id = 'XQAUEU-WR3AY23332'
@@ -884,7 +885,6 @@ def query(input, app_id, params=(), **kwargs):
     return doc['queryresult']
 
 
-from collections import Counter
 @app.route('/quiz/<skill_>')
 def quiz(skill_):
     name = session.get('NAME')
@@ -978,7 +978,6 @@ def quiz(skill_):
                            timeCap1=user.time_capsule1, timeCap2=user.time_capsule2)
 
 
-from collections import Counter
 @app.route('/unit_test_main/')
 def unit_test_main():
     topics = Topics.query.filter().all()
@@ -1261,9 +1260,11 @@ def user_profile(user_email):
         me = ''
         if me_student:
             me = me_student
+            me_type = 1
             occupation = 'Student'
         if me_teacher:
             me = me_teacher
+            me_type = 0
             occupation = 'Teacher'
         me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
         me_img = me_i.read()
@@ -1286,6 +1287,10 @@ def user_profile(user_email):
         }
         if m_student:
             student = Student.query.filter(Student.email == user_email).first()
+            subscribers = Follow.query.filter(Follow.user_id == student.id, Follow.user_type == 1).count()
+            following = Follow.query.filter(Follow.follower_id == student.id, Follow.follower_type == 1).count()
+            subscribe = Follow.query.filter(Follow.follower_id == me.id, Follow.follower_type == me_type,
+                                         Follow.user_id == student.id, Follow.user_type == 1).first()
             scores = Score.query.filter(Score.student_id == student.id).order_by(Score.date.desc()).all()
             skill_name_dict = {}
             topic_master_dict = {}
@@ -1352,6 +1357,10 @@ def user_profile(user_email):
             }
         elif m_teacher:
             teacher = Teacher.query.filter(Teacher.email == user_email).first()
+            subscribers = Follow.query.filter(Follow.user_id == teacher.id, Follow.user_type == 0).count()
+            following = Follow.query.filter(Follow.follower_id == teacher.id, Follow.follower_type == 0).count()
+            subscribe = Follow.query.filter(Follow.follower_id == me.id, Follow.follower_type == me_type,
+                                         Follow.user_id == teacher.id, Follow.user_type == 0).first()
             skill_statistic = {}
             topic_master_dict = {}
             score_list = []
@@ -1383,9 +1392,249 @@ def user_profile(user_email):
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
+    print(subscribe)
     return render_template('user_profile.html', name=name, email=email, user_info=user_info,
                            skill_list=json.dumps(skill_statistic),
-                           topic_master=topic_master_dict, score_list=score_list, user=my_info, unit_score=None)
+                           topic_master=topic_master_dict, score_list=score_list, user=my_info, unit_score=None, subscribers=subscribers,
+                           following=following, subscribe=subscribe)
+
+
+@app.route('/subscribe/<user_email>', methods=['GET', 'POST'])
+def subscribe(user_email):
+    email = session.get('EMAIL')
+    follower_student = Student.query.filter(Student.email == email).first()
+    follower_teacher = Teacher.query.filter(Teacher.email == email).first()
+    if follower_student:
+        follower = follower_student
+        follower_type = 1
+    if follower_teacher:
+        follower = follower_teacher
+        follower_type = 0
+    student = Student.query.filter(Student.email == user_email).first()
+    teacher = Teacher.query.filter(Teacher.email == user_email).first()
+    if student:
+        user = student
+        user_type = 1
+    if teacher:
+        user = teacher
+        user_type = 0
+    subscribe_add = Follow(user_id=user.id, user_type=user_type, follower_id=follower.id, follower_type=follower_type)
+    db.session.add(subscribe_add)
+    db.session.commit()
+    return ''
+
+
+@app.route('/unsubscribe/<user_email>', methods=['GET', 'POST'])
+def unsubscribe(user_email):
+    from models import db
+    email = session.get('EMAIL')
+    follower_student = Student.query.filter(Student.email == email).first()
+    follower_teacher = Teacher.query.filter(Teacher.email == email).first()
+    if follower_student:
+        follower = follower_student
+        follower_type = 1
+    if follower_teacher:
+        follower = follower_teacher
+        follower_type = 0
+    student = Student.query.filter(Student.email == user_email).first()
+    teacher = Teacher.query.filter(Teacher.email == user_email).first()
+    if student:
+        user = student
+        user_type = 1
+    if teacher:
+        user = teacher
+        user_type = 0
+    unsubscribe = Follow.query.filter(Follow.user_id == user.id,
+                                                       Follow.user_type == user_type,
+                                                                   Follow.follower_id == follower.id,
+                                                                                 Follow.follower_type == follower_type
+    ).first()
+    db.session.delete(unsubscribe)
+    db.session.commit()
+    return ''
+
+
+@app.route('/following', methods=['GET', 'POST'])
+def following():
+    email = session.get('EMAIL')
+    if email:
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        if student:
+            form = UpdateInfo()
+            image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
+            img_stream = image.read()
+            img_stream = base64.b64encode(img_stream).decode('ascii')
+            if student.badge_name:
+                color = student.badge_name.split('_')[1]
+                badge = base64.b64encode(
+                    open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+                    'ascii')
+            else:
+                color = None
+                badge = None
+            user_info = {
+                'email': email,
+                'first_name': student.firstname,
+                'last_name': student.lastname,
+                'profile_pic': img_stream,
+                'phone': student.phone,
+                'school': student.school,
+                'address': student.address,
+                'age': datetime.now().date().year - int(student.dob.split("-")[0]),
+                'gender': student.gender,
+                'password': student.password,
+                'color': color,
+                'badge_name': badge,
+                'occupation': 'Student'
+            }
+            following_list = []
+            following_in_db = Follow.query.filter(Follow.follower_id == student.id, Follow.follower_type == 1).all()
+            for following in following_in_db:
+                if following.user_type == 1:
+                    following_list.append({
+                        'user_type': 'Student',
+                        'user': Student.query.filter(Student.id == following.user_id).first()
+                    })
+                else:
+                    following_list.append({
+                        'user_type': 'Teacher',
+                        'user': Teacher.query.filter(Teacher.id == following.user_id).first()
+                    })
+        elif teacher:
+            image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
+            img_stream = image.read()
+            img_stream = base64.b64encode(img_stream).decode('ascii')
+            if teacher.badge_name:
+                color = teacher.badge_name.split('_')[1]
+                badge = base64.b64encode(
+                    open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
+                    'ascii')
+            else:
+                color = None
+                badge = None
+            user_info = {
+                'email': email,
+                'first_name': teacher.firstname,
+                'last_name': teacher.lastname,
+                'profile_pic': img_stream,
+                'phone': teacher.phone,
+                'school': teacher.school,
+                'password': teacher.password,
+                'color': color,
+                'badge_name': badge,
+                'occupation': 'Teacher'
+            }
+            following_list = []
+            following_in_db = Follow.query.filter(Follow.follower_id == teacher.id, Follow.follower_type == 0).all()
+            for following in following_in_db:
+                if following.user_type == 1:
+                    following_list.append({
+                        'user_type': 'Student',
+                        'user': Student.query.filter(Student.id == following.user_id).first()
+                    })
+                else:
+                    following_list.append({
+                        'user_type': 'Teacher',
+                        'user': Teacher.query.filter(Teacher.id == following.user_id).first()
+                    })
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('following.html', user=user_info, skill_list=None,
+                           topic_master=None, score_list=None, unit_score=None, following_list=following_list)
+
+
+@app.route('/follower', methods=['GET', 'POST'])
+def follower():
+    email = session.get('EMAIL')
+    if email:
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        if student:
+            form = UpdateInfo()
+            image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
+            img_stream = image.read()
+            img_stream = base64.b64encode(img_stream).decode('ascii')
+            if student.badge_name:
+                color = student.badge_name.split('_')[1]
+                badge = base64.b64encode(
+                    open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+                    'ascii')
+            else:
+                color = None
+                badge = None
+            user_info = {
+                'email': email,
+                'first_name': student.firstname,
+                'last_name': student.lastname,
+                'profile_pic': img_stream,
+                'phone': student.phone,
+                'school': student.school,
+                'address': student.address,
+                'age': datetime.now().date().year - int(student.dob.split("-")[0]),
+                'gender': student.gender,
+                'password': student.password,
+                'color': color,
+                'badge_name': badge,
+                'occupation': 'Student'
+            }
+            follower_list = []
+            follower_in_db = Follow.query.filter(Follow.user_id == student.id, Follow.user_type == 1).all()
+            for follower in follower_in_db:
+                if follower.follower_type == 1:
+                    follower_list.append({
+                        'follower_type': 'Student',
+                        'follower': Student.query.filter(Student.id == follower.follower_id).first()
+                    })
+                else:
+                    follower_list.append({
+                        'follower_type': 'Teacher',
+                        'follower': Teacher.query.filter(Teacher.id == follower.follower_id).first()
+                    })
+        elif teacher:
+            form = TeacherUpdateInfo()
+            image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
+            img_stream = image.read()
+            img_stream = base64.b64encode(img_stream).decode('ascii')
+            if teacher.badge_name:
+                color = teacher.badge_name.split('_')[1]
+                badge = base64.b64encode(
+                    open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
+                    'ascii')
+            else:
+                color = None
+                badge = None
+            user_info = {
+                'email': email,
+                'first_name': teacher.firstname,
+                'last_name': teacher.lastname,
+                'profile_pic': img_stream,
+                'phone': teacher.phone,
+                'school': teacher.school,
+                'password': teacher.password,
+                'color': color,
+                'badge_name': badge,
+                'occupation': 'Teacher'
+            }
+            follower_list = []
+            follower_in_db = Follow.query.filter(Follow.user_id == teacher.id, Follow.user_type == 0).all()
+            for follower in follower_in_db:
+                if follower.follwer_type == 1:
+                    follower_list.append({
+                        'follwer_type': 'Student',
+                        'follower': Student.query.filter(Student.id == follower.follwer_id).first()
+                    })
+                else:
+                    follower_list.append({
+                        'follwer_type': 'Teacher',
+                        'follower': Teacher.query.filter(Teacher.id == follower.follwer_id).first()
+                    })
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('followers.html', user=user_info, skill_list=None,
+                           topic_master=None, score_list=None, unit_score=None, follower_list=follower_list)
 
 
 def return_score(student):

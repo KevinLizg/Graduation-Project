@@ -61,7 +61,11 @@
                     <div class="col-lg-4 col-xlg-3 col-md-5">
                         <div class="card">
                             <div class="card-body">
-                                <center></center>
+                                {% if subscribe == None %}
+                                <center><button class="btn-youtube" onclick="subscribe()">Subscribe</button></center>
+                                {% else %}
+                                <center><button class="btn-youtube" onclick="unsubscribe()">Unsubscribe</button></center>
+                                {% endif %}
                                 <center class="m-t-30">
                                     {% if user_info.badge_name %}
                                     <div class="profile-item">
@@ -69,13 +73,13 @@
                                         <img src="data:;base64,{{ user_info.profile_pic }}" alt="user" class="rounded-circle" width="100" height="100">
                                     </div>
                                     {% else %}
-                                    <img src="data:;base64,{{ user.profile_pic }}" alt="user" class="rounded-circle" width="100" height="100">
+                                    <img src="data:;base64,{{ user_info.profile_pic }}" alt="user" class="rounded-circle" width="100" height="100">
                                     {% endif %}
                                     <h4 class="card-title m-t-10">{{ user_info.first_name }} {{ user_info.last_name }}</h4>
                                     <h6 class="card-subtitle">{{ user_info.occupation }}</h6>
                                     <div class="row text-center justify-content-md-center">
-                                        <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-people"></i> <font class="font-medium">254</font></a></div>
-                                        <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-picture"></i> <font class="font-medium">54</font></a></div>
+                                        <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-people"></i> <font class="font-medium">{{ subscribers }}</font></a></div>
+                                        <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-star"></i> <font class="font-medium">{{ following }}</font></a></div>
                                     </div>
                                 </center>
                             </div>

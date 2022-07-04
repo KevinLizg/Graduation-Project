@@ -277,7 +277,7 @@
                             <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                                 <i class="mdi mdi-av-timer"></i>
                                 <span class="hide-menu">Just Math It</span>
-                                <span class="badge badge-pill badge-info ml-auto m-r-15">?</span>
+                                <span class="badge badge-pill badge-info ml-auto m-r-15">2</span>
                             </a>
                             <ul aria-expanded="false" class="collapse  first-level">
                                 <li class="sidebar-item">
@@ -469,6 +469,39 @@
     <script src="{{ url_for('static',filename='profile/js/sparkline.js') }}"></script>
     <script src="{{ url_for('static',filename='profile/js/sidebarmenu.js') }}"></script>
     <script src="{{ url_for('static',filename='profile/js/custom.min.js') }}"></script>
+    <script>
+        function subscribe(){
+            $.ajax({
+                url: '{{ url_for('subscribe', user_email=user_info.email) }}',
+                type: 'POST',
+                data: {
+
+                },
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+
+        function unsubscribe(){
+            $.ajax({
+                url: '{{ url_for('unsubscribe', user_email=user_info.email) }}',
+                type: 'POST',
+                data: {
+
+                },
+                success: function (response) {
+                    window.location.reload();
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+    </script>
     <script>
             $(function () {
                 s = JSON.parse({{ skill_list|tojson }})
