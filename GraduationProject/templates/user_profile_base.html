@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="{{ url_for('static',filename='profile/css/style.min.css') }}" rel="stylesheet">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
     .item{
         position:relative;
@@ -47,6 +48,28 @@
         color:white;
         padding:0px 0px;
     }
+    .blur {
+  height: 222px;
+  position:relative;
+  font-size:40px;
+  text-align:center;
+}
+
+.blur:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  filter: blur(5px);
+  z-index:0;
+}
+.blur span {
+  position:relative;
+  z-index:1;
+}
     </style>
 </head>
 
@@ -287,18 +310,12 @@
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a href="{{ url_for("profile") }}" class="sidebar-link">
+                                    <a href="{{ url_for("user_profile",user_email=user_info.email) }}" class="sidebar-link">
                                         <i class="mdi mdi-home-map-marker"></i>
-                                        <span class="hide-menu"> Profile Home </span>
+                                        <span class="hide-menu"> {{ user_info.first_name }}'s Profile Home </span>
                                     </a>
                                 </li>
                             </ul>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
-                                <i class="mdi mdi-email"></i>
-                                <span class="hide-menu">Email</span>
-                            </a>
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark" href="{{ url_for('user_collections', user_email=user_info.email) }}" aria-expanded="false">

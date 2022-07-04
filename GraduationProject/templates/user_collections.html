@@ -1,7 +1,11 @@
 {% extends "user_profile_base.html" %}
 
 {% block mainContent %}
-        <div class="page-wrapper">
+        {% if followed_each_other == False %}
+            <div class="page-wrapper" style="filter: blur(100px)" id="followed">
+        {% else %}
+            <div class="page-wrapper">
+        {% endif %}
             <!-- ============================================================== -->
             <!-- Bread crumb and right sidebar toggle -->
             <!-- ============================================================== -->
@@ -138,6 +142,18 @@
                 </div>
             </div>
         </div>
+    <script>
+        if(document.getElementById("followed")){
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'You have not followed each other!',
+              footer: 'Check information by following each other'
+            }).then((result)=>{
+
+            })
+        }
+    </script>
     <!-- ============================================================== -->
     <!-- End Wrapper -->
     <!-- ============================================================== -->

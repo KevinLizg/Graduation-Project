@@ -1245,6 +1245,41 @@ def test():
     return render_template('test.html')
 
 
+def followed_each_other(email1, email2):
+    user1_s = Student.query.filter(Student.email == email1).first()
+    user1_t = Teacher.query.filter(Teacher.email == email1).first()
+    if user1_s:
+        user2_s = Student.query.filter(Student.email == email2).first()
+        user2_t = Teacher.query.filter(Teacher.email == email2).first()
+        if user2_s:
+            follow_record = Follow.query.filter(Follow.user_id == user2_s.id, Follow.user_type == 1, Follow.follower_id == user1_s.id, Follow.follower_type == 1).first()
+            followed_record = Follow.query.filter(Follow.follower_id == user2_s.id, Follow.follower_type == 1, Follow.user_id == user1_s.id, Follow.user_type == 1).first()
+        if user2_t:
+            follow_record = Follow.query.filter(Follow.user_id == user2_t.id, Follow.user_type == 0,
+                                                Follow.follower_id == user1_s.id, Follow.follower_type == 1).first()
+            followed_record = Follow.query.filter(Follow.follower_id == user2_t.id, Follow.follower_type == 0,
+                                                  Follow.user_id == user1_s.id, Follow.user_type == 1).first()
+    if user1_t:
+        user2_s = Student.query.filter(Student.email == email2).first()
+        user2_t = Teacher.query.filter(Teacher.email == email2).first()
+        if user2_s:
+            follow_record = Follow.query.filter(Follow.user_id == user2_s.id, Follow.user_type == 1,
+                                                Follow.follower_id == user1_t.id, Follow.follower_type == 0).first()
+            followed_record = Follow.query.filter(Follow.follower_id == user2_s.id, Follow.follower_type == 1,
+                                                  Follow.user_id == user1_t.id, Follow.user_type == 0).first()
+        if user2_t:
+            follow_record = Follow.query.filter(Follow.user_id == user2_t.id, Follow.user_type == 0,
+                                                Follow.follower_id == user1_t.id, Follow.follower_type == 0).first()
+            followed_record = Follow.query.filter(Follow.follower_id == user2_t.id, Follow.follower_type == 0,
+                                                  Follow.user_id == user1_t.id, Follow.user_type == 0).first()
+    print(follow_record, followed_record)
+    if follow_record and followed_record:
+        print("True")
+        return True
+    else:
+        print("False")
+        return False
+
 @app.route('/user_profile/<user_email>', methods=['GET', 'POST'])
 def user_profile(user_email):
     name = session.get('NAME')
@@ -1967,7 +2002,8 @@ def user_collections(user_email):
         return redirect(url_for('signin'))
     return render_template('user_collections.html', user=my_info, user_info=user_info, skill_list=None,
                            topic_master=None, score_list=None, unit_score=None, avatars=avatars, badges=badges,
-                           cap1=user_info['time_capsule1'], cap2=user_info['time_capsule2'])
+                           cap1=user_info['time_capsule1'], cap2=user_info['time_capsule2'],
+                           followed_each_other=followed_each_other(email, user_email))
 
 
 @app.route('/change_profile/<email>', methods=['GET', 'POST'])
@@ -2148,7 +2184,8 @@ def user_grade(user_email, topic_name):
         return redirect(url_for('signin'))
     print(user_info['email'])
     return render_template('user_grade.html', user=my_info, user_info=user_info, score_list=json.dumps(skill_score_list),
-                           skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic), unit_score=None)
+                           skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic), unit_score=None,
+                           followed_each_other=followed_each_other(email, user_email))
 
 
 @app.route('/unit_grade', methods=['GET', 'POST'])
@@ -2304,7 +2341,8 @@ def user_unit_grade(user_email):
         flash("Please sign in first")
         return redirect(url_for('signin'))
     return render_template('user_unit_grade.html', user=my_info, user_info=user_info, score_list=None,
-                           skill_score_list=None, skill_list=None, unit_score=json.dumps(user_unit_score), max_len=max_len)
+                           skill_score_list=None, skill_list=None, unit_score=json.dumps(user_unit_score),
+                           max_len=max_len, followed_each_other=followed_each_other(email, user_email))
 
 
 if __name__ == '__main__':

@@ -49,8 +49,8 @@
                                 <h4 class="card-title m-t-10">{{ user.first_name }} {{ user.last_name }}</h4>
                                 <h6 class="card-subtitle">{{ user.occupation }}</h6>
                                 <div class="row text-center justify-content-md-center">
-                                    <div class="col-4"><a href="{{ url_for('follower') }}" class="link"><i class="icon-people"></i> <font class="font-medium">{{ subscribers }}</font></a></div>
-                                    <div class="col-4"><a href="{{ url_for('following') }}" class="link"><i class="icon-star"></i> <font class="font-medium">{{ following }}</font></a></div>
+                                    <div class="col-4"><a href="{{ url_for('follower') }}" class="link"><i class="icon-people"></i> <font class="font-medium">{{ subscribers }} Followers</font></a></div>
+                                    <div class="col-4"><a href="{{ url_for('following') }}" class="link"><i class="icon-star"></i> <font class="font-medium">{{ following }} Followings</font></a></div>
                                 </div>
                             </center>
                         </div>
