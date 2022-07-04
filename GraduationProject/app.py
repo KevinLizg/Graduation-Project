@@ -1655,15 +1655,15 @@ def follower():
             follower_list = []
             follower_in_db = Follow.query.filter(Follow.user_id == teacher.id, Follow.user_type == 0).all()
             for follower in follower_in_db:
-                if follower.follwer_type == 1:
+                if follower.follower_type == 1:
                     follower_list.append({
-                        'follwer_type': 'Student',
-                        'follower': Student.query.filter(Student.id == follower.follwer_id).first()
+                        'follower_type': 'Student',
+                        'follower': Student.query.filter(Student.id == follower.follower_id).first()
                     })
                 else:
                     follower_list.append({
-                        'follwer_type': 'Teacher',
-                        'follower': Teacher.query.filter(Teacher.id == follower.follwer_id).first()
+                        'follower_type': 'Teacher',
+                        'follower': Teacher.query.filter(Teacher.id == follower.follower_id).first()
                     })
     else:
         flash("Please sign in first")
@@ -1939,6 +1939,7 @@ def user_collections(user_email):
         teacher = Teacher.query.filter(Teacher.email == user_email).first()
         user_info = ''
         if student:
+            isStudentOf = student.teacher_id == me.id
             image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
             img_stream = image.read()
             img_stream = base64.b64encode(img_stream).decode('ascii')
@@ -1970,6 +1971,7 @@ def user_collections(user_email):
                 'occupation': 'Student'
             }
         elif teacher:
+            isStudentOf = False
             image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
             img_stream = image.read()
             img_stream = base64.b64encode(img_stream).decode('ascii')
@@ -2003,7 +2005,7 @@ def user_collections(user_email):
     return render_template('user_collections.html', user=my_info, user_info=user_info, skill_list=None,
                            topic_master=None, score_list=None, unit_score=None, avatars=avatars, badges=badges,
                            cap1=user_info['time_capsule1'], cap2=user_info['time_capsule2'],
-                           followed_each_other=followed_each_other(email, user_email))
+                           followed_each_other=followed_each_other(email, user_email), isStudentOf=isStudentOf)
 
 
 @app.route('/change_profile/<email>', methods=['GET', 'POST'])
@@ -2164,6 +2166,7 @@ def user_grade(user_email, topic_name):
             'badge_name': badge,
             'occupation': 'Student'
         }
+        isStudentOf = student.teacher_id == me.id
         topic = Topics.query.filter(Topics.topic_name == topic_name).first()
         skills = Skills.query.filter(Skills.topic_id == topic.topic_id).all()
         skill_score_list = []
@@ -2185,7 +2188,7 @@ def user_grade(user_email, topic_name):
     print(user_info['email'])
     return render_template('user_grade.html', user=my_info, user_info=user_info, score_list=json.dumps(skill_score_list),
                            skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic), unit_score=None,
-                           followed_each_other=followed_each_other(email, user_email))
+                           followed_each_other=followed_each_other(email, user_email), isStudentOf=isStudentOf)
 
 
 @app.route('/unit_grade', methods=['GET', 'POST'])
@@ -2246,6 +2249,7 @@ def unit_grade():
     print(unit_score)
     return render_template('unit_grade.html', user=user_info, score_list=None,
                            skill_score_list=None, skill_list=None, unit_score=json.dumps(unit_score), max_len=max_len)
+
 
 @app.route('/user_unit_grade/<user_email>', methods=['GET', 'POST'])
 def user_unit_grade(user_email):
@@ -2313,6 +2317,7 @@ def user_unit_grade(user_email):
             'time_capsule2': user_student.time_capsule2,
             'occupation': 'Student'
         }
+        isStudentOf = user_student.teacher_id == me.id
         units = Unit.query.filter(Unit.student_id == user_student.id).all()
         unit_dict = {}
         topics = Topics.query.filter().all()
@@ -2342,7 +2347,43 @@ def user_unit_grade(user_email):
         return redirect(url_for('signin'))
     return render_template('user_unit_grade.html', user=my_info, user_info=user_info, score_list=None,
                            skill_score_list=None, skill_list=None, unit_score=json.dumps(user_unit_score),
-                           max_len=max_len, followed_each_other=followed_each_other(email, user_email))
+                           max_len=max_len, followed_each_other=followed_each_other(email, user_email),
+                           isStudentOf=isStudentOf)
+
+
+@app.route('/student_information', methods=['GET','POST'])
+def student_information():
+    email = session.get('EMAIL')
+    name = session.get('NAME')
+    if name:
+        session['NAME'] = name
+        session['EMAIL'] = email
+        me = Teacher.query.filter(Teacher.email == email).first()
+        me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
+        me_img = me_i.read()
+        me_img = base64.b64encode(me_img).decode('ascii')
+        if me.badge_name:
+            color = me.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + me.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
+        else:
+            color = None
+            badge = None
+        my_info = {
+            'email': email,
+            'first_name': me.firstname,
+            'last_name': me.lastname,
+            'color': color,
+            'badge_name': badge,
+            'profile_pic': me_img,
+            'occupation': 'Teacher'
+        }
+        student_list = Student.query.filter(Student.teacher_id == me.id).all()
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('student_information.html', user=my_info, skill_list=None,
+                           topic_master=None, score_list=None, unit_score=None,student_list=student_list)
 
 
 if __name__ == '__main__':

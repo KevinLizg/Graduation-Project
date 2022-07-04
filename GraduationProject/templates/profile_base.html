@@ -312,6 +312,14 @@
                                 <span class="hide-menu">Email</span>
                             </a>
                         </li>
+                        {% if user.occupation == 'Teacher' %}
+                        <li class="sidebar-item">
+                            <a class="sidebar-link waves-effect waves-dark" href="{{ url_for('student_information') }}" aria-expanded="false">
+                                <i class="fa fa-address-book"></i>
+                                <span class="hide-menu">Students' Info</span>
+                            </a>
+                        </li>
+                        {% endif %}
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark" href="{{ url_for('profile_collections') }}" aria-expanded="false">
                                 <i class="mdi mdi-account-star-variant"></i>

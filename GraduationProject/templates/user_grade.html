@@ -2,9 +2,10 @@
 
 
 {% block mainContent %}
-        {% if followed_each_other == False %}
-            <div class="page-wrapper" style="filter: blur(30px)" id="followed">
-        {% else %}
+        {% if followed_each_other == False and isStudentOf == False %}
+            <div class="page-wrapper" style="filter: blur(100px)" id="followed">
+        {% endif %}
+        {% if followed_each_other == True or isStudentOf == True %}
             <div class="page-wrapper">
         {% endif %}
             <div class="container-fluid">

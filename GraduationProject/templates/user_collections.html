@@ -1,9 +1,10 @@
 {% extends "user_profile_base.html" %}
 
 {% block mainContent %}
-        {% if followed_each_other == False %}
+        {% if followed_each_other == False and isStudentOf == False %}
             <div class="page-wrapper" style="filter: blur(100px)" id="followed">
-        {% else %}
+        {% endif %}
+        {% if followed_each_other == True or isStudentOf == True %}
             <div class="page-wrapper">
         {% endif %}
             <!-- ============================================================== -->
