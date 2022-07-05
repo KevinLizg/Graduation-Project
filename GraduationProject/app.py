@@ -1381,6 +1381,7 @@ def user_profile(user_email):
                 'last_name': student.lastname,
                 'profile_pic': img_stream,
                 'phone': student.phone,
+                'personal_message': student.personal_message,
                 'school': student.school,
                 'address': student.address,
                 'age': datetime.now().date().year - int(student.dob.split("-")[0]),
@@ -1419,6 +1420,7 @@ def user_profile(user_email):
                 'profile_pic': img_stream,
                 'phone': teacher.phone,
                 'school': teacher.school,
+                'personal_message': teacher.personal_message,
                 'password': teacher.password,
                 'color': color,
                 'badge_name': badge,
@@ -1741,6 +1743,7 @@ def profile():
                 'first_name': student.firstname,
                 'last_name': student.lastname,
                 'profile_pic': img_stream,
+                'personal_message': student.personal_message,
                 'phone': student.phone,
                 'school': student.school,
                 'address': student.address,
@@ -1766,6 +1769,7 @@ def profile():
                 student_in_db.phone = form.phone.data
                 student_in_db.address = form.address.data
                 student_in_db.school = form.school.data
+                student_in_db.personal_message = form.personal_message.data
                 db.session.add(student_in_db)
                 db.session.commit()
                 session.clear()
@@ -1797,6 +1801,7 @@ def profile():
                 'phone': teacher.phone,
                 'school': teacher.school,
                 'password': teacher.password,
+                'personal_message': teacher.personal_message,
                 'color': color,
                 'badge_name': badge,
                 'occupation': 'Teacher'
@@ -1815,6 +1820,7 @@ def profile():
                 teacher_in_db.lastname = form.lastname.data
                 teacher_in_db.phone = form.phone.data
                 teacher_in_db.school = form.school.data
+                teacher_in_db.personal_message = form.personal_message.data
                 db.session.add(teacher_in_db)
                 db.session.commit()
                 session.clear()

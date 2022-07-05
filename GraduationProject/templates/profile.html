@@ -90,10 +90,10 @@
                                 <a class="nav-link" id="pills-timeline-tab" data-toggle="pill" href="#like" role="tab" aria-controls="pills-timeline" aria-selected="true">Favorite Skills</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#profile" role="tab" aria-controls="pills-profile" aria-selected="false">Profile</a>
+                                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#profile" role="tab" aria-controls="pills-profile" aria-selected="false">Personal Information</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#setting" role="tab" aria-controls="pills-setting" aria-selected="false">Setting</a>
+                                <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#setting" role="tab" aria-controls="pills-setting" aria-selected="false">Update Information</a>
                             </li>
                             {% if user.occupation == 'Student' %}
                             <li class="nav-item">
@@ -201,7 +201,7 @@
                                         {% endif %}
                                     </div>
                                     <hr>
-                                    <p class="m-t-30">Hello! My name is {{ user.last_name }} {{ user.first_name }}!</p>
+                                    <p class="m-t-30">{{ user.personal_message }}</p>
                                     {% if user.occupation == 'Student' %}
                                     <h4 class="font-medium m-t-30">Mastery Skills</h4>
                                     <hr>
@@ -271,7 +271,11 @@
                                         <div class="form-group">
                                             <label class="col-md-12">Message</label>
                                             <div class="col-md-12">
-                                                <textarea rows="5" class="form-control form-control-line"></textarea>
+                                                {{ form.personal_message(rows="5", class="form-control form-control-line",value=user.personal_message, placeholder=user.personal_message)}}
+                                                {% for error in form.personal_message.errors %}
+                                                    <span style="color: red;">[{{ error }}]</span>
+                                                {% endfor %}
+{#                                                <textarea rows="5" class="form-control form-control-line"></textarea>#}
                                             </div>
                                         </div>
                                         {% if user.occupation == 'Student' %}

@@ -78,7 +78,7 @@
                                     <h4 class="card-title m-t-10">{{ user_info.first_name }} {{ user_info.last_name }}</h4>
                                     <h6 class="card-subtitle">{{ user_info.occupation }}</h6>
                                     <div class="row text-center justify-content-md-center">
-                                        <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-call-in"></i> <font class="font-bold">Email To {{ user_info.first_name }}</font></a></div>
+                                        <div class="col-4"><a href="javascript:void(0)" class="link"><i class="icon-call-in"></i> <font class="font-bold">Communicate With {{ user_info.first_name }}</font></a></div>
                                         <div class="col-4"><i class="icon-people"></i> <font class="font-medium">{{ subscribers }} Followers</font></div>
                                         <div class="col-4"><i class="icon-star"></i> <font class="font-medium">{{ following }} Followings</font></div>
                                     </div>
@@ -198,7 +198,7 @@
                                             {% endif %}
                                         </div>
                                         <hr>
-                                        <p class="m-t-30">Hello! My name is {{ user_info.last_name }} {{ user_info.first_name }}!</p>
+                                        <p class="m-t-30">{{ user_info.personal_message }}</p>
                                         {% if user_info.occupation == 'Student' %}
                                         <h4 class="font-medium m-t-30">Mastery Skills</h4>
                                         <hr>

@@ -70,6 +70,7 @@ class UpdateInfo(FlaskForm):
     phone = StringField('Phone Number', validators=[validators.Regexp('^(\d{10}|\d{11}|\d{12})$', message="Please enter a valid phone number"), DataRequired(message='Please enter your phone number'), ], render_kw={"placeholder": "Phone Number"})
     school = StringField('School', validators=[DataRequired(message='Please enter your School'), ], render_kw={"placeholder": "Your school"})
     address = StringField('Your Address', validators=[ DataRequired(message='Please enter your address')], render_kw={"placeholder": "Address"})
+    personal_message = TextAreaField('Message')
     submit = SubmitField('Update Info')
 
 
@@ -80,6 +81,7 @@ class TeacherUpdateInfo(FlaskForm):
                            render_kw={"placeholder": "Last Name"})
     phone = StringField('Phone Number', validators=[validators.Regexp('^(\d{10}|\d{11}|\d{12})$', message="Please enter a valid phone number"), DataRequired(message='Please enter your phone number'), ], render_kw={"placeholder": "Phone Number"})
     school = StringField('School', validators=[DataRequired(message='Please enter your School'), ], render_kw={"placeholder": "Your school"})
+    personal_message = TextAreaField('Message')
     submit = SubmitField('Update Info')
 
 
