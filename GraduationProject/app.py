@@ -2528,7 +2528,7 @@ def email_list(me_id, me_type):
             sender = Student.query.filter(Student.id == reply.sender_id).first()
             unanswered_list.append({
                 'sender_info': sender,
-                'sender_img': base64.b64encode(open('static/images/badge/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'sender_img': base64.b64encode(open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                 'email_info': reply
             })
         else:
@@ -2536,7 +2536,7 @@ def email_list(me_id, me_type):
             unanswered_list.append({
                 'sender_info': sender,
                 'sender_img': base64.b64encode(
-                    open('static/images/badge/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                    open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                 'email_info': reply
             })
 
