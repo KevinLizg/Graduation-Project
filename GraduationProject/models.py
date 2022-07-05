@@ -2,6 +2,7 @@ from flask import Flask
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
@@ -123,3 +124,28 @@ class Follow(db.Model):
     user_type = db.Column(db.Integer)
     follower_id = db.Column(db.Integer)
     follower_type = db.Column(db.Integer)
+
+
+class Email(db.Model):
+    email_id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer)
+    sender_type = db.Column(db.Integer)
+    receiver_id = db.Column(db.Integer)
+    receiver_type = db.Column(db.Integer)
+    state = db.Column(db.Integer)
+    subject = db.Column(db.String(128))
+    content = db.Column(db.String(2560))
+    time = db.Column(db.String(128))
+
+
+class Ereply(db.Model):
+    reply_id = db.Column(db.Integer, primary_key=True)
+    email_id = db.Column(db.Integer, db.ForeignKey('email.email_id'))
+    subject = db.Column(db.String(128))
+    state = db.Column(db.Integer)
+    content = db.Column(db.String(2560))
+    time = db.Column(db.String(128))
+    sender_id = db.Column(db.Integer)
+    sender_type = db.Column(db.Integer)
+    receiver_id = db.Column(db.Integer)
+    receiver_type = db.Column(db.Integer)

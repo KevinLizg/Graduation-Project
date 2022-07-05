@@ -1,0 +1,89 @@
+{% extends "profile_base.html" %}
+
+{% block mainContent %}
+        <div class="page-wrapper">
+            <div class="email-app">
+                <div class="left-part">
+                    <a class="ti-menu ti-close btn btn-success show-left-part d-block d-md-none" href="javascript:void(0)"></a>
+                    <div class="scrollable" style="height:100%;">
+                        <div class="p-15">
+                            <a id="compose_mail" class="waves-effect waves-light btn btn-danger d-block" href="{{ url_for('compose_email') }}">Compose</a>
+                        </div>
+                        <div class="divider"></div>
+                        <ul class="list-group">
+                            <li>
+                                <small class="p-15 grey-text text-lighten-1 db">Folders</small>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{{ url_for('unanswered') }}" class="active list-group-item-action"><i class="mdi mdi-inbox"></i> Unanswered <span class="label label-success float-right">{{ unanswered_list|length }}</span></a>
+                            </li>
+                            <li class="list-group-item">
+                                <hr>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{{ url_for('sent') }}" class="list-group-item-action"> <i class="mdi mdi-email"></i> Sent <span class="label label-success float-right">{{ sent_list|length }}</span></a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{{ url_for('inbox') }}" class="list-group-item-action"> <i class="mdi mdi-email"></i> Inbox <span class="label label-success float-right">{{ inbox_list|length }}</span> </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="right-part mail-list bg-white">
+                    <div class="p-15 b-b">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h4>Mailbox </h4>
+                                <span>Here is the list of mail</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Action part -->
+                    <!-- Button group part -->
+                    <div class="bg-light p-15 d-flex align-items-center do-block">
+                        <div class="btn-group m-t-5 m-b-5">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input sl-all" id="cstall">
+                                <label class="custom-control-label" for="cstall">Check All</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Action part -->
+                    <!-- Mail list-->
+                    <div class="table-responsive">
+                        <table class="table email-table no-wrap table-hover v-middle">
+                            <tbody>
+                                <!-- row -->
+                                {% for inbox in inbox_list %}
+                                <tr class="unread">
+                                    <!-- label -->
+                                    <td class="chb">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="cst1">
+                                            <label class="custom-control-label" for="cst1">&nbsp;</label>
+                                        </div>
+                                    </td>
+                                    <td class="user-image">
+                                        <img src="data:;base64,{{ inbox.sender_img }}" alt="user" class="rounded-circle" width="30" height="30">
+                                    </td>
+                                    <td class="user-name">
+                                        <h6 class="m-b-0">{{ inbox.sender_info.firstname }}</h6>
+                                    </td>
+                                    <!-- Message -->
+                                    <td class="max-texts"> <a class="link" href="{{ url_for('email_detail',email_id=inbox.email_info.email_id) }}"><span class="label label-info m-r-10">Subject</span> <span class="blue-grey-text text-darken-4">{{ inbox.email_info.subject }}</span></a></td>
+                                    <td class="clip"><i class="fa fa-paperclip"></i></td>
+                                    <td class="time"> {{ inbox.email_info.time.split(" ")[0] }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="chat-windows"></div>
+{% endblock %}
+</body>
+
+</html>

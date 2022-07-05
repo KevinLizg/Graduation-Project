@@ -107,3 +107,16 @@ class ReplyForm(FlaskForm):
 
 class ShopForm(FlaskForm):
     submit = SubmitField('Buy it!')
+
+
+class EmailTo(FlaskForm):
+    receiver = SelectField('To', validators=[DataRequired()], choices=[])
+    subject = StringField('Subject',validators=[DataRequired(message='Please Enter Subject')],render_kw={"placeholder": "Subject"})
+    content = TextAreaField('Content', validators=[DataRequired(message='Please Enter The Content')])
+    submit = SubmitField('Send')
+
+
+class EmailReplyForm(FlaskForm):
+    reply = TextAreaField('Reply', validators=[DataRequired(message='Please Enter This Field')],
+                          render_kw={"placeholder": "Reply"})
+    submit = SubmitField('Send')

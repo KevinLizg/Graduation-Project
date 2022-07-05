@@ -248,14 +248,15 @@ def signup(token):
     teachers = Teacher.query.all()
     teacher_list = []
     for teacher in teachers:
-        teacher_list.append((teacher.id, teacher.firstname+" "+teacher.lastname+" from "+teacher.school))
+        teacher_list.append((teacher.id, teacher.firstname + " " + teacher.lastname + " from " + teacher.school))
     form.teacher.choices = teacher_list
     try:
         email = s.loads(token, salt='email-confirm', max_age=180)
         if form.validate_on_submit():
             if form.firstname.data.isalpha() and form.lastname.data.isalpha():
                 passw_hash = generate_password_hash(form.password.data)
-                student = Student(email=email, teacher_id=form.teacher.data, firstname=form.firstname.data, lastname=form.lastname.data,
+                student = Student(email=email, teacher_id=form.teacher.data, firstname=form.firstname.data,
+                                  lastname=form.lastname.data,
                                   password=passw_hash, gender=form.gender.data, phone=form.phone.data,
                                   school=form.school.data, dob=form.dob.data, address=form.address.data,
                                   profile_photo=form.lastname.data[0])
@@ -612,50 +613,52 @@ def ready(skill_):
 
 
 skill_dict = {
-            # Good
-            1: [0, 1],
-            # Good
-            2: [2, 3],
-            # Good
-            3: [6, 8],
-            # Good
-            4: [13, 16, 28],
-            # Good
-            5: [53],
-            # Good
-            6: [11],
-            # Good
-            7: [21],
-            # Good
-            8: [111],
-            # Good
-            9: [24],
-            # Good
-            10: [50],
-            # Good
-            11: [26],
-            # Good
-            12: [18, 19, 22, 25],
-            # Good
-            13: [32, 33, 34, 38],
-            # Good
-            14: [35, 36, 37, 39],
-            # Good
-            15: [112, 75, 115],
-            # Good
-            16: [114],
-            # Not good
-            17: [30, 42],
-            # Good
-            18: [59,124,125],
-            # Good
-            19: [40, 10],
-            # Good
-            20: [101, 102],
-            # Good
-            21: [27],
-            22: [55],
+    # Good
+    1: [0, 1],
+    # Good
+    2: [2, 3],
+    # Good
+    3: [6, 8],
+    # Good
+    4: [13, 16, 28],
+    # Good
+    5: [53],
+    # Good
+    6: [11],
+    # Good
+    7: [21],
+    # Good
+    8: [111],
+    # Good
+    9: [24],
+    # Good
+    10: [50],
+    # Good
+    11: [26],
+    # Good
+    12: [18, 19, 22, 25],
+    # Good
+    13: [32, 33, 34, 38],
+    # Good
+    14: [35, 36, 37, 39],
+    # Good
+    15: [112, 75, 115],
+    # Good
+    16: [114],
+    # Not good
+    17: [30, 42],
+    # Good
+    18: [59, 124, 125],
+    # Good
+    19: [40, 10],
+    # Good
+    20: [101, 102],
+    # Good
+    21: [27],
+    22: [55],
 }
+
+
 @app.route('/practice/<skill_>')
 def practice(skill_):
     name = session.get('NAME')
@@ -706,7 +709,8 @@ def practice(skill_):
                 else:
                     option_list.append('>')
                     option_list.append('=')
-            if skill_dict[skill.skill_id][ran_num] != 19 and skill_dict[skill.skill_id][ran_num] != 101 and skill_dict[skill.skill_id][ran_num] != 55:
+            if skill_dict[skill.skill_id][ran_num] != 19 and skill_dict[skill.skill_id][ran_num] != 101 and \
+                    skill_dict[skill.skill_id][ran_num] != 55:
                 for j in range(1, 4):
                     gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
                     option_list.append(gen_solution)
@@ -759,7 +763,7 @@ def wrong_problem_add(question_id):
         question_list = json.load(f)
     for question in question_list:
         if question['id'] == int(question_id):
-            if exists('static/json/wrong/' + email+'.json'):
+            if exists('static/json/wrong/' + email + '.json'):
                 with open('static/json/wrong/' + email + '.json', 'r', encoding='utf-8') as f:
                     wrong_question_list = json.load(f)
                     new_id = len(wrong_question_list)
@@ -827,7 +831,7 @@ def wrong_problem_delete(question_id):
     for wrong_question in wrong_question_list:
         if wrong_question['id'] == int(question_id):
             del wrong_question_list[int(question_id)]
-    for idx in range(1,len(wrong_question_list)):
+    for idx in range(1, len(wrong_question_list)):
         wrong_question_list[idx]['id'] = idx
     with open('static/json/wrong/' + email + '.json', 'w', encoding='utf-8') as f:
         json.dump(wrong_question_list, f, ensure_ascii=False, indent=4)
@@ -849,7 +853,7 @@ def wrong_collection():
             user = student_in_db
         if teacher_in_db:
             user = teacher_in_db
-    filename = email+'.json'
+    filename = email + '.json'
     if not exists('static/json/wrong/' + filename):
         filename = None
         question_list = None
@@ -937,7 +941,8 @@ def quiz(skill_):
                 else:
                     option_list.append('>')
                     option_list.append('=')
-            if skill_dict[skill.skill_id][ran_num] != 19 and skill_dict[skill.skill_id][ran_num] != 101 and skill_dict[skill.skill_id][ran_num] != 55:
+            if skill_dict[skill.skill_id][ran_num] != 19 and skill_dict[skill.skill_id][ran_num] != 101 and \
+                    skill_dict[skill.skill_id][ran_num] != 55:
                 for j in range(1, 4):
                     gen_problem, gen_solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
                     option_list.append(gen_solution)
@@ -957,7 +962,7 @@ def quiz(skill_):
                 answer = ["A", "B", "C", "D"]
             idx = 0
             if skill.skill_id == 10:
-                problem = 'Zero Interval of: '+problem
+                problem = 'Zero Interval of: ' + problem
             for op in option_list:
                 if op == solution:
                     an = answer[idx]
@@ -1024,7 +1029,7 @@ def unit_test(topic):
             skill_id.append(skill.skill_id)
         list = []
         for i in range(0, 20):
-            skill_ran_num = skill_id[random.randint(0, len(skill_id)-1)]
+            skill_ran_num = skill_id[random.randint(0, len(skill_id) - 1)]
             ran_num = random.randint(0, len(skill_dict[skill_ran_num]) - 1)
             problem, solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
             app_id = 'XQAUEU-WR3AY23332'
@@ -1059,7 +1064,8 @@ def unit_test(topic):
                 else:
                     option_list.append('>')
                     option_list.append('=')
-            if skill_dict[skill_ran_num][ran_num] != 19 and skill_dict[skill_ran_num][ran_num] != 101 and skill_dict[skill_ran_num][ran_num] != 55:
+            if skill_dict[skill_ran_num][ran_num] != 19 and skill_dict[skill_ran_num][ran_num] != 101 and \
+                    skill_dict[skill_ran_num][ran_num] != 55:
                 for j in range(1, 4):
                     gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
                     option_list.append(gen_solution)
@@ -1252,8 +1258,10 @@ def followed_each_other(email1, email2):
         user2_s = Student.query.filter(Student.email == email2).first()
         user2_t = Teacher.query.filter(Teacher.email == email2).first()
         if user2_s:
-            follow_record = Follow.query.filter(Follow.user_id == user2_s.id, Follow.user_type == 1, Follow.follower_id == user1_s.id, Follow.follower_type == 1).first()
-            followed_record = Follow.query.filter(Follow.follower_id == user2_s.id, Follow.follower_type == 1, Follow.user_id == user1_s.id, Follow.user_type == 1).first()
+            follow_record = Follow.query.filter(Follow.user_id == user2_s.id, Follow.user_type == 1,
+                                                Follow.follower_id == user1_s.id, Follow.follower_type == 1).first()
+            followed_record = Follow.query.filter(Follow.follower_id == user2_s.id, Follow.follower_type == 1,
+                                                  Follow.user_id == user1_s.id, Follow.user_type == 1).first()
         if user2_t:
             follow_record = Follow.query.filter(Follow.user_id == user2_t.id, Follow.user_type == 0,
                                                 Follow.follower_id == user1_s.id, Follow.follower_type == 1).first()
@@ -1272,13 +1280,11 @@ def followed_each_other(email1, email2):
                                                 Follow.follower_id == user1_t.id, Follow.follower_type == 0).first()
             followed_record = Follow.query.filter(Follow.follower_id == user2_t.id, Follow.follower_type == 0,
                                                   Follow.user_id == user1_t.id, Follow.user_type == 0).first()
-    print(follow_record, followed_record)
     if follow_record and followed_record:
-        print("True")
         return True
     else:
-        print("False")
         return False
+
 
 @app.route('/user_profile/<user_email>', methods=['GET', 'POST'])
 def user_profile(user_email):
@@ -1325,7 +1331,7 @@ def user_profile(user_email):
             subscribers = Follow.query.filter(Follow.user_id == student.id, Follow.user_type == 1).count()
             following = Follow.query.filter(Follow.follower_id == student.id, Follow.follower_type == 1).count()
             subscribe = Follow.query.filter(Follow.follower_id == me.id, Follow.follower_type == me_type,
-                                         Follow.user_id == student.id, Follow.user_type == 1).first()
+                                            Follow.user_id == student.id, Follow.user_type == 1).first()
             scores = Score.query.filter(Score.student_id == student.id).order_by(Score.date.desc()).all()
             skill_name_dict = {}
             topic_master_dict = {}
@@ -1368,7 +1374,8 @@ def user_profile(user_email):
             img_stream = base64.b64encode(img_stream).decode('ascii')
             if student.badge_name:
                 color = student.badge_name.split('_')[1]
-                badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+                badge = base64.b64encode(
+                    open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
                     'ascii')
             else:
                 color = None
@@ -1396,7 +1403,7 @@ def user_profile(user_email):
             subscribers = Follow.query.filter(Follow.user_id == teacher.id, Follow.user_type == 0).count()
             following = Follow.query.filter(Follow.follower_id == teacher.id, Follow.follower_type == 0).count()
             subscribe = Follow.query.filter(Follow.follower_id == me.id, Follow.follower_type == me_type,
-                                         Follow.user_id == teacher.id, Follow.user_type == 0).first()
+                                            Follow.user_id == teacher.id, Follow.user_type == 0).first()
             skill_statistic = {}
             topic_master_dict = {}
             score_list = []
@@ -1407,7 +1414,8 @@ def user_profile(user_email):
             img_stream = base64.b64encode(img_stream).decode('ascii')
             if teacher.badge_name:
                 color = teacher.badge_name.split('_')[1]
-                badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
+                badge = base64.b64encode(
+                    open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
                     'ascii')
             else:
                 color = None
@@ -1432,7 +1440,8 @@ def user_profile(user_email):
     print(subscribe)
     return render_template('user_profile.html', name=name, email=email, user_info=user_info,
                            skill_list=json.dumps(skill_statistic),
-                           topic_master=topic_master_dict, score_list=score_list, user=my_info, unit_score=None, subscribers=subscribers,
+                           topic_master=topic_master_dict, score_list=score_list, user=my_info, unit_score=None,
+                           subscribers=subscribers,
                            following=following, subscribe=subscribe)
 
 
@@ -1482,10 +1491,10 @@ def unsubscribe(user_email):
         user = teacher
         user_type = 0
     unsubscribe = Follow.query.filter(Follow.user_id == user.id,
-                                                       Follow.user_type == user_type,
-                                                                   Follow.follower_id == follower.id,
-                                                                                 Follow.follower_type == follower_type
-    ).first()
+                                      Follow.user_type == user_type,
+                                      Follow.follower_id == follower.id,
+                                      Follow.follower_type == follower_type
+                                      ).first()
     db.session.delete(unsubscribe)
     db.session.commit()
     return ''
@@ -1733,7 +1742,8 @@ def profile():
             img_stream = base64.b64encode(img_stream).decode('ascii')
             if student.badge_name:
                 color = student.badge_name.split('_')[1]
-                badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+                badge = base64.b64encode(
+                    open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
                     'ascii')
             else:
                 color = None
@@ -1788,7 +1798,8 @@ def profile():
             img_stream = base64.b64encode(img_stream).decode('ascii')
             if teacher.badge_name:
                 color = teacher.badge_name.split('_')[1]
-                badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
+                badge = base64.b64encode(
+                    open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
                     'ascii')
             else:
                 color = None
@@ -1953,7 +1964,8 @@ def user_collections(user_email):
             badges = Badge.query.filter(Badge.user_id == student.id, Badge.user_type == 1).all()
             if student.badge_name:
                 color = student.badge_name.split('_')[1]
-                badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+                badge = base64.b64encode(
+                    open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
                     'ascii')
             else:
                 color = None
@@ -1985,7 +1997,8 @@ def user_collections(user_email):
             badges = Badge.query.filter(Badge.user_id == teacher.id, Badge.user_type == 0).all()
             if teacher.badge_name:
                 color = teacher.badge_name.split('_')[1]
-                badge = base64.b64encode(open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
+                badge = base64.b64encode(
+                    open('static/images/badge/' + teacher.badge_name + ".png", 'rb').read()).decode(
                     'ascii')
             else:
                 color = None
@@ -2192,7 +2205,8 @@ def user_grade(user_email, topic_name):
         flash("Please sign in first")
         return redirect(url_for('signin'))
     print(user_info['email'])
-    return render_template('user_grade.html', user=my_info, user_info=user_info, score_list=json.dumps(skill_score_list),
+    return render_template('user_grade.html', user=my_info, user_info=user_info,
+                           score_list=json.dumps(skill_score_list),
                            skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic), unit_score=None,
                            followed_each_other=followed_each_other(email, user_email), isStudentOf=isStudentOf)
 
@@ -2251,7 +2265,7 @@ def unit_grade():
             'label': unit,
             'borderColor': color[idx],
         })
-        idx+=1
+        idx += 1
     print(unit_score)
     return render_template('unit_grade.html', user=user_info, score_list=None,
                            skill_score_list=None, skill_list=None, unit_score=json.dumps(unit_score), max_len=max_len)
@@ -2300,7 +2314,8 @@ def user_unit_grade(user_email):
 
         if user_student.badge_name:
             color = user_student.badge_name.split('_')[1]
-            badge = base64.b64encode(open('static/images/badge/' + user_student.badge_name + ".png", 'rb').read()).decode(
+            badge = base64.b64encode(
+                open('static/images/badge/' + user_student.badge_name + ".png", 'rb').read()).decode(
                 'ascii')
         else:
             color = None
@@ -2346,7 +2361,7 @@ def user_unit_grade(user_email):
                 'label': unit,
                 'borderColor': color[idx],
             })
-            idx+=1
+            idx += 1
         print(user_info)
     else:
         flash("Please sign in first")
@@ -2357,7 +2372,7 @@ def user_unit_grade(user_email):
                            isStudentOf=isStudentOf)
 
 
-@app.route('/student_information', methods=['GET','POST'])
+@app.route('/student_information', methods=['GET', 'POST'])
 def student_information():
     email = session.get('EMAIL')
     name = session.get('NAME')
@@ -2389,7 +2404,517 @@ def student_information():
         flash("Please sign in first")
         return redirect(url_for('signin'))
     return render_template('student_information.html', user=my_info, skill_list=None,
-                           topic_master=None, score_list=None, unit_score=None,student_list=student_list)
+                           topic_master=None, score_list=None, unit_score=None, student_list=student_list)
+
+
+@app.route('/compose_email', methods=['GET', 'POST'])
+def compose_email():
+    email = session.get('EMAIL')
+    name = session.get('NAME')
+    if name:
+        form = EmailTo()
+        session['NAME'] = name
+        session['EMAIL'] = email
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        me = ''
+        if student:
+            me = student
+            me_type = 1
+            occupation = 'Student'
+        if teacher:
+            me = teacher
+            me_type = 0
+            occupation = 'Teacher'
+        me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
+        me_img = me_i.read()
+        me_img = base64.b64encode(me_img).decode('ascii')
+        if me.badge_name:
+            color = me.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + me.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
+        else:
+            color = None
+            badge = None
+        my_info = {
+            'email': email,
+            'first_name': me.firstname,
+            'last_name': me.lastname,
+            'color': color,
+            'badge_name': badge,
+            'profile_pic': me_img,
+            'occupation': occupation
+        }
+        if my_info['occupation'] == 'Student':
+            receiver_list = []
+            my_teacher = Teacher.query.filter(Teacher.id == me.teacher_id).first()
+            receiver_list.append(
+                ((me.teacher_id, 0), my_teacher.firstname + " " + my_teacher.lastname + " from " + my_teacher.school))
+            student_list = Student.query.all()
+            teacher_list = Teacher.query.all()
+            for student in student_list:
+                if followed_each_other(student.email, me.email) and student.email != me.email:
+                    receiver_list.append(
+                        ((student.id, 1), student.firstname + " " + student.lastname + " from " + student.school))
+            for teacher in teacher_list:
+                if followed_each_other(teacher.email, me.email) and teacher.email != me.email:
+                    receiver_list.append(
+                        ((teacher.id, 0), teacher.firstname + " " + teacher.lastname + " from " + teacher.school))
+        else:
+            receiver_list = []
+            my_student_list = Student.query.filter(Student.teacher_id == me.id).all()
+            for my_student in my_student_list:
+                receiver_list.append(((my_student.id, 1),
+                                      my_student.firstname + " " + my_student.lastname + " from " + my_student.school))
+            student_list = Student.query.all()
+            teacher_list = Teacher.query.all()
+            for student in student_list:
+                if followed_each_other(student.email, me.email) and student.email != me.email:
+                    receiver_list.append(((student.id, 1),
+                                          student.firstname + " " + student.lastname + " from " + student.school))
+            for teacher in teacher_list:
+                if followed_each_other(teacher.email, me.email) and teacher.email != me.email:
+                    receiver_list.append(((teacher.id, 0),
+                                          teacher.firstname + " " + teacher.lastname + " from " + teacher.school))
+        form.receiver.choices = receiver_list
+        unanswered_list, inbox_list, sent_list = email_list(me.id, me_type)
+        if form.validate_on_submit():
+            form.receiver.data = form.receiver.data.replace('(', '')
+            form.receiver.data = form.receiver.data.replace(')', '')
+            form.receiver.data = form.receiver.data.split(',')
+            print('receiver_id:', form.receiver.data[0], ', receiver_type', form.receiver.data[1])
+            new_email = Email(sender_id=me.id, sender_type=me_type, receiver_id=int(form.receiver.data[0]),
+                              receiver_type=int(form.receiver.data[1]), state=0, subject=form.subject.data,
+                              content=form.content.data,
+                              time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            db.session.add(new_email)
+            db.session.commit()
+            return redirect(url_for('sent'))
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('compose_email.html', user=my_info, skill_list=None,
+                           topic_master=None, score_list=None, unit_score=None, form=form, inbox_list=inbox_list,
+                           unanswered_list=unanswered_list, sent_list=sent_list)
+
+
+def email_list(me_id, me_type):
+    unanswered_list = []
+    inbox_list = []
+    sent_list = []
+    # unanswered_list
+    emails = Email.query.filter(Email.receiver_id == me_id, Email.receiver_type == me_type,
+                                Email.state == 0).all()
+    replies = Ereply.query.filter(Ereply.receiver_id == me_id, Ereply.receiver_type == me_type,
+                                  Ereply.state == 0).all()
+    for email in emails:
+        if email.sender_type == 1:
+            sender = Student.query.filter(Student.id == email.sender_id).first()
+            unanswered_list.append({
+                'sender_info': sender,
+                'sender_img': base64.b64encode(open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'email_info': email
+            })
+        else:
+            sender = Teacher.query.filter(Teacher.id == email.sender_id).first()
+            unanswered_list.append({
+                'sender_info': sender,
+                'sender_img': base64.b64encode(
+                    open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'email_info': email
+            })
+    for reply in replies:
+        if reply.sender_type == 1:
+            sender = Student.query.filter(Student.id == reply.sender_id).first()
+            unanswered_list.append({
+                'sender_info': sender,
+                'sender_img': base64.b64encode(open('static/images/badge/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'email_info': reply
+            })
+        else:
+            sender = Teacher.query.filter(Teacher.id == reply.sender_id).first()
+            unanswered_list.append({
+                'sender_info': sender,
+                'sender_img': base64.b64encode(
+                    open('static/images/badge/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'email_info': reply
+            })
+
+    # inbox_list
+    emails = Email.query.filter(Email.receiver_id == me_id, Email.receiver_type == me_type,
+                                Email.state == 1).all()
+    replies = Ereply.query.filter(Ereply.receiver_id == me_id, Ereply.receiver_type == me_type,
+                                  Ereply.state == 1).all()
+    for email in emails:
+        if email.sender_type == 1:
+            sender = Student.query.filter(Student.id == email.sender_id).first()
+            inbox_list.append({
+                'sender_info': sender,
+                'sender_img': base64.b64encode(open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'email_info': email
+            })
+        else:
+            sender = Teacher.query.filter(Teacher.id == email.sender_id).first()
+            inbox_list.append({
+                'sender_info': sender,
+                'sender_img': base64.b64encode(
+                    open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'email_info': email
+            })
+    replies_id_set = set()
+    inbox_replies = []
+    for reply in replies:
+        if not reply.email_id in replies_id_set:
+            replies_id_set.add(reply.email_id)
+            inbox_replies.append(reply)
+    for reply in inbox_replies:
+        if reply.sender_type == 1:
+            sender = Student.query.filter(Student.id == reply.sender_id).first()
+            inbox_list.append({
+                'sender_info': sender,
+                'sender_img': base64.b64encode(
+                    open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'email_info': reply
+            })
+        else:
+            sender = Teacher.query.filter(Teacher.id == reply.sender_id).first()
+            inbox_list.append({
+                'sender_info': sender,
+                'sender_img': base64.b64encode(
+                    open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'email_info': reply
+            })
+
+    # sent_list
+    emails = Email.query.filter(Email.sender_id == me_id, Email.sender_type == me_type).all()
+    replies = Ereply.query.filter(Ereply.sender_id == me_id, Ereply.sender_type == me_type).all()
+    for email in emails:
+        if email.sender_type == 1:
+            sender = Student.query.filter(Student.id == email.sender_id).first()
+            sent_list.append({
+                'sender_info': sender,
+                'sender_img': base64.b64encode(open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'email_info': email
+            })
+        else:
+            sender = Teacher.query.filter(Teacher.id == email.sender_id).first()
+            sent_list.append({
+                'sender_info': sender,
+                'sender_img': base64.b64encode(
+                    open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'email_info': email
+            })
+    replies_id_set = set()
+    sent_replies = []
+    for reply in replies:
+        if not reply.email_id in replies_id_set:
+            replies_id_set.add(reply.email_id)
+            sent_replies.append(reply)
+    for reply in inbox_replies:
+        if reply.sender_type == 1:
+            sender = Student.query.filter(Student.id == reply.sender_id).first()
+            sent_list.append({
+                'sender_info': sender,
+                'sender_img': base64.b64encode(
+                    open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'email_info': reply
+            })
+        else:
+            sender = Teacher.query.filter(Teacher.id == reply.sender_id).first()
+            sent_list.append({
+                'sender_info': sender,
+                'sender_img': base64.b64encode(
+                    open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'email_info': reply
+            })
+    return unanswered_list, inbox_list, sent_list
+
+
+@app.route('/inbox', methods=['GET', 'POST'])
+def inbox():
+    email = session.get('EMAIL')
+    name = session.get('NAME')
+    if name:
+        session['NAME'] = name
+        session['EMAIL'] = email
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        me = ''
+        if student:
+            me = student
+            occupation = 'Student'
+            user_type = 1
+        if teacher:
+            me = teacher
+            occupation = 'Teacher'
+            user_type = 0
+        me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
+        me_img = me_i.read()
+        me_img = base64.b64encode(me_img).decode('ascii')
+        if me.badge_name:
+            color = me.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + me.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
+        else:
+            color = None
+            badge = None
+        my_info = {
+            'email': email,
+            'first_name': me.firstname,
+            'last_name': me.lastname,
+            'color': color,
+            'badge_name': badge,
+            'profile_pic': me_img,
+            'user_type': user_type,
+            'occupation': occupation
+        }
+        unanswered_list, inbox_list, sent_list = email_list(me.id, user_type)
+        # unanswered_list = email_list(emails, replies)
+        # emails = Email.query.filter(Email.receiver_id == me.id, Email.receiver_type == user_type,
+        #                             Email.state == 1).all()
+        # inbox_list = email_list(emails, [])
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('inbox.html', user=my_info, skill_list=None,
+                           topic_master=None, score_list=None, unit_score=None, inbox_list=inbox_list,
+                           unanswered_list=unanswered_list, sent_list=sent_list)
+
+
+@app.route('/sent', methods=['GET', 'POST'])
+def sent():
+    email = session.get('EMAIL')
+    name = session.get('NAME')
+    if name:
+        session['NAME'] = name
+        session['EMAIL'] = email
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        me = ''
+        if student:
+            me = student
+            occupation = 'Student'
+            user_type = 1
+        if teacher:
+            me = teacher
+            occupation = 'Teacher'
+            user_type = 0
+        me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
+        me_img = me_i.read()
+        me_img = base64.b64encode(me_img).decode('ascii')
+        if me.badge_name:
+            color = me.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + me.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
+        else:
+            color = None
+            badge = None
+        my_info = {
+            'email': email,
+            'first_name': me.firstname,
+            'last_name': me.lastname,
+            'color': color,
+            'badge_name': badge,
+            'profile_pic': me_img,
+            'user_type': user_type,
+            'occupation': occupation
+        }
+        # emails = Email.query.filter(Email.receiver_id == me.id, Email.receiver_type == user_type,
+        #                             Email.state == 0).all()
+        # replies = Ereply.query.filter(Ereply.receiver_id == me.id, Ereply.receiver_type == user_type,
+        #                             Ereply.state == 0).all()
+        # unanswered_list = email_list(emails, replies)
+        # emails = Email.query.filter(Email.receiver_id == me.id, Email.receiver_type == user_type,
+        #                             Email.state == 1).all()
+        # replies = Ereply.query.filter(Ereply.receiver_id == me.id, Ereply.receiver_type == user_type,
+        #                               Ereply.state == 1).all()
+        # inbox_list = email_list(emails, replies)
+        # sent_list = Email.query.filter(Email.sender_id == me.id, Email.sender_type == user_type).all()
+        unanswered_list, inbox_list, sent_list = email_list(me.id, user_type)
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('sent.html', user=my_info, skill_list=None,
+                           topic_master=None, score_list=None, unit_score=None, inbox_list=inbox_list,
+                           unanswered_list=unanswered_list, sent_list=sent_list)
+
+
+@app.route('/unanswered', methods=['GET', 'POST'])
+def unanswered():
+    email = session.get('EMAIL')
+    name = session.get('NAME')
+    if name:
+        session['NAME'] = name
+        session['EMAIL'] = email
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        me = ''
+        if student:
+            me = student
+            occupation = 'Student'
+            user_type = 1
+        if teacher:
+            me = teacher
+            occupation = 'Teacher'
+            user_type = 0
+        me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
+        me_img = me_i.read()
+        me_img = base64.b64encode(me_img).decode('ascii')
+        if me.badge_name:
+            color = me.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + me.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
+        else:
+            color = None
+            badge = None
+        my_info = {
+            'email': email,
+            'first_name': me.firstname,
+            'last_name': me.lastname,
+            'color': color,
+            'badge_name': badge,
+            'profile_pic': me_img,
+            'user_type': user_type,
+            'occupation': occupation
+        }
+        # emails = Email.query.filter(Email.receiver_id == me.id, Email.receiver_type == user_type, Email.state == 0).all()
+        # replies = Ereply.query.filter(Ereply.receiver_id == me.id, Ereply.receiver_type == user_type,
+        #                               Ereply.state == 0).all()
+        # unanswered_list = email_list(emails, replies)
+        # emails = Email.query.filter(Email.receiver_id == me.id, Email.receiver_type == user_type,
+        #                             Email.state == 1).all()
+        # inbox_list = email_list(emails, [])
+        unanswered_list, inbox_list, sent_list = email_list(me.id, user_type)
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('unanswered.html', user=my_info, skill_list=None,
+                           topic_master=None, score_list=None, unit_score=None, unanswered_list=unanswered_list,
+                           inbox_list=inbox_list, sent_list=sent_list)
+
+
+@app.route('/email_detail/<email_id>', methods=['GET', 'POST'])
+def email_detail(email_id):
+    from models import db
+    email = session.get('EMAIL')
+    name = session.get('NAME')
+    if name:
+        form = EmailReplyForm()
+        session['NAME'] = name
+        session['EMAIL'] = email
+        student = Student.query.filter(Student.email == email).first()
+        teacher = Teacher.query.filter(Teacher.email == email).first()
+        me = ''
+        if student:
+            me = student
+            occupation = 'Student'
+            user_type = 1
+        if teacher:
+            me = teacher
+            occupation = 'Teacher'
+            user_type = 0
+        me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
+        me_img = me_i.read()
+        me_img = base64.b64encode(me_img).decode('ascii')
+        if me.badge_name:
+            color = me.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + me.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
+        else:
+            color = None
+            badge = None
+        my_info = {
+            'email': email,
+            'first_name': me.firstname,
+            'last_name': me.lastname,
+            'color': color,
+            'badge_name': badge,
+            'profile_pic': me_img,
+            'user_type': user_type,
+            'occupation': occupation
+        }
+        email_ = Email.query.filter(Email.email_id == email_id).first()
+        if email_.sender_type == 1:
+            sender_info = Student.query.filter(Student.id == email_.sender_id).first()
+            if email_.receiver_type == 1:
+                receiver_info = Student.query.filter(Student.id == email_.receiver_id).first()
+            else:
+                receiver_info = Teacher.query.filter(Teacher.id == email_.receiver_id).first()
+            email_info = {
+                'sender_info': sender_info,
+                'sender_img': base64.b64encode(
+                    open('static/images/icon/' + sender_info.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'receiver_info': receiver_info,
+                'email_info': email_
+            }
+        if email_.sender_type == 0:
+            teacher_info = Teacher.query.filter(Teacher.id == email_.sender_id).first()
+            if email_.receiver_type == 1:
+                receiver_info = Student.query.filter(Student.id == email_.receiver_id).first()
+            else:
+                receiver_info = Teacher.query.filter(Teacher.id == email_.receiver_id).first()
+            email_info = {
+                'sender_info': teacher_info,
+                'sender_img': base64.b64encode(
+                    open('static/images/icon/' + teacher_info.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'receiver_info': receiver_info,
+                'email_info': email_
+            }
+        print(email_info['sender_info'])
+        print(email_info['receiver_info'])
+        unanswered_list, inbox_list, sent_list = email_list(me.id, user_type)
+        replies = Ereply.query.filter(Ereply.email_id == int(email_id)).all()
+        reply_list = []
+        for reply  in replies:
+            if reply.sender_type == 1:
+                sender = Student.query.filter(Student.id == reply.sender_id).first()
+            else:
+                sender = Teacher.query.filter(Teacher.id == reply.sender_id).first()
+            if reply.receiver_type == 1:
+                receiver = Student.query.filter(Student.id == reply.receiver_id).first()
+            else:
+                receiver = Teacher.query.filter(Teacher.id == reply.receiver_id).first()
+            reply_list.append({
+                'sender': sender,
+                'sender_img': base64.b64encode(
+                    open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'receiver': receiver,
+                'content': reply.content
+            })
+        if form.validate_on_submit():
+            check_reply = Ereply.query.filter(Ereply.email_id == email_.email_id).first()
+            if not check_reply:
+                email_.state = 1
+                reply = Ereply(email_id=email_.email_id, subject=email_.subject, content=form.reply.data,
+                               time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"), state=0,
+                               sender_id=email_.receiver_id, sender_type=email_.receiver_type,
+                               receiver_id=email_.sender_id, receiver_type=email_.sender_type)
+            else:
+                no_reply = Ereply.query.filter(Ereply.receiver_id == me.id, Ereply.receiver_type == user_type, Ereply.state==0).first()
+                if no_reply:
+                    no_reply.state = 1
+                    db.session.add(no_reply)
+                if email_.sender_id == me.id:
+                    receiver_id = email_.receiver_id
+                    receiver_type = email_.receiver_type
+                if email_.receiver_id == me.id:
+                    receiver_id = email_.sender_id
+                    receiver_type = email_.sender_type
+                reply = Ereply(email_id=email_.email_id, subject=email_.subject, content=form.reply.data,
+                               time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"), state=0,
+                               sender_id=me.id, sender_type=user_type,
+                               receiver_id=receiver_id, receiver_type=receiver_type)
+            db.session.add(email_)
+            db.session.add(reply)
+            db.session.commit()
+            return redirect(url_for('compose_email'))
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
+    return render_template('email_detail.html', user=my_info, skill_list=None,
+                           topic_master=None, score_list=None, unit_score=None, email_info=email_info,
+                           form=form, reply_list=reply_list, unanswered_list=unanswered_list,
+                           inbox_list=inbox_list, sent_list=sent_list)
 
 
 if __name__ == '__main__':

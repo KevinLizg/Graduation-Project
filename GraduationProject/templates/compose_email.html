@@ -1,0 +1,84 @@
+{% extends "profile_base.html" %}
+
+{% block mainContent %}
+        <div class="page-wrapper">
+            <div class="email-app">
+                <div class="left-part">
+                    <a class="ti-menu ti-close btn btn-success show-left-part d-block d-md-none" href="javascript:void(0)"></a>
+                    <div class="scrollable" style="height:100%;">
+                        <div class="p-15">
+                            <a id="compose_mail" class="waves-effect waves-light btn btn-danger d-block" href="{{ url_for('compose_email') }}">Compose</a>
+                        </div>
+                        <div class="divider"></div>
+                        <ul class="list-group">
+                            <li>
+                                <small class="p-15 grey-text text-lighten-1 db">Folders</small>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{{ url_for('unanswered') }}" class="list-group-item-action"><i class="mdi mdi-inbox"></i> Unanswered <span class="label label-success float-right">{{ unanswered_list|length }}</span></a>
+                            </li>
+                            <li class="list-group-item">
+                                <hr>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{{ url_for('sent') }}" class="active list-group-item-action"> <i class="mdi mdi-email"></i> Sent <span class="label label-success float-right">{{ sent_list|length }}</span></a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{{ url_for('inbox') }}" class="list-group-item-action"> <i class="mdi mdi-email"></i> Inbox <span class="label label-success float-right">{{ inbox_list|length }}</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="right-part mail-compose bg-white">
+                    <div class="p-20 border-bottom">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h4>Compose</h4>
+                                <span>create new message</span>
+                            </div>
+                            <div class="ml-auto">
+                                <a id="cancel_compose" class="btn btn-dark" href="">Back</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Action part -->
+                    <!-- Button group part -->
+                    <div class="card-body">
+                        <form method="post" novalidate>
+                            {{ form.hidden_tag() }}
+                            <div class="form-group">
+                                To:<font style="color: red"> &nbsp;*(You can only send email to the users that you have <b>followed each other</b>. Or you can directly send email to your <b>teacher</b>).</font>
+                                {{ form.receiver(class="form-control")}}
+                                {% for error in form.receiver.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div><hr>
+                            <div class="form-group">
+                                To:
+                                {{ form.subject(class="form-control")}}
+                                {% for error in form.subject.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div><hr>
+                            Content:<br>
+                                {% for error in form.content.errors %}
+                                <br><span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                                {{ form.content(style="height: 250px; width: 900px") }}
+                            <br>
+                            {{ form.submit(class="btn btn-success m-t-20")}}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="chat-windows"></div>
+{% endblock %}
+</body>
+
+</html>
