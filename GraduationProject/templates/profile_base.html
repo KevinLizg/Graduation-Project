@@ -115,7 +115,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle waves-effect waves-dark" href="" id="2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="font-22 mdi mdi-email-outline"></i>
-
+                                <span class="badge badge-pill badge-info noti">{{ unanswered_list|length }}</span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right mailbox animated bounceInDown" aria-labelledby="2">
                                 <span class="with-arrow">
@@ -130,24 +130,25 @@
                                     </li>
                                     <li>
                                         <div class="message-center message-body">
-{#                                            {% for e in email_list %}#}
-                                            <a href="javascript:void(0)" class="message-item">
+                                            {% for unanswered in unanswered_list %}
+                                            <a href="{{ url_for('email_detail',email_id=unanswered.email_info.email_id) }}" class="message-item">
                                                 <span class="user-img">
-{#                                                    <img src="data:;base64,{{ e.img }}" alt="user" class="rounded-circle">#}
-{#                                                    <span class="profile-status online pull-right"></span>#}
+                                                    <img src="data:;base64,{{ unanswered.sender_img }}" class="rounded-circle" width="40" height="40">
+                                                    <span class="profile-status online pull-right"></span>
                                                 </span>
                                                 <div class="mail-contnet">
-{#                                                    <h5 class="message-title">{{ e.Sender }}</h5>#}
+                                                    <h5 class="message-title">{{ unanswered.sender_info.firstname }} {{ unanswered.sender_info.lastname }}</h5>
 {#                                                    <span class="mail-desc">{{ e.Type }}</span>#}
-{#                                                    <span class="time">{{ e.Time }}</span>#}
+                                                    <span class="time">{{ unanswered.email_info.send_time }}</span>
                                                 </div>
                                             </a>
-{#                                            {% endfor %}#}
+                                            {% endfor %}
                                         </div>
                                     </li>
                                 </ul>
                             </div>
                         </li>
+
                         <!-- ============================================================== -->
                         <!-- End Messages -->
                         <!-- ============================================================== -->

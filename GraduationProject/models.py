@@ -135,7 +135,11 @@ class Email(db.Model):
     state = db.Column(db.Integer)
     subject = db.Column(db.String(128))
     content = db.Column(db.String(2560))
-    time = db.Column(db.String(128))
+    reply_content = db.Column(db.String(2560))
+    send_time = db.Column(db.String(128))
+    reply_time = db.Column(db.String(128))
+    sender_del = db.Column(db.Boolean, default=False)
+    receiver_del = db.Column(db.Boolean, default=False)
 
 
 class Ereply(db.Model):

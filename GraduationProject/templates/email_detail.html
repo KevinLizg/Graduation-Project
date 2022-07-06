@@ -38,6 +38,7 @@
                         <h4 class="m-b-0"><b>Subject: </b>{{ email_info.email_info.subject }}</h4>
                     </div>
                     <div class="card-body border-bottom">
+                        <div>{{ email_info.email_info.send_time }}</div>
                         <div class="d-flex no-block align-items-center m-b-40">
                             <div class="m-r-10"><img src="data:;base64,{{ email_info.sender_img }}" alt="user" class="rounded-circle" width="45" height="45"></div>
                             <div class="">
@@ -47,28 +48,32 @@
                         <h4 class="m-b-15">Content:</h4>
                         <p>{{ email_info.email_info.content }}</p>
                         <hr>
-                        {% for reply in reply_list %}
+                        {% if email_info.email_info.reply_content %}
                             <h4 class="m-b-15">Reply:</h4>
+                            <div>{{ email_info.email_info.reply_time }}</div>
                             <div class="d-flex no-block align-items-center m-b-40">
-                               <div class="m-r-10"><img src="data:;base64,{{ reply.sender_img }}" alt="user" class="rounded-circle" width="45" height="45"></div>
+                               <div class="m-r-10"><img src="data:;base64,{{ email_info.receiver_img }}" alt="user" class="rounded-circle" width="45" height="45"></div>
                                 <div>
-                                    <h5 class="m-b-0 font-16 font-medium">{{ reply.sender.firstname }} {{ reply.sender.lastname }}<small> ( {{ reply.sender.email }} )</small></h5><span>to {{ reply.receiver.firstname }} {{ reply.receiver.lastname }}<small> ( {{ reply.receiver.email }} )</small></span>
+                                    <h5 class="m-b-0 font-16 font-medium">{{ email_info.receiver_info.firstname }} {{ email_info.receiver_info.lastname }}<small> ( {{ email_info.receiver_info.email }} )</small></h5><span>to {{ email_info.sender_info.firstname }} {{ email_info.sender_info.lastname }}<small> ( {{ email_info.sender_info.email }} )</small></span>
                                 </div>
                             </div>
-                            <p>{{ reply.content }}</p>
+                            <p>{{ email_info.email_info.reply_content }}</p>
                             <hr>
-                        {% endfor %}
+                        {% endif %}
                     </div>
-                    <div class="card-body">
-                        <h4><i class="fa fa-reply m-r-10 m-b-10"></i> Reply <span></span></h4>
-                        <form method="post" novalidate>
-                            {{ form.hidden_tag() }}
-                        <div class="border m-t-20 p-15">
-                            {{ form.reply(style="height: 250px; width: 800px") }}
+                    {% if email_info.email_info.state == 0 and
+                            not (email_info.email_info.sender_id == user.id and email_info.email_info.sender_type == user.user_type) %}
+                        <div class="card-body">
+                            <h4><i class="fa fa-reply m-r-10 m-b-10"></i> Reply <span></span></h4>
+                            <form method="post" novalidate>
+                                {{ form.hidden_tag() }}
+                            <div class="border m-t-20 p-15">
+                                {{ form.reply(style="height: 250px; width: 800px") }}
+                            </div>
+                                {{ form.submit(class="btn btn-success m-t-20") }}
+                            </form>
                         </div>
-                            {{ form.submit(class="btn btn-success m-t-20") }}
-                        </form>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

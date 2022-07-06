@@ -61,7 +61,6 @@
                                     <td class="chb">
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="cst1">
-                                            <label class="custom-control-label" for="cst1">&nbsp;</label>
                                         </div>
                                     </td>
                                     <td class="user-image">
@@ -73,7 +72,7 @@
                                     <!-- Message -->
                                     <td class="max-texts"> <a class="link" href="{{ url_for('email_detail',email_id=unanswered.email_info.email_id) }}"><span class="label label-info m-r-10">Subject</span> <span class="blue-grey-text text-darken-4">{{ unanswered.email_info.subject }}</span></a></td>
                                     <td class="clip"><i class="fa fa-paperclip"></i></td>
-                                    <td class="time"> {{ unanswered.email_info.time.split(" ")[0] }}</td>
+                                    <td class="time"> {{ unanswered.email_info.send_time.split(" ")[0] }}</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
