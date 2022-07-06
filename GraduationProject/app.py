@@ -1331,6 +1331,7 @@ def user_profile(user_email):
         }
         if m_student:
             student = Student.query.filter(Student.email == user_email).first()
+            isStudentOf = student.teacher_id == me.id
             subscribers = Follow.query.filter(Follow.user_id == student.id, Follow.user_type == 1).count()
             following = Follow.query.filter(Follow.follower_id == student.id, Follow.follower_type == 1).count()
             subscribe = Follow.query.filter(Follow.follower_id == me.id, Follow.follower_type == me_type,
@@ -1402,6 +1403,7 @@ def user_profile(user_email):
                 'occupation': 'Student'
             }
         elif m_teacher:
+            isStudentOf = False
             teacher = Teacher.query.filter(Teacher.email == user_email).first()
             subscribers = Follow.query.filter(Follow.user_id == teacher.id, Follow.user_type == 0).count()
             following = Follow.query.filter(Follow.follower_id == teacher.id, Follow.follower_type == 0).count()
@@ -1444,7 +1446,8 @@ def user_profile(user_email):
                            skill_list=json.dumps(skill_statistic),
                            topic_master=topic_master_dict, score_list=score_list, user=my_info, unit_score=None,
                            subscribers=subscribers,
-                           following=following, subscribe=subscribe, unanswered_list=unanswered_list)
+                           following=following, subscribe=subscribe, unanswered_list=unanswered_list,
+                           followed_each_other=followed_each_other(email, user_email), isStudentOf=isStudentOf)
 
 
 @app.route('/subscribe/<user_email>', methods=['GET', 'POST'])
@@ -2637,6 +2640,11 @@ def email_list(me_id, me_type):
                     'email_info': email
                 })
     return unanswered_list, inbox_list, sent_list
+
+
+# def notification_list(me_id, me_type):
+#     follow_list = Follow.query.filter(Follow.follower_id==me_id, Follow.follower_type==me_type).all()
+#     for following in follow_list:
 
 
 @app.route('/inbox', methods=['GET', 'POST'])
