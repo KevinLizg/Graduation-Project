@@ -1,6 +1,5 @@
 import base64
 import collections
-import email.policy
 import itertools
 import os
 import random, json
@@ -8,9 +7,8 @@ import urllib
 
 import wolframalpha
 import xmltodict
-# from mathgenerator import mathgen
 from mathgenerator import mathgen
-
+from datetime import timedelta, datetime
 from flask import Flask, render_template, url_for, jsonify, redirect, flash, session, request
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from flask_mail import Message, Mail
@@ -18,28 +16,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from form import *
 
-from config import Config
-from flask_sqlalchemy import SQLAlchemy, Pagination
 from models import *
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 from collections import Counter
-
-################# Wolfram Query ###################
-# app_id = 'XQAUEU-WR3AY23332'
-# client = wolframalpha.Client(app_id)
-# problem, solution = mathgen.genById(4)
-# if (len(problem.split("Equation")) > 1):
-#     problem = problem.split("Equation")[1]
-# res = client.query('Convert 21421 from base 10 to base 7.')
-# # img_list = []
-# for pod in res.pods:
-#     for sub in pod.subpods:
-#         print(sub.plaintext)
-# img_list.append(sub.img['@src'])
-####################################################
 
 
 ################# Clear Cached ###################
@@ -1303,11 +1285,13 @@ def user_profile(user_email):
         if me_student:
             me = me_student
             unanswered_list, _, _ = email_list(me.id, 1)
+            notifications = notification_list(me.id, 1)
             me_type = 1
             occupation = 'Student'
         if me_teacher:
             me = me_teacher
             unanswered_list, _, _ = email_list(me.id, 0)
+            notifications = notification_list(me.id, 0)
             me_type = 0
             occupation = 'Teacher'
         me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
@@ -1447,7 +1431,8 @@ def user_profile(user_email):
                            topic_master=topic_master_dict, score_list=score_list, user=my_info, unit_score=None,
                            subscribers=subscribers,
                            following=following, subscribe=subscribe, unanswered_list=unanswered_list,
-                           followed_each_other=followed_each_other(email, user_email), isStudentOf=isStudentOf)
+                           followed_each_other=followed_each_other(email, user_email), isStudentOf=isStudentOf,
+                           notifications=notifications)
 
 
 @app.route('/subscribe/<user_email>', methods=['GET', 'POST'])
@@ -1513,6 +1498,7 @@ def following():
         teacher = Teacher.query.filter(Teacher.email == email).first()
         if student:
             unanswered_list, _, _ = email_list(student.id, 1)
+            notifications = notification_list(student.id, 1)
             image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
             img_stream = image.read()
             img_stream = base64.b64encode(img_stream).decode('ascii')
@@ -1554,6 +1540,7 @@ def following():
                     })
         elif teacher:
             unanswered_list, _, _ = email_list(teacher.id, 0)
+            notifications = notification_list(teacher.id, 0)
             image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
             img_stream = image.read()
             img_stream = base64.b64encode(img_stream).decode('ascii')
@@ -1595,7 +1582,7 @@ def following():
         return redirect(url_for('signin'))
     return render_template('following.html', user=user_info, skill_list=None,
                            topic_master=None, score_list=None, unit_score=None, following_list=following_list,
-                           unanswered_list=unanswered_list)
+                           unanswered_list=unanswered_list, notifications=notifications)
 
 
 @app.route('/follower', methods=['GET', 'POST'])
@@ -1606,6 +1593,7 @@ def follower():
         teacher = Teacher.query.filter(Teacher.email == email).first()
         if student:
             unanswered_list, _, _ = email_list(student.id, 1)
+            notifications = notification_list(student.id, 1)
             image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
             img_stream = image.read()
             img_stream = base64.b64encode(img_stream).decode('ascii')
@@ -1647,6 +1635,7 @@ def follower():
                     })
         elif teacher:
             unanswered_list, _, _ = email_list(teacher.id, 0)
+            notifications = notification_list(teacher.id, 0)
             image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
             img_stream = image.read()
             img_stream = base64.b64encode(img_stream).decode('ascii')
@@ -1688,7 +1677,7 @@ def follower():
         return redirect(url_for('signin'))
     return render_template('followers.html', user=user_info, skill_list=None,
                            topic_master=None, score_list=None, unit_score=None, follower_list=follower_list,
-                           unanswered_list=unanswered_list)
+                           unanswered_list=unanswered_list, notifications=notifications)
 
 
 def return_score(student):
@@ -1736,12 +1725,12 @@ def return_score(student):
 def profile():
     from models import db
     email = session.get('EMAIL')
-    print(email)
     if email:
         student = Student.query.filter(Student.email == email).first()
         teacher = Teacher.query.filter(Teacher.email == email).first()
         if student:
             unanswered_list, _, _ = email_list(student.id, 1)
+            notifications = notification_list(student.id, 1)
             subscribers = Follow.query.filter(Follow.user_id == student.id, Follow.user_type == 1).count()
             following = Follow.query.filter(Follow.follower_id == student.id, Follow.follower_type == 1).count()
             score_list, skill_statistic, topic_master_dict = return_score(student)
@@ -1796,6 +1785,7 @@ def profile():
                 return redirect(url_for('signin'))
         elif teacher:
             unanswered_list, _, _ = email_list(teacher.id, 0)
+            notifications = notification_list(teacher.id, 0)
             subscribers = Follow.query.filter(Follow.user_id == teacher.id, Follow.user_type == 0).count()
             following = Follow.query.filter(Follow.follower_id == teacher.id, Follow.follower_type == 0).count()
             skill_statistic = {}
@@ -1853,7 +1843,7 @@ def profile():
     return render_template('profile.html', user=user_info, form=form, skill_list=json.dumps(skill_statistic),
                            topic_master=topic_master_dict, score_list=score_list, unit_score=None, likes=like_list,
                            subscribers=subscribers, following=following,
-                           unanswered_list=unanswered_list
+                           unanswered_list=unanswered_list, notifications=notifications
                            )
 
 
@@ -1896,8 +1886,9 @@ def profile_collections():
             'time_capsule2': student.time_capsule2,
             'occupation': 'Student'
         }
+        notifications = notification_list(student.id, 1)
     elif teacher:
-        unanswered_list, _, _ = email_list(student.id, 0)
+        unanswered_list, _, _ = email_list(teacher.id, 0)
         image = open('static/images/icon/' + teacher.profile_photo + ".png", 'rb')
         img_stream = image.read()
         img_stream = base64.b64encode(img_stream).decode('ascii')
@@ -1925,10 +1916,11 @@ def profile_collections():
             'time_capsule2': teacher.time_capsule2,
             'occupation': 'Teacher'
         }
+        notifications = notification_list(teacher.id, 0)
     return render_template('profile_collections.html', user=user_info, skill_list=None,
                            topic_master=None, score_list=None, unit_score=None, avatars=avatars, badges=badges,
                            cap1=user_info['time_capsule1'], cap2=user_info['time_capsule2'],
-                           unanswered_list=unanswered_list)
+                           unanswered_list=unanswered_list, notifications=notifications)
 
 
 @app.route('/user_collections/<user_email>', methods=['GET', 'POST'])
@@ -1944,10 +1936,12 @@ def user_collections(user_email):
         if me_student:
             me = me_student
             unanswered_list, _, _ = email_list(me.id, 1)
+            notifications = notification_list(me.id, 1)
             occupation = 'Student'
         if me_teacher:
             me = me_teacher
             unanswered_list, _, _ = email_list(me.id, 0)
+            notifications = notification_list(me.id, 0)
             occupation = 'Teacher'
         me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
         me_img = me_i.read()
@@ -2041,7 +2035,7 @@ def user_collections(user_email):
                            topic_master=None, score_list=None, unit_score=None, avatars=avatars, badges=badges,
                            cap1=user_info['time_capsule1'], cap2=user_info['time_capsule2'],
                            followed_each_other=followed_each_other(email, user_email), isStudentOf=isStudentOf,
-                           unanswered_list=unanswered_list
+                           unanswered_list=unanswered_list, notifications=notifications
                            )
 
 
@@ -2100,6 +2094,7 @@ def grade(topic_name):
     image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
     img_stream = image.read()
     img_stream = base64.b64encode(img_stream).decode('ascii')
+    notifications = notification_list(student.id, 1)
     if student.badge_name:
         color = student.badge_name.split('_')[1]
         badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
@@ -2140,7 +2135,7 @@ def grade(topic_name):
         })
     return render_template('grade.html', user=user_info, score_list=json.dumps(skill_score_list),
                            skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic), unit_score=None,
-                           unanswered_list=unanswered_list
+                           unanswered_list=unanswered_list, notifications=notifications
                            )
 
 
@@ -2157,10 +2152,12 @@ def user_grade(user_email, topic_name):
         if me_student:
             me = me_student
             unanswered_list, _, _ = email_list(me.id, 1)
+            notifications = notification_list(me.id, 1)
             occupation = 'Student'
         if me_teacher:
             me = me_teacher
             unanswered_list, _, _ = email_list(me.id, 0)
+            notifications = notification_list(me.id, 0)
             occupation = 'Teacher'
         me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
         me_img = me_i.read()
@@ -2227,12 +2224,11 @@ def user_grade(user_email, topic_name):
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    print(user_info['email'])
     return render_template('user_grade.html', user=my_info, user_info=user_info,
                            score_list=json.dumps(skill_score_list),
                            skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic), unit_score=None,
                            followed_each_other=followed_each_other(email, user_email), isStudentOf=isStudentOf,
-                           unanswered_list=unanswered_list
+                           unanswered_list=unanswered_list, notifications=notifications
                            )
 
 
@@ -2240,6 +2236,7 @@ def user_grade(user_email, topic_name):
 def unit_grade():
     email = session.get('EMAIL')
     student = Student.query.filter(Student.email == email).first()
+    notifications = notification_list(student.id, 1)
     _, skill_statistic, _ = return_score(student)
     image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
     img_stream = image.read()
@@ -2293,7 +2290,7 @@ def unit_grade():
         idx += 1
     return render_template('unit_grade.html', user=user_info, score_list=None,
                            skill_score_list=None, skill_list=None, unit_score=json.dumps(unit_score), max_len=max_len,
-                           unanswered_list=unanswered_list
+                           unanswered_list=unanswered_list, notifications=notifications
                            )
 
 
@@ -2310,10 +2307,12 @@ def user_unit_grade(user_email):
         if me_student:
             me = me_student
             unanswered_list, _, _ = email_list(me.id, 1)
+            notifications = notification_list(me.id, 1)
             occupation = 'Student'
         if me_teacher:
             me = me_teacher
             unanswered_list, _, _ = email_list(me.id, 0)
+            notifications = notification_list(me.id, 0)
             occupation = 'Teacher'
         me_i = open('static/images/icon/' + me.profile_photo + ".png", 'rb')
         me_img = me_i.read()
@@ -2390,7 +2389,6 @@ def user_unit_grade(user_email):
                 'borderColor': color[idx],
             })
             idx += 1
-        print(user_info)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
@@ -2398,7 +2396,7 @@ def user_unit_grade(user_email):
                            skill_score_list=None, skill_list=None, unit_score=json.dumps(user_unit_score),
                            max_len=max_len, followed_each_other=followed_each_other(email, user_email),
                            isStudentOf=isStudentOf,
-                           unanswered_list=unanswered_list
+                           unanswered_list=unanswered_list,notifications=notifications
                            )
 
 
@@ -2430,11 +2428,14 @@ def student_information():
             'occupation': 'Teacher'
         }
         student_list = Student.query.filter(Student.teacher_id == me.id).all()
+        unanswered_list, _, _ = email_list(me.id, 0)
+        notifications = notification_list(me.id, 0)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
     return render_template('student_information.html', user=my_info, skill_list=None,
-                           topic_master=None, score_list=None, unit_score=None, student_list=student_list)
+                           topic_master=None, score_list=None, unit_score=None, student_list=student_list,
+                           unanswered_list=unanswered_list, notifications=notifications)
 
 
 @app.route('/compose_email', methods=['GET', 'POST'])
@@ -2450,11 +2451,13 @@ def compose_email():
         me = ''
         if student:
             unanswered_list, inbox_list, sent_list = email_list(student.id, 1)
+            notifications = notification_list(student.id, 1)
             me = student
             me_type = 1
             occupation = 'Student'
         if teacher:
             unanswered_list, inbox_list, sent_list = email_list(teacher.id, 0)
+            notifications = notification_list(teacher.id, 0)
             me = teacher
             me_type = 0
             occupation = 'Teacher'
@@ -2527,7 +2530,8 @@ def compose_email():
     return render_template('compose_email.html', user=my_info, skill_list=None,
                            topic_master=None, score_list=None, unit_score=None, form=form,
                            inbox_list=inbox_list,
-                           unanswered_list=unanswered_list, sent_list=sent_list)
+                           unanswered_list=unanswered_list, sent_list=sent_list,
+                           notifications=notifications)
 
 
 def email_list(me_id, me_type):
@@ -2554,7 +2558,7 @@ def email_list(me_id, me_type):
 
     # inbox
     inbox_list = []
-    inbox_emails = Email.query.filter(Email.sender_id == me_id, Email.sender_type == me_type,
+    inbox_emails = Email.query.filter(Email.receiver_id == me_id, Email.receiver_type == me_type,
                                       Email.state == 1).all()
     for email in inbox_emails:
         if email.sender_type == 1:
@@ -2642,9 +2646,24 @@ def email_list(me_id, me_type):
     return unanswered_list, inbox_list, sent_list
 
 
-# def notification_list(me_id, me_type):
-#     follow_list = Follow.query.filter(Follow.follower_id==me_id, Follow.follower_type==me_type).all()
-#     for following in follow_list:
+def notification_list(me_id, me_type):
+    notifications = []
+    follow_list = Follow.query.filter(Follow.follower_id == me_id, Follow.follower_type == me_type).all()
+    for following in follow_list:
+        if following.user_type == 1:
+            following_user = Student.query.filter(Student.id == following.user_id).first()
+            filter_after = datetime.today() - timedelta(days=5)
+            score_list = Score.query.filter(Score.student_id == following_user.id,
+                                            Score.date > filter_after).order_by(Score.date).all()
+            for score_record in score_list:
+                skill = Skills.query.filter(Skills.skill_id == Score.skill_id).first()
+                notifications.append({
+                    'following_user': following_user,
+                    'following_img':  base64.b64encode(open('static/images/icon/' + following_user.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                    'score_record': score_record,
+                    'skill': skill
+                })
+    return notifications
 
 
 @app.route('/inbox', methods=['GET', 'POST'])
@@ -2686,13 +2705,15 @@ def inbox():
             'occupation': occupation
         }
         unanswered_list, inbox_list, sent_list = email_list(me.id, user_type)
+        notifications = notification_list(me.id, user_type)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
     return render_template('inbox.html', user=my_info, skill_list=None,
                            topic_master=None, score_list=None, unit_score=None,
                            inbox_list=inbox_list,
-                           unanswered_list=unanswered_list, sent_list=sent_list
+                           unanswered_list=unanswered_list, sent_list=sent_list,
+                           notifications=notifications
                            )
 
 
@@ -2735,13 +2756,14 @@ def sent():
             'occupation': occupation
         }
         unanswered_list, inbox_list, sent_list = email_list(me.id, user_type)
+        notifications = notification_list(me.id, user_type)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
     return render_template('sent.html', user=my_info, skill_list=None,
                            topic_master=None, score_list=None, unit_score=None,
                            inbox_list=inbox_list,
-                           unanswered_list=unanswered_list, sent_list=sent_list
+                           unanswered_list=unanswered_list, sent_list=sent_list,notifications=notifications
                            )
 
 
@@ -2784,13 +2806,14 @@ def unanswered():
             'occupation': occupation
         }
         unanswered_list, inbox_list, sent_list = email_list(me.id, user_type)
+        notifications = notification_list(me.id, user_type)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
     return render_template('unanswered.html', user=my_info, skill_list=None,
                            topic_master=None, score_list=None, unit_score=None,
                            unanswered_list=unanswered_list,
-                           inbox_list=inbox_list, sent_list=sent_list
+                           inbox_list=inbox_list, sent_list=sent_list, notifications=notifications
                            )
 
 
@@ -2836,6 +2859,7 @@ def email_detail(email_id):
             'occupation': occupation
         }
         unanswered_list, inbox_list, sent_list = email_list(me.id, user_type)
+        notifications = notification_list(me.id, user_type)
         email_ = Email.query.filter(Email.email_id == email_id).first()
         if email_.sender_type == 1:
             sender_info = Student.query.filter(Student.id == email_.sender_id).first()
@@ -2881,7 +2905,7 @@ def email_detail(email_id):
                            topic_master=None, score_list=None, unit_score=None, email_info=email_info,
                            form=form,
                            unanswered_list=unanswered_list,
-                           inbox_list=inbox_list, sent_list=sent_list
+                           inbox_list=inbox_list, sent_list=sent_list, notifications=notifications
                            )
 
 

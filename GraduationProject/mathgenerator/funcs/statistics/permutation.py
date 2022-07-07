@@ -9,7 +9,8 @@ def gen_func(maxlength=20, format='string'):
     answer = int(math.factorial(a) / (math.factorial(a - b)))
 
     if format == 'string':
-        problem = f"Number of Permutations from {a} objects picked {b} at a time =  "
+        # problem = f"Number of Permutations from {a} objects picked {b} at a time =  "
+        problem = f"Permutations({a},{b})"
         solution = str(answer)
         return problem, solution
     elif format == 'latex':

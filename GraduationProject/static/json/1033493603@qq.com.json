@@ -1,0 +1,128 @@
+[
+    {
+        "id": 0,
+        "title": "Permutations(18,5)",
+        "option": [
+            "1028160",
+            "57657600",
+            "980179200",
+            "1814400"
+        ],
+        "answer": "A",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP262923hga9961d178f8i000048bc4hc82bdca992?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP263123hga9961d178f8i000066fd85i9d56406g3?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP263223hga9961d178f8i000037c3c7465795fhe5?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP263323hga9961d178f8i00003d7675h8ge0089cd?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP263423hga9961d178f8i00002h7i1226ied8b61d?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP263523hga9961d178f8i0000305i3f829fdih19i?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP263623hga9961d178f8i00002gcgb1036bh8ha7h?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP263723hga9961d178f8i000034c43heb1hec96a1?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP264123hga9961d178f8i000030c794103696a69g?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP264223hga9961d178f8i00004cgc8ceaab8ehiic?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP264423hga9961d178f8i0000600i132a59h28h15?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP264523hga9961d178f8i0000319eg9ha67252iia?MSPStoreType=image/gif&s=3",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP264623hga9961d178f8i00005gdi177h6774092e?MSPStoreType=image/gif&s=3"
+        ],
+        "skill": "Permutation and Combination"
+    },
+    {
+        "id": 1,
+        "title": "Permutations(18,4)",
+        "option": [
+            "73440",
+            "1663200",
+            "1",
+            "154440"
+        ],
+        "answer": "A",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51342021i6d63c4e2if100004fai2ia5533ea3ae?MSPStoreType=image/gif&s=2",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51362021i6d63c4e2if1000059f3i084f6fe2546?MSPStoreType=image/gif&s=2",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51372021i6d63c4e2if10000633ec03dhf7gb8c4?MSPStoreType=image/gif&s=2",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51382021i6d63c4e2if100001dc286a83285ei0f?MSPStoreType=image/gif&s=2",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51392021i6d63c4e2if100005708f60ia5dda721?MSPStoreType=image/gif&s=2",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51402021i6d63c4e2if100006966ci6bfg9fb9ef?MSPStoreType=image/gif&s=2",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51412021i6d63c4e2if1000057ib4h8eb7845i3c?MSPStoreType=image/gif&s=2",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51452021i6d63c4e2if100001c4cccd1f8cb446d?MSPStoreType=image/gif&s=2",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51472021i6d63c4e2if10000269728h28078eif4?MSPStoreType=image/gif&s=2",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51482021i6d63c4e2if100001g6858f6881ad5af?MSPStoreType=image/gif&s=2",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP51492021i6d63c4e2if100002bi1645gc73dee72?MSPStoreType=image/gif&s=2"
+        ],
+        "skill": "Permutation and Combination"
+    },
+    {
+        "id": 2,
+        "title": "Permutations(16,5)",
+        "option": [
+            "1816214400",
+            "17",
+            "524160",
+            "110"
+        ],
+        "answer": "C",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP9691gga6914685aeaf300003g495d32dg4504bb?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP9711gga6914685aeaf3000034f9e937eh9hgaei?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP9721gga6914685aeaf300002hbcg274bi9f5594?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP9731gga6914685aeaf300004f5f4i858g1fif60?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP9741gga6914685aeaf300005ag4ed61g3d56e9g?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP9751gga6914685aeaf300003cgh3a0144g5813g?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP9761gga6914685aeaf300000f5i59163586eee1?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP9771gga6914685aeaf300005a28i87g1ff96iag?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP9811gga6914685aeaf300001cff8885dbcg60eb?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP9831gga6914685aeaf300002f3008ef5344idi7?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP9841gga6914685aeaf300005c6039ai5c98d9cd?MSPStoreType=image/gif&s=6",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP9851gga6914685aeaf300002bcbg31i090760fb?MSPStoreType=image/gif&s=6"
+        ],
+        "skill": "Permutation and Combination"
+    },
+    {
+        "id": 3,
+        "title": "Permutations(19,4)",
+        "option": [
+            "1395360",
+            "73440",
+            "1716",
+            "93024"
+        ],
+        "answer": "D",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP3974127dee6757d72d4d00005a0a70bh165cid3b?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP3976127dee6757d72d4d0000527bif80fed63hd1?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP3977127dee6757d72d4d00005a9caei1f8d6fh89?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP3978127dee6757d72d4d0000319cb1128eff7c3g?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP3979127dee6757d72d4d00006a0ih9i12a14ci3e?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP3980127dee6757d72d4d000036f3eac717bhb0ib?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP3981127dee6757d72d4d000056df67a4d2g0hddi?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP3985127dee6757d72d4d00003057767839eh23ib?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP3987127dee6757d72d4d00005f8hg313hi426b3d?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP3988127dee6757d72d4d000028e6cbce8ad49550?MSPStoreType=image/gif&s=1",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP3989127dee6757d72d4d00000hbe6bc092gh04d8?MSPStoreType=image/gif&s=1"
+        ],
+        "skill": "Permutation and Combination"
+    },
+    {
+        "id": 4,
+        "title": "Combinations(20,7)",
+        "option": [
+            "77520",
+            "252",
+            "24310",
+            "680"
+        ],
+        "answer": "A",
+        "analysis": [
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4079134728b0320iga76000015484dfebg5h25ca?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4081134728b0320iga760000434b7d141h4759d5?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4082134728b0320iga7600001g49745cbga321g6?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4083134728b0320iga7600002i89fg24d9c7bc32?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4084134728b0320iga7600001de4cgid3dc11ib1?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4085134728b0320iga7600000fi701def2bia703?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4086134728b0320iga760000576369c0a0436a01?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4090134728b0320iga7600000he8f5h020121cga?MSPStoreType=image/gif&s=8",
+            "https://www6b3.wolframalpha.com/Calculate/MSP/MSP4091134728b0320iga7600001f538gi81g3h9ca2?MSPStoreType=image/gif&s=8"
+        ],
+        "skill": "Permutation and Combination"
+    }
+]

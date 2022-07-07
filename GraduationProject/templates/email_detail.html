@@ -32,7 +32,7 @@
 
                 <div class="right-part mail-details bg-white">
                     <div class="card-body bg-light">
-                        <a type="button" href="" class="btn btn-outline-secondary font-18 m-r-10"><i class="mdi mdi-arrow-left"></i></a>
+                        <a type="button" href="{{ url_for('inbox') }}" class="btn btn-outline-secondary font-18 m-r-10"><i class="mdi mdi-arrow-left"></i></a>
                     </div>
                     <div class="card-body border-bottom">
                         <h4 class="m-b-0"><b>Subject: </b>{{ email_info.email_info.subject }}</h4>
@@ -73,6 +73,13 @@
                                 {{ form.submit(class="btn btn-success m-t-20") }}
                             </form>
                         </div>
+{#                    {% else %}#}
+{#                        <div class="card-body">#}
+{#                            <h4><i class="fa fa-reply m-r-10 m-b-10"></i> Reply <span></span></h4>#}
+{#                            <form method="post" novalidate>#}
+{#                                <a class="btn btn-success m-t-20" href="{{ url_for('email_reply',email_id=email_info.email_info.email_id) }}">Reply</a>#}
+{#                            </form>#}
+{#                        </div>#}
                     {% endif %}
                 </div>
             </div>

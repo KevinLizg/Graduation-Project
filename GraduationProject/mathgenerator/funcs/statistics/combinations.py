@@ -15,7 +15,8 @@ def gen_func(maxlength=20, format='string'):
     solution = int(factorial(a) / (factorial(b) * factorial(a - b)))
 
     if format == 'string':
-        problem = f"Number of combinations from {a} objects picked {b} at a time "
+        # problem = f"Number of combinations from {a} objects picked {b} at a time"
+        problem = f"Combinations({a},{b})"
         return problem, str(solution)
     elif format == 'latex':
         return "Latex unavailable"
