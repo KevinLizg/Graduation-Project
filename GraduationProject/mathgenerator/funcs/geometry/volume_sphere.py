@@ -6,7 +6,7 @@ def gen_func(maxRadius=100, format='string'):
     ans = (4 * math.pi / 3) * r**3
 
     if format == 'string':
-        problem = f"Volume of sphere with radius {r} m = "
+        problem = f"Volume of sphere with radius is {r}= "
         solution = f"{ans} m^3"
         return problem, solution
     elif format == 'latex':

@@ -623,12 +623,12 @@ skill_dict = {
     # Good
     13: [32, 33, 34, 38],
     # Good
-    14: [35, 36, 37, 39],
+    14: [35, 36, 37, 39, 61],
     # Good
     15: [112, 75, 115],
     # Good
     16: [114],
-    # Not good
+    # Good
     17: [30, 42],
     # Good
     18: [59, 124, 125],
@@ -2544,7 +2544,7 @@ def email_list(me_id, me_type):
             sender = Student.query.filter(Student.id == email.sender_id).first()
             unanswered_list.append({
                 'sender_info': sender,
-                'sender_img': base64.b64encode(open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                'sender_img': base64.b64encode(open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                 'email_info': email
             })
         else:
@@ -2552,7 +2552,7 @@ def email_list(me_id, me_type):
             unanswered_list.append({
                 'sender_info': sender,
                 'sender_img': base64.b64encode(
-                    open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                    open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                 'email_info': email
             })
 
@@ -2568,7 +2568,7 @@ def email_list(me_id, me_type):
                 inbox_list.append({
                     'receiver_info': receiver,
                     'sender_info': sender,
-                    'sender_img': base64.b64encode(open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                    'sender_img': base64.b64encode(open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                     'email_info': email
                 })
             else:
@@ -2577,7 +2577,7 @@ def email_list(me_id, me_type):
                     'receiver_info': receiver,
                     'sender_info': sender,
                     'sender_img': base64.b64encode(
-                        open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                        open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                     'email_info': email
                 })
         else:
@@ -2587,7 +2587,7 @@ def email_list(me_id, me_type):
                 inbox_list.append({
                     'receiver_info': receiver,
                     'sender_info': sender,
-                    'sender_img': base64.b64encode(open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                    'sender_img': base64.b64encode(open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                     'email_info': email
                 })
             else:
@@ -2596,7 +2596,7 @@ def email_list(me_id, me_type):
                     'receiver_info': receiver,
                     'sender_info': sender,
                     'sender_img': base64.b64encode(
-                        open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                        open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                     'email_info': email
                 })
 
@@ -2611,7 +2611,7 @@ def email_list(me_id, me_type):
                 sent_list.append({
                     'receiver_info': receiver,
                     'sender_info': sender,
-                    'sender_img': base64.b64encode(open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                    'sender_img': base64.b64encode(open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                     'email_info': email
                 })
             else:
@@ -2620,7 +2620,7 @@ def email_list(me_id, me_type):
                     'receiver_info': receiver,
                     'sender_info': sender,
                     'sender_img': base64.b64encode(
-                        open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                        open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                     'email_info': email
                 })
         else:
@@ -2631,7 +2631,7 @@ def email_list(me_id, me_type):
                     'receiver_info': receiver,
                     'sender_info': sender,
                     'sender_img': base64.b64encode(
-                        open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                        open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                     'email_info': email
                 })
             else:
@@ -2640,7 +2640,7 @@ def email_list(me_id, me_type):
                     'receiver_info': receiver,
                     'sender_info': sender,
                     'sender_img': base64.b64encode(
-                        open('static/images/avatar/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                        open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                     'email_info': email
                 })
     return unanswered_list, inbox_list, sent_list
