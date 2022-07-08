@@ -3,10 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateField, RadioField, FileField, \
     SelectField, TextAreaField, MultipleFileField, validators
 from wtforms.validators import DataRequired, EqualTo, Email, Length
-import email_validator
-from flask_wtf.file import FileRequired, FileAllowed
 from wtforms.fields.html5 import DateField
-from flask_wtf.recaptcha import RecaptchaField
 
 app = Flask(__name__)
 

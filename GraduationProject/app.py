@@ -94,13 +94,22 @@ def email_varification():
             if teacher_in_db:
                 flash('This email has been signed up as a teacher account!')
             else:
-                token = s.dumps(email, salt='email-confirm')
+                # import requests
+                # url = "https://api.apilayer.com/email_verification/check?email=" + email
+                # payload = {}
+                # headers = {
+                #     "apikey": "Bf4R4NooHbOu8esOllb4LXv49sn3bL3M"
+                # }
+                #
+                # response = requests.request("GET", url, headers=headers, data=payload)
+                # status_code = response.status_code
+                # result = response.text
+                # print(result)
                 # Access API to verify your email address
-                # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
-                # r = requests.get(url)
-                # print(r.json())
-                # if r.json()['smtp_check'] == True:
-                if True:
+                url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
+                r = requests.get(url)
+                if r.json()['smtp_check'] == True:
+                    token = s.dumps(email, salt='email-confirm')
                     msg = Message('Just Math it - Sign up Email', sender='1575631865@qq.com', recipients=[email])
                     link = url_for('signup', token=token, _external=True)
                     msg.body = 'Click to finish your sign up: {}'.format(link)
@@ -127,11 +136,9 @@ def teacher_email_verification():
             else:
                 token = s.dumps(email, salt='email-confirm')
                 # Access API to verify your email address
-                # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
-                # r = requests.get(url)
-                # print(r.json())
-                # if r.json()['smtp_check'] == True:
-                if True:
+                url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
+                r = requests.get(url)
+                if r.json()['smtp_check'] == True:
                     msg = Message('Just Math it - Sign up Email', sender='1575631865@qq.com', recipients=[email])
                     link = url_for('signup_teacher', token=token, _external=True)
                     msg.body = 'Click to finish your sign up: {}'.format(link)
@@ -155,13 +162,10 @@ def change_pass_verification():
         student_in_db = Student.query.filter(Student.email == email).first()
         teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
         if student_in_db:
-            token = s.dumps(email, salt='email-confirm')
             # Access API to verify your email address
-            # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
-            # r = requests.get(url)
-            # print(r.json())
-            # if r.json()['smtp_check'] == True:
-            if True:
+            url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
+            r = requests.get(url)
+            if r.json()['smtp_check'] == True:
                 token = s.dumps(email, salt='email-confirm')
                 msg = Message('Just Math it - Modify your password', sender='1575631865@qq.com', recipients=[email])
                 link = url_for('change_password', token=token, _external=True)
@@ -172,13 +176,10 @@ def change_pass_verification():
             else:
                 flash('This is not a valid email')
         elif teacher_in_db:
-            token = s.dumps(email, salt='email-confirm')
             # Access API to verify your email address
-            # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
-            # r = requests.get(url)
-            # print(r.json())
-            # if r.json()['smtp_check'] == True:
-            if True:
+            url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
+            r = requests.get(url)
+            if r.json()['smtp_check'] == True:
                 token = s.dumps(email, salt='email-confirm')
                 msg = Message('Just Math it - Modify your password', sender='1575631865@qq.com', recipients=[email])
                 link = url_for('change_password', token=token, _external=True)
@@ -380,7 +381,6 @@ def skill_details(skill_):
             user_type = 0
         like = Like.query.filter(
             Like.user_type == user_type, Like.skill_id == skill.skill_id, Like.user_id == user_in_db.id).first()
-        print(like)
         page = int(request.args.get('page', 1))
         per_page = int(request.args.get('per_page', 3))
         paginate = Comments.query.filter(Comments.skill_id == skill.skill_id).order_by(
@@ -505,6 +505,7 @@ def shop():
         for avatar_file in os.listdir('static/images/avatar'):
             avatar = Avatar.query.filter(Avatar.user_id == user.id, Avatar.user_type == user_type,
                                          Avatar.avatar_name == avatar_file.split('.')[0]).first()
+            print(avatar_file)
             avatar_have = False
             if avatar:
                 avatar_have = True

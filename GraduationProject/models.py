@@ -140,16 +140,3 @@ class Email(db.Model):
     reply_time = db.Column(db.String(128))
     sender_del = db.Column(db.Boolean, default=False)
     receiver_del = db.Column(db.Boolean, default=False)
-
-
-class Ereply(db.Model):
-    reply_id = db.Column(db.Integer, primary_key=True)
-    email_id = db.Column(db.Integer, db.ForeignKey('email.email_id'))
-    subject = db.Column(db.String(128))
-    state = db.Column(db.Integer)
-    content = db.Column(db.String(2560))
-    time = db.Column(db.String(128))
-    sender_id = db.Column(db.Integer)
-    sender_type = db.Column(db.Integer)
-    receiver_id = db.Column(db.Integer)
-    receiver_type = db.Column(db.Integer)
