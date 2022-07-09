@@ -27,15 +27,19 @@ $(document).ready(function() {
             const newtime = timer;
 
             $('#addTime1').click(function () {
-                timer = newtime+10, minutes, seconds;
-                document.getElementById("addTime1").disabled = true;
-                setTimeout(function(){document.getElementById("addTime1").disabled = false;},5000);
+                if(vue.timeCap1 > 0){
+                    timer = newtime+10, minutes, seconds;
+                    document.getElementById("addTime1").disabled = true;
+                    setTimeout(function(){document.getElementById("addTime1").disabled = false;},5000);
+                }
             })
 
             $('#addTime2').click(function () {
-                timer = newtime+20, minutes, seconds;
-                document.getElementById("addTime2").disabled = true;
-                setTimeout(function(){document.getElementById("addTime2").disabled = false;},5000);
+                if(vue.timeCap2 > 0){
+                    timer = newtime+20, minutes, seconds;
+                    document.getElementById("addTime2").disabled = true;
+                    setTimeout(function(){document.getElementById("addTime2").disabled = false;},5000);
+                }
             })
 
             if (--timer < 0) {

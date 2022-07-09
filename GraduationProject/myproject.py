@@ -163,64 +163,64 @@ def change_pass_verification():
         teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
         if student_in_db:
             # Access API to verify your email address
-            url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
-            r = requests.get(url)
-            if r.json()['smtp_check'] == True:
-                token = s.dumps(email, salt='email-confirm')
-                msg = Message('Just Math it - Modify your password', sender='1575631865@qq.com', recipients=[email])
-                link = url_for('change_password', token=token, _external=True)
-                msg.body = 'Click to change your password: {}'.format(link)
-                mail.send(msg)
-                session['ACTOR'] = 'Student'
-                flash('Please check your Email, and follow the email link to modify your password')
-            else:
-                flash('This is not a valid email')
+            # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
+            # r = requests.get(url)
+            # if r.json()['smtp_check'] == True:
+            token = s.dumps(email, salt='email-confirm')
+            msg = Message('Just Math it - Modify your password', sender='1575631865@qq.com', recipients=[email])
+            link = url_for('change_password', token=token, user_type='Student',  _external=True)
+            msg.body = 'Click to change your password: {}'.format(link)
+            mail.send(msg)
+            session['ACTOR'] = 'Student'
+            flash('Please check your Email, and follow the email link to modify your password')
+            # else:
+            #     flash('This is not a valid email')
         elif teacher_in_db:
             # Access API to verify your email address
-            url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
-            r = requests.get(url)
-            if r.json()['smtp_check'] == True:
-                token = s.dumps(email, salt='email-confirm')
-                msg = Message('Just Math it - Modify your password', sender='1575631865@qq.com', recipients=[email])
-                link = url_for('change_password', token=token, _external=True)
-                msg.body = 'Click to change your password: {}'.format(link)
-                mail.send(msg)
-                session['ACTOR'] = 'Teacher'
-                flash('Please check your Email, and follow the email link to modify your password')
-            else:
-                flash('This is not a valid email')
+            # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
+            # r = requests.get(url)
+            # if r.json()['smtp_check'] == True:
+            token = s.dumps(email, salt='email-confirm')
+            msg = Message('Just Math it - Modify your password', sender='1575631865@qq.com', recipients=[email])
+            link = url_for('change_password', token=token, user_type='Teacher', _external=True)
+            msg.body = 'Click to change your password: {}'.format(link)
+            mail.send(msg)
+            session['ACTOR'] = 'Teacher'
+            flash('Please check your Email, and follow the email link to modify your password')
+            # else:
+            #     flash('This is not a valid email')
         else:
             flash('Sorry! Your have not got an account, please sign up a new one!')
         session['EMAIL'] = email
     return render_template('change_pass_verification.html', form=form)
 
 
-@app.route('/change_password/<token>', methods=['GET', 'POST'])
-def change_password(token):
+@app.route('/change_password/<token>/<user_type>', methods=['GET', 'POST'])
+def change_password(token, user_type):
     from models import db
     form = ChangePassword()
-    user_type = session.get('ACTOR')
     try:
         email = s.loads(token, salt='email-confirm', max_age=180)
+        print(email, user_type)
         if form.validate_on_submit() and user_type == 'Student':
-            student = Student.query.filter(Student.email == session.get('EMAIL')).first()
-            student.student_password = generate_password_hash(form.password.data)
+            student = Student.query.filter(Student.email == email).first()
+            student.password = generate_password_hash(form.password.data)
             db.session.add(student)
             db.session.commit()
             session.clear()
             flash("Change successfully")
             return redirect(url_for('signin'))
-        elif form.validate_on_submit() and user_type == 'Teacher':
-            teacher = Teacher.query.filter(Teacher.email == session.get('EMAIL')).first()
-            teacher.teacher_password = generate_password_hash(form.password.data)
+        if form.validate_on_submit() and user_type == 'Teacher':
+            teacher = Teacher.query.filter(Teacher.email == email).first()
+            teacher.password = generate_password_hash(form.password.data)
             db.session.add(teacher)
             db.session.commit()
             session.clear()
             flash("Change successfully")
             return redirect(url_for('signin'))
-        elif user_type is None:
-            flash('Please use the same browser on the same computer to finish password change. Otherwise, this will '
-                  'not work.')
+        # else:
+        #     flash('Please use the same browser on the same computer to finish password change. Otherwise, this will '
+        #           'not work.')
     except SignatureExpired:
         flash('Token is expired, please resend an email to sign up')
     return render_template('change_password.html', form=form)
@@ -661,6 +661,7 @@ def practice(skill_):
         list = []
         for i in range(0, 5):
             ran_num = random.randint(0, len(skill_dict[skill.skill_id]) - 1)
+            print(skill_dict[skill.skill_id][ran_num])
             problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
             app_id = 'XQAUEU-WR3AY23332'
             client = wolframalpha.Client(app_id)
@@ -1012,77 +1013,77 @@ def unit_test(topic):
         for skill in skills:
             skill_id.append(skill.skill_id)
         list = []
-        for i in range(0, 20):
-            skill_ran_num = skill_id[random.randint(0, len(skill_id) - 1)]
-            ran_num = random.randint(0, len(skill_dict[skill_ran_num]) - 1)
-            problem, solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
-            app_id = 'XQAUEU-WR3AY23332'
-            client = wolframalpha.Client(app_id)
-            # res = client.query(problem)
-            res = query(problem, app_id)
-            img_list = []
-            solution_list = []
-            for pod in res.pods:
-                for sub in pod.subpods:
-                    img_list.append(sub.img['@src'])
-                    solution_list.append(sub.plaintext)
-            option_list = [solution]
-            if skill_dict[skill_ran_num][ran_num] == 19:
-                for j in range(1, 2):
-                    if solution == 'Exist':
-                        option_list.append('Do not exist')
-                    else:
-                        option_list.append('Exist')
-            if skill_dict[skill_ran_num][ran_num] == 101:
-                if solution == 'is a leap year':
-                    option_list.append('is not a leap year')
-                else:
-                    option_list.append('is a leap year')
-            if skill_dict[skill_ran_num][ran_num] == 55:
-                if solution == '>':
-                    option_list.append('<')
-                    option_list.append('=')
-                elif solution == '=':
-                    option_list.append('<')
-                    option_list.append('>')
-                else:
-                    option_list.append('>')
-                    option_list.append('=')
-            if skill_dict[skill_ran_num][ran_num] != 19 and skill_dict[skill_ran_num][ran_num] != 101 and \
-                    skill_dict[skill_ran_num][ran_num] != 55:
-                for j in range(1, 4):
-                    gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
-                    option_list.append(gen_solution)
-                while len(set(option_list)) != len(option_list):
-                    op_dict = dict(Counter(option_list))
-                    for key, value in op_dict.items():
-                        if value > 1:
-                            option_list.remove(key)
-                            gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
-                            option_list.append(gen_solution)
-            random.shuffle(option_list)
-            if skill_dict[skill_ran_num][ran_num] == 55:
-                answer = ["A", "B", "C"]
-            if skill_dict[skill_ran_num][ran_num] == 19:
-                answer = ["A", "B"]
-            if skill_dict[skill_ran_num][ran_num] != 55 and skill_dict[skill_ran_num][ran_num] != 19:
-                answer = ["A", "B", "C", "D"]
-            idx = 0
-            if skill_ran_num == 10:
-                problem = 'Zero Interval of: ' + problem
-            for op in option_list:
-                if op == solution:
-                    an = answer[idx]
-                idx += 1
-            list.append({
-                'id': i,
-                'title': problem,
-                'option': option_list,
-                'answer': an,
-                'analysis': img_list
-            })
-        with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
-            json.dump(list, f, ensure_ascii=False, indent=4)
+        # for i in range(0, 20):
+        #     skill_ran_num = skill_id[random.randint(0, len(skill_id) - 1)]
+        #     ran_num = random.randint(0, len(skill_dict[skill_ran_num]) - 1)
+        #     problem, solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
+        #     app_id = 'XQAUEU-WR3AY23332'
+        #     client = wolframalpha.Client(app_id)
+        #     # res = client.query(problem)
+        #     res = query(problem, app_id)
+        #     img_list = []
+        #     solution_list = []
+        #     for pod in res.pods:
+        #         for sub in pod.subpods:
+        #             img_list.append(sub.img['@src'])
+        #             solution_list.append(sub.plaintext)
+        #     option_list = [solution]
+        #     if skill_dict[skill_ran_num][ran_num] == 19:
+        #         for j in range(1, 2):
+        #             if solution == 'Exist':
+        #                 option_list.append('Do not exist')
+        #             else:
+        #                 option_list.append('Exist')
+        #     if skill_dict[skill_ran_num][ran_num] == 101:
+        #         if solution == 'is a leap year':
+        #             option_list.append('is not a leap year')
+        #         else:
+        #             option_list.append('is a leap year')
+        #     if skill_dict[skill_ran_num][ran_num] == 55:
+        #         if solution == '>':
+        #             option_list.append('<')
+        #             option_list.append('=')
+        #         elif solution == '=':
+        #             option_list.append('<')
+        #             option_list.append('>')
+        #         else:
+        #             option_list.append('>')
+        #             option_list.append('=')
+        #     if skill_dict[skill_ran_num][ran_num] != 19 and skill_dict[skill_ran_num][ran_num] != 101 and \
+        #             skill_dict[skill_ran_num][ran_num] != 55:
+        #         for j in range(1, 4):
+        #             gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
+        #             option_list.append(gen_solution)
+        #         while len(set(option_list)) != len(option_list):
+        #             op_dict = dict(Counter(option_list))
+        #             for key, value in op_dict.items():
+        #                 if value > 1:
+        #                     option_list.remove(key)
+        #                     gen_problem, gen_solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
+        #                     option_list.append(gen_solution)
+        #     random.shuffle(option_list)
+        #     if skill_dict[skill_ran_num][ran_num] == 55:
+        #         answer = ["A", "B", "C"]
+        #     if skill_dict[skill_ran_num][ran_num] == 19:
+        #         answer = ["A", "B"]
+        #     if skill_dict[skill_ran_num][ran_num] != 55 and skill_dict[skill_ran_num][ran_num] != 19:
+        #         answer = ["A", "B", "C", "D"]
+        #     idx = 0
+        #     if skill_ran_num == 10:
+        #         problem = 'Zero Interval of: ' + problem
+        #     for op in option_list:
+        #         if op == solution:
+        #             an = answer[idx]
+        #         idx += 1
+        #     list.append({
+        #         'id': i,
+        #         'title': problem,
+        #         'option': option_list,
+        #         'answer': an,
+        #         'analysis': img_list
+        #     })
+        # with open('static/json/' + email + '.json', 'w', encoding='utf-8') as f:
+        #     json.dump(list, f, ensure_ascii=False, indent=4)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
