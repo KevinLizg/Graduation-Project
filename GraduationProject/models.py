@@ -138,5 +138,5 @@ class Email(db.Model):
     reply_content = db.Column(db.String(2560))
     send_time = db.Column(db.String(128))
     reply_time = db.Column(db.String(128))
-    # sender_del = db.Column(db.Boolean)
-    # receiver_del = db.Column(db.Boolean)
+    sender_del = db.Column(db.Integer)
+    receiver_del = db.Column(db.Integer)

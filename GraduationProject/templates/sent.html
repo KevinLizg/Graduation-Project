@@ -76,7 +76,7 @@
                                         {% else %}
                                             <td class="max-texts"> <a class="link" href="{{ url_for('email_detail',email_id=sent.email_info.email_id) }}"><span class="label label-success m-r-10">Replied by</span> <span class="blue-grey-text text-darken-4">{{ sent.receiver_info.firstname }}</span></a></td>
                                         {% endif %}
-                                        <td class="clip"><i class="fa fa-paperclip"></i></td>
+                                        <td><a class="fa fa-trash" onclick="deleteEmail({{ sent.email_info.email_id }})"></a></td>
                                         <td class="time"> {{ sent.email_info.send_time.split(" ")[0] }}</td>
                                     </tr>
                                 {% endfor %}
@@ -87,6 +87,42 @@
             </div>
         </div>
     <div class="chat-windows"></div>
+    <script>
+        function deleteEmail(email_id) {
+            Swal.fire({
+              title: 'Are you sure?',
+              text: "You won't be able to revert this!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+              if (result.isConfirmed) {
+                Swal.fire(
+                  'Deleted!',
+                  'Your file has been deleted.',
+                  'success'
+                )
+                const user_type = {{ user.user_type }};
+                $.ajax({
+                    url: 'delete_email',
+                    type: 'POST',
+                    data: {
+                        'email_id': email_id ,
+                        'user_type': user_type
+                    },
+                    success: function (response) {
+                        window.location.reload();
+                    },
+                    error: function (response) {
+
+                    }
+                });
+              }
+            })
+        }
+    </script>
 {% endblock %}
 </body>
 

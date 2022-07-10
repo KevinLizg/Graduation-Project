@@ -45,6 +45,7 @@ def add_header(r):
 @app.errorhandler(404)
 # inbuilt function which takes error as parameter
 def not_found(e):
+    # lxfosopsqgfegbea
     name = session.get('NAME')
     email = session.get('EMAIL')
     session['NAME'] = name
@@ -2537,7 +2538,7 @@ def email_list(me_id, me_type):
     # unanswered
     unanswered_list = []
     unanswered_emails = Email.query.filter(Email.receiver_id == me_id, Email.receiver_type == me_type,
-                                Email.state == 0).all()
+                                Email.state == 0, Email.receiver_del == 0).all()
     for email in unanswered_emails:
         if email.sender_type == 1:
             sender = Student.query.filter(Student.id == email.sender_id).first()
@@ -2558,7 +2559,7 @@ def email_list(me_id, me_type):
     # inbox
     inbox_list = []
     inbox_emails = Email.query.filter(Email.receiver_id == me_id, Email.receiver_type == me_type,
-                                      Email.state == 1).all()
+                                      Email.state == 1, Email.receiver_del == 0).all()
     for email in inbox_emails:
         if email.sender_type == 1:
             sender = Student.query.filter(Student.id == email.sender_id).first()
@@ -2601,7 +2602,7 @@ def email_list(me_id, me_type):
 
     # sent
     sent_list = []
-    sent_emails = Email.query.filter(Email.sender_id == me_id, Email.sender_type == me_type).all()
+    sent_emails = Email.query.filter(Email.sender_id == me_id, Email.sender_type == me_type, Email.sender_del == 0).all()
     for email in sent_emails:
         if email.sender_type == 1:
             sender = Student.query.filter(Student.id == email.sender_id).first()
@@ -2663,6 +2664,48 @@ def notification_list(me_id, me_type):
                     'skill': skill
                 })
     return notifications
+
+
+@app.route('/delete_email', methods=['GET', 'POST'])
+def delete_email():
+    from models import db
+    user_email = session.get('EMAIL')
+    email_id = request.form.get("email_id")
+    user_type = request.form.get("user_type")
+    email = Email.query.filter(Email.email_id == email_id).first()
+    if int(user_type) == 1:
+        user = Student.query.filter(Student.email == user_email).first()
+        if user.id == email.sender_id:
+            email.sender_del = 1
+            if email.receiver_del == 1:
+                db.session.delete(email)
+            else:
+                db.session.add(email)
+            db.session.commit()
+        if user.id == email.receiver_id:
+            email.receiver_del = 1
+            if email.sender_del == 1:
+                db.session.delete(email)
+            else:
+                db.session.add(email)
+            db.session.commit()
+    if int(user_type) == 0:
+        user = Teacher.query.filter(Teacher.email == user_email).first()
+        if user.id == email.sender_id:
+            email.sender_del = 1
+            if email.receiver_del == 1:
+                db.session.delete(email)
+            else:
+                db.session.add(email)
+            db.session.commit()
+        if user.id == email.receiver_id:
+            email.receiver_del = 1
+            if email.sender_del == 1:
+                db.session.delete(email)
+            else:
+                db.session.add(email)
+            db.session.commit()
+    return 'hello'
 
 
 @app.route('/inbox', methods=['GET', 'POST'])
