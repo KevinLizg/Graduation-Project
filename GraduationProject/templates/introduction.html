@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% extends "base.html" %}
+
+
+{% block mainContent %}
+
+    <section id="page-breadcrumb">
+        <div class="vertical-center sun">
+             <div class="container">
+                <div class="row">
+                    <div class="action">
+                        <div class="col-sm-12">
+                            <h1 class="title">Introduction</h1>
+                            <p>Introduction of how to use this website to improve your math skills</p>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+   </section>
+    <!--/#page-breadcrumb-->
+
+    <section id="about-company" class="padding-top wow fadeInUp" data-wow-duration="400ms" data-wow-delay="400ms">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <img src="../static/images/introduction/reward.jpg" class="margin-bottom" alt="" width="500">
+                    <h1 class="margin-bottom">Different Kinds of Practice for each skill and topic</h1>
+                    <p>There are three different types of practice.<br /> Some of them could give rewards after you answer questions correctly</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--/#about-company-->
+    
+    <section id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+                    <div class="single-service">
+                        <div class="wow scaleIn" data-wow-duration="500ms" data-wow-delay="300ms">
+                            <img src="../static/images/introduction/practice.jpg" alt="">
+                        </div>
+                        <h2>Practice</h2>
+                        <p>Practices are not graded and are not timed. It includes 5 questions for each practice and it is to help you practice and help you enhance the knowledge of different skills. You could add the questions you answered wrong in <b>Wrong Questions Collection</b> to review and re-do these questions. You could also check the solution by paying coins you earn in quizzes and unite tests.</p>
+                    </div>
+                </div>
+                <div class="col-sm-3 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="600ms">
+                    <div class="single-service">
+                        <div class="wow scaleIn" data-wow-duration="500ms" data-wow-delay="600ms">
+                            <img src="../static/images/introduction/quiz.jpeg" alt="">
+                        </div>
+                        <h2>Quiz</h2>
+                        <p>Quizzes are for different skills, it is limited to <b>2 minutes.</b>It has <b>10 questions</b> for each quiz. For each question you answer correctly, you could earn <b>1 coin</b>. After you finish the quiz or time is up, the result of the quiz will show to you, the result will be also recorded into you <b>profile page</b> in order to help you analyze your recent grade changes and change your learning strategy based on the analysis.</b></p>
+                    </div>
+                </div>
+                <div class="col-sm-3 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="900ms">
+                    <div class="single-service">
+                        <div class="wow scaleIn" data-wow-duration="500ms" data-wow-delay="900ms">
+                            <img src="../static/images/introduction/unit_test.png" alt="">
+                        </div>
+                        <h2>Unit Test</h2>
+                        <p>There are five unit tests for you to do. The unit tests contain <b>Basic Math, Algebra, Geometry, Statistic and Misc.</b> You can do unit tests to earn coins as well. Unit test is limited to 3 minutes, it has <b>20 questions</b> for each unit test. For each question you answer correctly, you could earn <b>2 coins</b>. Unit tests can help you measure <b>how well your entire module is learning.</b> You could also review your recent grade changes as quizzes.</p>
+                    </div>
+                </div>
+                <div class="col-sm-3 text-center padding wow fadeIn" data-wow-duration="1000ms" data-wow-delay="900ms">
+                    <div class="single-service">
+                        <div class="wow scaleIn" data-wow-duration="500ms" data-wow-delay="900ms">
+                            <img src="../static/images/introduction/wrong_questions.png" alt="">
+                        </div>
+                        <h2>Wrong Question Collection</h2>
+                        <p>When you answer the questions in <b>PRACTICE.</b>You could add the questions in this collection so that you can review the questions you have answered. If you <b>have cost the coins to check the solution</b>, you could <b>directly review the solution.</b> If you haven't checked the solution when you add the question, you need to pay coins to check the solution for the question. The wrong question collection can <b>help you learn something new from the past.</b></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--/#services-->
+
+    <section id="action">
+        <div class="vertical-center">
+             <div class="container">
+                <div class="row">
+                    <div class="action count">
+                        <div class="col-sm-3 text-center wow bounceIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+                            <h1 class="timer bold" data-to="{{ student_number }}" data-speed="3000" data-from="0"></h1>
+                            <h3>Students</h3>
+                        </div>
+                        <div class="col-sm-3 text-center wow bounceIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+                            <h1 class="timer bold" data-to="{{ teacher_number }}" data-speed="3000" data-from="0"></h1>
+                            <h3>Teachers</h3>
+                        </div>
+                        <div class="col-sm-3 text-center wow bounceIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+                            <h1 class="timer bold" data-to="5" data-speed="3000" data-from="0"></h1>
+                            <h3>Topics</h3>
+                        </div>
+                        <div class="col-sm-3 text-center wow bounceIn" data-wow-duration="1000ms" data-wow-delay="300ms">
+                            <h1 class="timer bold" data-to="3000" data-speed="3000" data-from="0"><h2 style="display: inline">+</h2></h1>
+                            <h3>Question Bank</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+   </section>
+    <!--/#action-->
+
+    <section id="company-information" class="padding-top">
+        <div class="container">
+            <div class="row">
+                <div class="about-us">
+                    <div class="col-sm-12 wow fadeInLeft" data-wow-duration="1000ms" data-wow-delay="300ms">
+                        <h2 class="bold">ONLINE SHOP</h2>
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <img src="../static/images/introduction/shop.jpg" class="img-responsive" alt="">
+                            </div>
+                            <div class="col-sm-7">
+                                <h3 class="top-zero">You could use your coins to buy virtual avatars, badges and time capsules for yourself.</h3>
+                                <p>After you buy them in the shop, you could change your avatars and badge. Time capsules can add <b>time for quiz and unit test.</b> <br> <br> You can change your avatar and badge in <b>profile page</b> and review all the collections you have collected.</p>
+                            </div>
+                        </div>
+                    </div>
+{#                    <div class="col-sm-5 wow fadeInRight" data-wow-duration="1000ms" data-wow-delay="300ms">#}
+{#                        <div class="our-skills">#}
+{#                            <h2 class="bold">Our Skills</h2>#}
+{#                            <div class="single-skill">#}
+{#                                <h3>Design</h3>#}
+{#                                <div class="progress">#}
+{#                                    <div class="progress-bar progress-bar-primary six-sec-ease-in-out" role="progressbar"  data-transition="35">35%</div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="single-skill">#}
+{#                                <h3>HTML</h3>#}
+{#                                <div class="progress">#}
+{#                                    <div class="progress-bar progress-bar-primary six-sec-ease-in-out" role="progressbar"  data-transition="80">80%</div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="single-skill">#}
+{#                                <h3>PHP</h3>#}
+{#                                <div class="progress">#}
+{#                                    <div class="progress-bar progress-bar-primary six-sec-ease-in-out" role="progressbar"  data-transition="60">60%</div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--/#company-information-->
+
+{#    <section id="team">#}
+{#        <div class="container">#}
+{#            <div class="row">#}
+{#                <h1 class="title text-center wow fadeInDown" data-wow-duration="500ms" data-wow-delay="300ms">Meet the Team</h1>#}
+{#                <p class="text-center wow fadeInDown" data-wow-duration="400ms" data-wow-delay="400ms">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. <br>#}
+{#                Ut enim ad minim veniam, quis nostrud </p>#}
+{#                <div id="team-carousel" class="carousel slide wow fadeIn" data-ride="carousel" data-wow-duration="400ms" data-wow-delay="400ms">#}
+{#                    <!-- Indicators -->#}
+{#                    <ol class="carousel-indicators visible-xs">#}
+{#                        <li data-target="#team-carousel" data-slide-to="0" class="active"></li>#}
+{#                        <li data-target="#team-carousel" data-slide-to="1"></li>#}
+{#                    </ol>#}
+{#                    <!-- Wrapper for slides -->#}
+{#                    <div class="carousel-inner">#}
+{#                        <div class="item active">#}
+{#                            <div class="col-sm-3 col-xs-6">#}
+{#                                <div class="team-single-wrapper">#}
+{#                                    <div class="team-single">#}
+{#                                        <div class="person-thumb">#}
+{#                                            <img src="images/aboutus/1.jpg" class="img-responsive" alt="">#}
+{#                                        </div>#}
+{#                                        <div class="social-profile">#}
+{#                                            <ul class="nav nav-pills">#}
+{#                                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>#}
+{#                                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>#}
+{#                                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>#}
+{#                                            </ul>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                    <div class="person-info">#}
+{#                                        <h2>John Doe</h2>#}
+{#                                        <p>CEO &amp; Developer</p>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <!-- Controls -->#}
+{#                    <a class="left team-carousel-control hidden-xs" href="#team-carousel" data-slide="prev">left</a>#}
+{#                    <a class="right team-carousel-control hidden-xs" href="#team-carousel" data-slide="next">right</a>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </section>#}
+{% endblock %}
+</html>

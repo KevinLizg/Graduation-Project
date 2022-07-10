@@ -506,7 +506,6 @@ def shop():
         for avatar_file in os.listdir('static/images/avatar'):
             avatar = Avatar.query.filter(Avatar.user_id == user.id, Avatar.user_type == user_type,
                                          Avatar.avatar_name == avatar_file.split('.')[0]).first()
-            print(avatar_file)
             avatar_have = False
             if avatar:
                 avatar_have = True
@@ -576,6 +575,23 @@ def shop_buy(price):
             db.session.commit()
     return 'hello'
 
+
+@app.route('/introduction', methods=['GET', 'POST'])
+def introduction():
+    name = session.get('NAME')
+    email = session.get('EMAIL')
+    if (name):
+        session['NAME'] = name
+        session['EMAIL'] = email
+        student_in_db = Student.query.filter(Student.email == email).first()
+        teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
+        user = ''
+        if student_in_db:
+            user = student_in_db
+        elif teacher_in_db:
+            user = teacher_in_db
+    return render_template('introduction.html', user=user, coins=user.coins, student_number=Student.query.count(),
+                           teacher_number=Teacher.query.count())
 
 @app.route('/ready/<skill_>', methods=["GET", "POST"])
 def ready(skill_):
@@ -1085,7 +1101,7 @@ def unit_test(topic):
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('unit_test.html', num=1 * 120, user=user, coins=user.coins,
+    return render_template('unit_test.html', num=1 * 180, user=user, coins=user.coins,
                            timeCap1=user.time_capsule1, timeCap2=user.time_capsule2, topic=topic)
 
 
@@ -2588,6 +2604,49 @@ def email_list(me_id, me_type):
                     'receiver_info': receiver,
                     'sender_info': sender,
                     'sender_img': base64.b64encode(open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                    'email_info': email
+                })
+            else:
+                receiver = Teacher.query.filter(Teacher.id == email.receiver_id).first()
+                inbox_list.append({
+                    'receiver_info': receiver,
+                    'sender_info': sender,
+                    'sender_img': base64.b64encode(
+                        open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                    'email_info': email
+                })
+    inbox_emails = Email.query.filter(Email.sender_id == me_id, Email.sender_type == me_type,
+                                      Email.state == 1, Email.sender_del == 0).all()
+    for email in inbox_emails:
+        if email.sender_type == 1:
+            sender = Student.query.filter(Student.id == email.sender_id).first()
+            if email.receiver_type == 1:
+                receiver = Student.query.filter(Student.id == email.receiver_id).first()
+                inbox_list.append({
+                    'receiver_info': receiver,
+                    'sender_info': sender,
+                    'sender_img': base64.b64encode(
+                        open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                    'email_info': email
+                })
+            else:
+                receiver = Teacher.query.filter(Teacher.id == email.receiver_id).first()
+                inbox_list.append({
+                    'receiver_info': receiver,
+                    'sender_info': sender,
+                    'sender_img': base64.b64encode(
+                        open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
+                    'email_info': email
+                })
+        else:
+            sender = Teacher.query.filter(Teacher.id == email.sender_id).first()
+            if email.receiver_type == 1:
+                receiver = Student.query.filter(Student.id == email.receiver_id).first()
+                inbox_list.append({
+                    'receiver_info': receiver,
+                    'sender_info': sender,
+                    'sender_img': base64.b64encode(
+                        open('static/images/icon/' + sender.profile_photo + ".png", 'rb').read()).decode('ascii'),
                     'email_info': email
                 })
             else:
