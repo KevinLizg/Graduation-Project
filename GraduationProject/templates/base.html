@@ -118,7 +118,7 @@
                                 <li><a href="{{ url_for('topics',topic='Misc') }}">Misc</a></li>
                             </ul>
                         </li>
-                        <li ><a href="{{ url_for("unit_test_main") }}">Unit Test</a></li>
+                        <li ><a href="{{ url_for("topic_test_main") }}">Topic Test</a></li>
                         {% if user %}
                         <li class="dropdown"><a href="{{ url_for("index") }}">Dear {{ user.firstname }}<i class="fa fa-angle-down"></i></a>
                             <ul role="menu" class="sub-menu">

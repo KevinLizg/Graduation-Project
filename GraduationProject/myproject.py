@@ -73,7 +73,7 @@ def index():
 app.config["MAIL_SERVER"] = 'smtp.qq.com'
 app.config["MAIL_PORT"] = 465
 app.config["MAIL_USERNAME"] = '1575631865@qq.com'
-app.config['MAIL_PASSWORD'] = 'edhkaigxljyubaaa'
+app.config['MAIL_PASSWORD'] = 'hello'
 app.config['MAIL_DEFAULT_SENDER'] = '1575631865@qq.com'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
@@ -590,6 +590,9 @@ def introduction():
             user = student_in_db
         elif teacher_in_db:
             user = teacher_in_db
+    else:
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
     return render_template('introduction.html', user=user, coins=user.coins, student_number=Student.query.count(),
                            teacher_number=Teacher.query.count())
 
@@ -985,8 +988,8 @@ def quiz(skill_):
                            timeCap1=user.time_capsule1, timeCap2=user.time_capsule2)
 
 
-@app.route('/unit_test_main/')
-def unit_test_main():
+@app.route('/topic_test_main/')
+def topic_test_main():
     topics = Topics.query.filter().all()
     name = session.get('NAME')
     email = session.get('EMAIL')
@@ -1005,11 +1008,11 @@ def unit_test_main():
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('unit_test_main.html', user=user, topics=topics)
+    return render_template('topic_test_main.html', user=user, topics=topics)
 
 
-@app.route('/unit_test/<topic>')
-def unit_test(topic):
+@app.route('/topic_test/<topic>')
+def topic_test(topic):
     name = session.get('NAME')
     email = session.get('EMAIL')
     if (name):
@@ -1101,7 +1104,7 @@ def unit_test(topic):
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
-    return render_template('unit_test.html', num=1 * 180, user=user, coins=user.coins,
+    return render_template('topic_test.html', num=1 * 180, user=user, coins=user.coins,
                            timeCap1=user.time_capsule1, timeCap2=user.time_capsule2, topic=topic)
 
 
@@ -1982,7 +1985,7 @@ def user_collections(user_email):
         teacher = Teacher.query.filter(Teacher.email == user_email).first()
         user_info = ''
         if student:
-            isStudentOf = student.teacher_id == me.id
+            isStudentOf = (student.teacher_id == me.id and occupation == 'Teacher')
             image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
             img_stream = image.read()
             img_stream = base64.b64encode(img_stream).decode('ascii')
@@ -2221,7 +2224,7 @@ def user_grade(user_email, topic_name):
             'badge_name': badge,
             'occupation': 'Student'
         }
-        isStudentOf = student.teacher_id == me.id
+        isStudentOf =  (student.teacher_id == me.id and occupation == 'Teacher')
         topic = Topics.query.filter(Topics.topic_name == topic_name).first()
         skills = Skills.query.filter(Skills.topic_id == topic.topic_id).all()
         skill_score_list = []
@@ -2381,7 +2384,7 @@ def user_unit_grade(user_email):
             'time_capsule2': user_student.time_capsule2,
             'occupation': 'Student'
         }
-        isStudentOf = user_student.teacher_id == me.id
+        isStudentOf = (user_student.teacher_id == me.id and occupation == 'Teacher')
         units = Unit.query.filter(Unit.student_id == user_student.id).all()
         unit_dict = {}
         topics = Topics.query.filter().all()

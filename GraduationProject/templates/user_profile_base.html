@@ -324,7 +324,7 @@
                                 <li class="sidebar-item">
                                     <a href="{{ url_for('user_unit_grade', user_email=user_info.email) }}" class="sidebar-link">
                                         <i class="mdi mdi-album"></i>
-                                        <span class="hide-menu"> Unit </span>
+                                        <span class="hide-menu"> Topics </span>
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
@@ -572,7 +572,7 @@
                 array[i] = i;
             }
             console.log(max_len);
-            new Chart(document.getElementById('shit'), {
+            new Chart(document.getElementById('linechart'), {
                   type: 'line',
                   data: {
                     labels: array,
@@ -581,7 +581,7 @@
                   options: {
                     title: {
                       display: true,
-                      text: 'Unit Score Line Chart'
+                      text: 'Topic\'s Score Line Chart'
                     }
                   }
             });
