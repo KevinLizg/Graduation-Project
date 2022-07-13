@@ -45,7 +45,6 @@ def add_header(r):
 @app.errorhandler(404)
 # inbuilt function which takes error as parameter
 def not_found(e):
-    # lxfosopsqgfegbea
     name = session.get('NAME')
     email = session.get('EMAIL')
     session['NAME'] = name
@@ -72,9 +71,9 @@ def index():
 
 app.config["MAIL_SERVER"] = 'smtp.qq.com'
 app.config["MAIL_PORT"] = 465
-app.config["MAIL_USERNAME"] = '1575631865@qq.com'
-app.config['MAIL_PASSWORD'] = 'hello'
-app.config['MAIL_DEFAULT_SENDER'] = '1575631865@qq.com'
+app.config["MAIL_USERNAME"] = ''
+app.config['MAIL_PASSWORD'] = 'fuck u!'
+app.config['MAIL_DEFAULT_SENDER'] = ''
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 
@@ -127,31 +126,32 @@ def email_varification():
 @app.route('/teacher_email_verification', methods=['GET', 'POST'])
 def teacher_email_verification():
     form = TeacherEmailVeriForm()
-    if form.validate_on_submit() and form.token.data == 'TCSNUP':
-        email = form.email.data
-        user_in_db = Teacher.query.filter(Teacher.email == email).first()
-        student_in_db = Student.query.filter(Student.email == email).first()
-        if not user_in_db:
-            if student_in_db:
-                flash('This email has been signed up as a student account!')
-            else:
-                token = s.dumps(email, salt='email-confirm')
-                # Access API to verify your email address
-                url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
-                r = requests.get(url)
-                if r.json()['smtp_check'] == True:
-                    msg = Message('Just Math it - Sign up Email', sender='1575631865@qq.com', recipients=[email])
-                    link = url_for('signup_teacher', token=token, _external=True)
-                    msg.body = 'Click to finish your sign up: {}'.format(link)
-                    mail.send(msg)
-                    flash('Please check your Email, and follow the email link to finish your sign up as a teacher')
+    if form.validate_on_submit():
+        if form.token.data == 'TCSNUP':
+            email = form.email.data
+            user_in_db = Teacher.query.filter(Teacher.email == email).first()
+            student_in_db = Student.query.filter(Student.email == email).first()
+            if not user_in_db:
+                if student_in_db:
+                    flash('This email has been signed up as a student account!')
                 else:
-                    flash('This is not a valid email')
+                    token = s.dumps(email, salt='email-confirm')
+                    # Access API to verify your email address
+                    url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
+                    r = requests.get(url)
+                    if r.json()['smtp_check'] == True:
+                        msg = Message('Just Math it - Sign up Email', sender='1575631865@qq.com', recipients=[email])
+                        link = url_for('signup_teacher', token=token, _external=True)
+                        msg.body = 'Click to finish your sign up: {}'.format(link)
+                        mail.send(msg)
+                        flash('Please check your Email, and follow the email link to finish your sign up as a teacher')
+                    else:
+                        flash('This is not a valid email')
+            else:
+                flash('This Email has been registered')
+            session['EMAIL'] = email
         else:
-            flash('This Email has been registered')
-        session['EMAIL'] = email
-    elif form.token.data != 'TCSNUP':
-        flash('The token is not correct')
+            flash('The token is not correct')
     return render_template('teacher_email_verification.html', form=form)
 
 
