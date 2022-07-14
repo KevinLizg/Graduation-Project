@@ -72,7 +72,7 @@ def index():
 app.config["MAIL_SERVER"] = 'smtp.qq.com'
 app.config["MAIL_PORT"] = 465
 app.config["MAIL_USERNAME"] = ''
-app.config['MAIL_PASSWORD'] = 'fuck u!'
+app.config['MAIL_PASSWORD'] = 'fuck u'
 app.config['MAIL_DEFAULT_SENDER'] = ''
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
@@ -844,8 +844,8 @@ def wrong_problem_delete(question_id):
     return 'wrong_problem_update'
 
 
-@app.route('/wrong_collection', methods=["GET", "POST"])
-def wrong_collection():
+@app.route('/question_collection', methods=["GET", "POST"])
+def question_collection():
     name = session.get('NAME')
     email = session.get('EMAIL')
     if (name):
@@ -876,7 +876,7 @@ def wrong_collection():
         with open('static/json/wrong/' + email + '.json', 'w', encoding='utf-8') as f:
             json.dump(question_list, f, ensure_ascii=False, indent=4)
             f.close()
-    return render_template('wrong_collection.html', user=user, filename=filename, question_list=question_list)
+    return render_template('question_collection.html', user=user, filename=filename, question_list=question_list)
 
 
 def query(input, app_id, params=(), **kwargs):
