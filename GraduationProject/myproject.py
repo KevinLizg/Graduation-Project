@@ -1779,6 +1779,7 @@ def profile():
                 'password': student.password,
                 'color': color,
                 'badge_name': badge,
+                'teacher_email': Teacher.query.filter(Teacher.id == student.teacher_id).first().email,
                 'occupation': 'Student'
             }
             likes = Like.query.filter(Like.user_id == student.id, Like.user_type == 1).all()
@@ -1832,6 +1833,7 @@ def profile():
                 'password': teacher.password,
                 'personal_message': teacher.personal_message,
                 'color': color,
+                'teacher_email': None,
                 'badge_name': badge,
                 'occupation': 'Teacher'
             }

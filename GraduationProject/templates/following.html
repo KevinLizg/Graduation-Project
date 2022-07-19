@@ -64,6 +64,9 @@
                             <div class="card-body">
                                 <div class="list-group m-t-30">
                                     <a href="javascript:void(0)" class="list-group-item active"><i class="ti-layers m-r-10" disabled=""></i></a>
+                                    {% if user.occupation == 'Teacher' %}
+                                          <a href="{{ url_for('student_information') }}" class="list-group-item"><i class="ti-info-alt m-r-10"></i> Students' Information </a>
+                                    {% endif %}
                                     <a href="{{ url_for('following') }}" class="list-group-item"><i class="ti-star m-r-10"></i> Following </a>
                                     <a href="{{ url_for('follower') }}" class="list-group-item"><i class="ti-bookmark m-r-10"></i> Followers </a>
                                 </div>

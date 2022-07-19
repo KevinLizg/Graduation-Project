@@ -125,6 +125,7 @@
                             </ul>
                             <!-- Tabs -->
                             <div class="tab-content" id="pills-tabContent">
+                                {% if user_info.occupation == 'Student' %}
                                 <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="pills-timeline-tab">
                                     <div class="card-body">
                                         {% for sc in score_list[0:5] %}
@@ -157,6 +158,13 @@
                                         {% endfor %}
                                     </div>
                                 </div>
+                                {% else %}
+                                    <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="pills-timeline-tab">
+                                        <div class="card-body">
+                                            Teacher does not have history
+                                        </div>
+                                    </div>
+                                {% endif %}
                                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                                     <div class="card-body">
                                         <div class="row">

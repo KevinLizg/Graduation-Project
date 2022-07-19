@@ -51,6 +51,9 @@
                                 <div class="row text-center justify-content-md-center">
                                     <div class="col-4"><a href="{{ url_for('follower') }}" class="link"><i class="icon-people"></i> <font class="font-medium">{{ subscribers }} Followers</font></a></div>
                                     <div class="col-4"><a href="{{ url_for('following') }}" class="link"><i class="icon-star"></i> <font class="font-medium">{{ following }} Followings</font></a></div>
+                                    {% if user.occupation == 'Student' %}
+                                          <div class="col-4"><a href="{{ url_for('user_profile',user_email = user.teacher_email) }}" class="link"><i class="icon-target"></i> <font class="font-medium">My Teacher's Information</font></a></div>
+                                    {% endif %}
                                 </div>
                             </center>
                         </div>
@@ -83,6 +86,7 @@
                     <div class="card">
                         <!-- Tabs -->
                         <ul class="nav nav-pills custom-pills" id="pills-tab" role="tablist">
+                            {% if user.occupation == 'Student' %}
                             <li class="nav-item">
                                 <a class="nav-link active" id="pills-timeline-tab" data-toggle="pill" href="#history" role="tab" aria-controls="pills-timeline" aria-selected="true">History</a>
                             </li>
@@ -95,14 +99,24 @@
                             <li class="nav-item">
                                 <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#setting" role="tab" aria-controls="pills-setting" aria-selected="false">Update Information</a>
                             </li>
-                            {% if user.occupation == 'Student' %}
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="pill" href="#analysis" role="tab" aria-controls="pills-setting" aria-selected="false">Analysis</a>
+                            </li>
+                            {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link active" id="pills-timeline-tab" data-toggle="pill" href="#like" role="tab" aria-controls="pills-timeline" aria-selected="true">Favorite Skills</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#profile" role="tab" aria-controls="pills-profile" aria-selected="false">Personal Information</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="pills-setting-tab" data-toggle="pill" href="#setting" role="tab" aria-controls="pills-setting" aria-selected="false">Update Information</a>
                             </li>
                             {% endif %}
                         </ul>
                         <!-- Tabs -->
                         <div class="tab-content" id="pills-tabContent">
+                            {% if user.occupation == 'Student' %}
                             <div class="tab-pane fade show active" id="history" role="tabpanel" aria-labelledby="pills-timeline-tab">
                                 <div class="card-body">
                                     {% for sc in score_list[0:5] %}
@@ -134,7 +148,12 @@
                                     {% endfor %}
                                 </div>
                             </div>
+                            {% endif %}
+                            {% if user.occupation == 'Teacher' %}
+                            <div class="tab-pane fade show active" id="like" role="tabpanel" aria-labelledby="pills-timeline-tab">
+                            {% else %}
                             <div class="tab-pane fade" id="like" role="tabpanel" aria-labelledby="pills-timeline-tab">
+                            {% endif %}
                                 <div class="card-body">
                                     {% for like in likes %}
                                     <div class="profiletimeline m-t-0">
