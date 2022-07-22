@@ -13,7 +13,8 @@
                         <div class="col-lg-6">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">{{ skill_score_list[index]['skill_name'] }}</h4>
+                                    <h4 class="card-title"><button class="btn-dropbox" onclick="showAnalysis({{ index }})">{{ skill_score_list[index]['skill_name'] }}</button></h4>
+                                    <p class="text-muted m-t-0" style="display: inline"><code>Click the skill name to see details of the skills</code></p>
                                     <div>
                                         <canvas id="skill{{ index }}" height="150"></canvas>
                                     </div>
@@ -31,6 +32,29 @@
             </footer>
         </div>
     </div>
+
+    <script>
+        function showAnalysis(index){
+            const score_analysis_list = JSON.parse({{ score_analysis_list|tojson }});
+            Swal.fire({
+              title: '<strong>Analysis <i class="fa fa-angle-right"></i> </strong>'+score_analysis_list[index]['skill_name'],
+              icon: 'info',
+              html:
+                '<b>Number of taking: </b>'+parseInt(score_analysis_list[index]['times'])+
+                '<br><b>Average Score: </b>'+parseInt(score_analysis_list[index]['avg_score'])+
+                '<br><b>The Highest Score: </b>'+parseInt(score_analysis_list[index]['max_score'])+
+                '<br><b>The Lowest Score: </b>'+parseInt(score_analysis_list[index]['min_score'])+
+                '<br><b>The Average Time: </b>'+parseInt(score_analysis_list[index]['avg_time'])+' seconds'+
+                '<br><b>The Longest Time: </b>'+parseInt(score_analysis_list[index]['max_time'])+' seconds'+
+                '<br><b>The Shortest Time: </b>'+parseInt(score_analysis_list[index]['min_time'])+' seconds',
+              showCloseButton: true,
+              focusConfirm: false,
+              confirmButtonText:
+                '<i class="fa fa-thumbs-up"></i> Got It!',
+              confirmButtonAriaLabel: 'Thumbs up, great!',
+            })
+        }
+    </script>
 
 {% endblock %}
 </body>

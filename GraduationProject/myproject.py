@@ -2110,53 +2110,92 @@ def change_profile(email):
 @app.route('/grade/<topic_name>', methods=['GET', 'POST'])
 def grade(topic_name):
     email = session.get('EMAIL')
-    student = Student.query.filter(Student.email == email).first()
-    _, skill_statistic, _ = return_score(student)
-    image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
-    img_stream = image.read()
-    img_stream = base64.b64encode(img_stream).decode('ascii')
-    notifications = notification_list(student.id, 1)
-    if student.badge_name:
-        color = student.badge_name.split('_')[1]
-        badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
-            'ascii')
+    if email:
+        student = Student.query.filter(Student.email == email).first()
+        _, skill_statistic, _ = return_score(student)
+        image = open('static/images/icon/' + student.profile_photo + ".png", 'rb')
+        img_stream = image.read()
+        img_stream = base64.b64encode(img_stream).decode('ascii')
+        notifications = notification_list(student.id, 1)
+        if student.badge_name:
+            color = student.badge_name.split('_')[1]
+            badge = base64.b64encode(open('static/images/badge/' + student.badge_name + ".png", 'rb').read()).decode(
+                'ascii')
+        else:
+            color = None
+            badge = None
+        user_info = {
+            'email': email,
+            'first_name': student.firstname,
+            'last_name': student.lastname,
+            'profile_pic': img_stream,
+            'phone': student.phone,
+            'school': student.school,
+            'address': student.address,
+            'age': datetime.now().date().year - int(student.dob.split("-")[0]),
+            'gender': student.gender,
+            'password': student.password,
+            'color': color,
+            'badge_name': badge,
+            'occupation': 'Student'
+        }
+        unanswered_list, _, _ = email_list(student.id, 1)
+        topic = Topics.query.filter(Topics.topic_name == topic_name).first()
+        skills = Skills.query.filter(Skills.topic_id == topic.topic_id).all()
+        skill_score_list = []
+        score_analysis_list = []
+        for skill in skills:
+            scores = Score.query.filter(Score.student_id == student.id, Score.skill_id == skill.skill_id).order_by(
+                Score.date.asc()).all()
+            skill_name = skill.skill_name
+            score_list = {}
+            avg_time = 0
+            min_time = 10000
+            max_time = 0
+            avg_score = 0
+            min_score = 10000
+            max_score = 0
+            for score in scores:
+                score_list[str(score.date)] = score.score
+                avg_score += int(score.score)
+                min_score = min(min_score, int(score.score))
+                max_score = max(max_score, int(score.score))
+                avg_time += int(score.time)
+                max_time = max(max_time, int(score.time))
+                min_time = min(min_time, int(score.time))
+            if len(scores) == 0:
+                avg_score = 0
+                avg_time = 0
+            else:
+                avg_score = avg_score / len(scores)
+                avg_time = avg_time / len(scores)
+            if min_time == 10000:
+                min_time = 0
+                min_score = 0
+            score_analysis_list.append({
+                'skill_name': skill.skill_name,
+                'times': len(scores),
+                'avg_score': avg_score,
+                'min_score': min_score,
+                'max_score': max_score,
+                'avg_time': avg_time,
+                'min_time': min_time,
+                'max_time': max_time
+            })
+            skill_score_list.append({
+                'skill_name': skill_name,
+                'score_list': list(score_list.values()),
+                'date': list(score_list.keys())
+            })
+        for key in skill_score_list:
+            print(key)
     else:
-        color = None
-        badge = None
-    user_info = {
-        'email': email,
-        'first_name': student.firstname,
-        'last_name': student.lastname,
-        'profile_pic': img_stream,
-        'phone': student.phone,
-        'school': student.school,
-        'address': student.address,
-        'age': datetime.now().date().year - int(student.dob.split("-")[0]),
-        'gender': student.gender,
-        'password': student.password,
-        'color': color,
-        'badge_name': badge,
-        'occupation': 'Student'
-    }
-    unanswered_list, _, _ = email_list(student.id, 1)
-    topic = Topics.query.filter(Topics.topic_name == topic_name).first()
-    skills = Skills.query.filter(Skills.topic_id == topic.topic_id).all()
-    skill_score_list = []
-    for skill in skills:
-        scores = Score.query.filter(Score.student_id == student.id, Score.skill_id == skill.skill_id).order_by(
-            Score.date.asc()).all()
-        skill_name = skill.skill_name
-        score_list = {}
-        for score in scores:
-            score_list[str(score.date)] = score.score
-        skill_score_list.append({
-            'skill_name': skill_name,
-            'score_list': list(score_list.values()),
-            'date': list(score_list.keys())
-        })
+        flash("Please sign in first")
+        return redirect(url_for('signin'))
     return render_template('grade.html', user=user_info, score_list=json.dumps(skill_score_list),
                            skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic), unit_score=None,
-                           unanswered_list=unanswered_list, notifications=notifications
+                           unanswered_list=unanswered_list, notifications=notifications,
+                           score_analysis_list=json.dumps(score_analysis_list)
                            )
 
 
@@ -2230,13 +2269,45 @@ def user_grade(user_email, topic_name):
         topic = Topics.query.filter(Topics.topic_name == topic_name).first()
         skills = Skills.query.filter(Skills.topic_id == topic.topic_id).all()
         skill_score_list = []
+        score_analysis_list = []
         for skill in skills:
             scores = Score.query.filter(Score.student_id == student.id, Score.skill_id == skill.skill_id).order_by(
                 Score.date.asc()).all()
             skill_name = skill.skill_name
             score_list = {}
+            avg_time = 0
+            min_time = 10000
+            max_time = 0
+            avg_score = 0
+            min_score = 10000
+            max_score = 0
             for score in scores:
                 score_list[str(score.date)] = score.score
+                avg_score += int(score.score)
+                min_score = min(min_score, int(score.score))
+                max_score = max(max_score, int(score.score))
+                avg_time += int(score.time)
+                max_time = max(max_time, int(score.time))
+                min_time = min(min_time, int(score.time))
+            if len(scores) == 0:
+                avg_score = 0
+                avg_time = 0
+            else:
+                avg_score = avg_score / len(scores)
+                avg_time = avg_time / len(scores)
+            if min_time == 10000:
+                min_time = 0
+                min_score = 0
+            score_analysis_list.append({
+                'skill_name': skill.skill_name,
+                'times': len(scores),
+                'avg_score': avg_score,
+                'min_score': min_score,
+                'max_score': max_score,
+                'avg_time': avg_time,
+                'min_time': min_time,
+                'max_time': max_time
+            })
             skill_score_list.append({
                 'skill_name': skill_name,
                 'score_list': list(score_list.values()),
@@ -2249,7 +2320,8 @@ def user_grade(user_email, topic_name):
                            score_list=json.dumps(skill_score_list),
                            skill_score_list=skill_score_list, skill_list=json.dumps(skill_statistic), unit_score=None,
                            followed_each_other=followed_each_other(email, user_email), isStudentOf=isStudentOf,
-                           unanswered_list=unanswered_list, notifications=notifications
+                           unanswered_list=unanswered_list, notifications=notifications,
+                           score_analysis_list=json.dumps(score_analysis_list)
                            )
 
 
