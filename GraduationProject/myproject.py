@@ -3,7 +3,7 @@ import collections
 import itertools
 import os
 import random, json
-import urllib
+import urllib, ssl
 
 import wolframalpha
 import xmltodict
@@ -13,10 +13,10 @@ from flask import Flask, render_template, url_for, jsonify, redirect, flash, ses
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from flask_mail import Message, Mail
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from form import *
-
 from models import *
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -71,8 +71,8 @@ def index():
 
 app.config["MAIL_SERVER"] = 'smtp.qq.com'
 app.config["MAIL_PORT"] = 465
-app.config["MAIL_USERNAME"] = '1575631865@qq.com'
-app.config['MAIL_PASSWORD'] = 'lxfosopsqgfegbe'
+app.config["MAIL_USERNAME"] = ''
+app.config['MAIL_PASSWORD'] = ''
 app.config['MAIL_DEFAULT_SENDER'] = 'JustMathIt'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
@@ -94,17 +94,6 @@ def email_varification():
             if teacher_in_db:
                 flash('This email has been signed up as a teacher account!')
             else:
-                # import requests
-                # url = "https://api.apilayer.com/email_verification/check?email=" + email
-                # payload = {}
-                # headers = {
-                #     "apikey": "Bf4R4NooHbOu8esOllb4LXv49sn3bL3M"
-                # }
-                #
-                # response = requests.request("GET", url, headers=headers, data=payload)
-                # status_code = response.status_code
-                # result = response.text
-                # print(result)
                 # Access API to verify your email address
                 url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
                 r = requests.get(url)
@@ -164,9 +153,6 @@ def change_pass_verification():
         teacher_in_db = Teacher.query.filter(Teacher.email == email).first()
         if student_in_db:
             # Access API to verify your email address
-            # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
-            # r = requests.get(url)
-            # if r.json()['smtp_check'] == True:
             token = s.dumps(email, salt='email-confirm')
             msg = Message('Just Math it - Modify your password', sender='1575631865@qq.com', recipients=[email])
             link = url_for('change_password', token=token, user_type='Student',  _external=True)
@@ -174,13 +160,7 @@ def change_pass_verification():
             mail.send(msg)
             session['ACTOR'] = 'Student'
             flash('Please check your Email, and follow the email link to modify your password')
-            # else:
-            #     flash('This is not a valid email')
         elif teacher_in_db:
-            # Access API to verify your email address
-            # url = 'http://apilayer.net/api/check?access_key=e1d7174635e48945b8ff1b6bb5b5b789&email='+email+'&smtp=1&format=1'
-            # r = requests.get(url)
-            # if r.json()['smtp_check'] == True:
             token = s.dumps(email, salt='email-confirm')
             msg = Message('Just Math it - Modify your password', sender='1575631865@qq.com', recipients=[email])
             link = url_for('change_password', token=token, user_type='Teacher', _external=True)
@@ -188,8 +168,6 @@ def change_pass_verification():
             mail.send(msg)
             session['ACTOR'] = 'Teacher'
             flash('Please check your Email, and follow the email link to modify your password')
-            # else:
-            #     flash('This is not a valid email')
         else:
             flash('Sorry! Your have not got an account, please sign up a new one!')
         session['EMAIL'] = email
@@ -202,7 +180,6 @@ def change_password(token, user_type):
     form = ChangePassword()
     try:
         email = s.loads(token, salt='email-confirm', max_age=180)
-        print(email, user_type)
         if form.validate_on_submit() and user_type == 'Student':
             student = Student.query.filter(Student.email == email).first()
             student.password = generate_password_hash(form.password.data)
@@ -219,9 +196,6 @@ def change_password(token, user_type):
             session.clear()
             flash("Change successfully")
             return redirect(url_for('signin'))
-        # else:
-        #     flash('Please use the same browser on the same computer to finish password change. Otherwise, this will '
-        #           'not work.')
     except SignatureExpired:
         flash('Token is expired, please resend an email to sign up')
     return render_template('change_password.html', form=form)
@@ -681,11 +655,8 @@ def practice(skill_):
         list = []
         for i in range(0, 5):
             ran_num = random.randint(0, len(skill_dict[skill.skill_id]) - 1)
-            print(skill_dict[skill.skill_id][ran_num])
             problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
             app_id = 'XQAUEU-WR3AY23332'
-            client = wolframalpha.Client(app_id)
-            # res = client.query(problem)
             res = query(problem, app_id)
             img_list = []
             solution_list = []
@@ -763,7 +734,6 @@ from os.path import exists
 def wrong_problem_add(question_id):
     email = request.form.get("email")
     check = request.form.get("check")
-    print(check)
     with open('static/json/' + email + '.json', 'r', encoding='utf-8') as f:
         question_list = json.load(f)
     for question in question_list:
@@ -879,19 +849,19 @@ def question_collection():
     return render_template('question_collection.html', user=user, filename=filename, question_list=question_list)
 
 
-def query(input, app_id, params=(), **kwargs):
-    data = dict(
-        input=input,
-        appid=app_id,
-    )
-    data = itertools.chain(params, data.items(), kwargs.items())
-    query = urllib.parse.urlencode(tuple(data))
-    url = 'https://api.wolframalpha.com/v2/query?' + query + '&podstate=Step-by-step%20solution'
-    resp = urllib.request.urlopen(url)
-    assert resp.headers.get_content_type() == 'text/xml'
-    assert resp.headers.get_param('charset') == 'utf-8'
-    doc = xmltodict.parse(resp, postprocessor=wolframalpha.Document.make)
-    return doc['queryresult']
+# def query(input, app_id, params=(), **kwargs):
+#     data = dict(
+#         input=input,
+#         appid=app_id,
+#     )
+#     data = itertools.chain(params, data.items(), kwargs.items())
+#     query = urllib.parse.urlencode(tuple(data))
+#     url = 'https://api.wolframalpha.com/v2/query?' + query + '&podstate=Step-by-step%20solution'
+#     resp = urllib.request.urlopen(url)
+#     assert resp.headers.get_content_type() == 'text/xml'
+#     assert resp.headers.get_param('charset') == 'utf-8'
+#     doc = xmltodict.parse(resp, postprocessor=wolframalpha.Document.make)
+#     return doc['queryresult']
 
 
 @app.route('/quiz/<skill_>')
@@ -916,8 +886,6 @@ def quiz(skill_):
             ran_num = random.randint(0, len(skill_dict[skill.skill_id]) - 1)
             problem, solution = mathgen.genById(skill_dict[skill.skill_id][ran_num])
             app_id = 'XQAUEU-WR3AY23332'
-            client = wolframalpha.Client(app_id)
-            # res = client.query(problem)
             res = query(problem, app_id)
             img_list = []
             solution_list = []
@@ -1035,8 +1003,6 @@ def topic_test(topic):
             ran_num = random.randint(0, len(skill_dict[skill_ran_num]) - 1)
             problem, solution = mathgen.genById(skill_dict[skill_ran_num][ran_num])
             app_id = 'XQAUEU-WR3AY23332'
-            client = wolframalpha.Client(app_id)
-            # res = client.query(problem)
             res = query(problem, app_id)
             img_list = []
             solution_list = []
@@ -2187,8 +2153,6 @@ def grade(topic_name):
                 'score_list': list(score_list.values()),
                 'date': list(score_list.keys())
             })
-        for key in skill_score_list:
-            print(key)
     else:
         flash("Please sign in first")
         return redirect(url_for('signin'))
@@ -2609,7 +2573,6 @@ def compose_email():
             form.receiver.data = form.receiver.data.replace('(', '')
             form.receiver.data = form.receiver.data.replace(')', '')
             form.receiver.data = form.receiver.data.split(',')
-            print('receiver_id:', form.receiver.data[0], ', receiver_type', form.receiver.data[1])
             new_email = Email(sender_id=me.id, sender_type=me_type, receiver_id=int(form.receiver.data[0]),
                               receiver_type=int(form.receiver.data[1]), state=0, subject=form.subject.data,
                               content=form.content.data,

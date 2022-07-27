@@ -1,9 +1,10 @@
 # Educational games for GCSE maths
-The project title is Educational games for GCSE maths. The project supervisor is Dr Ian Kenny. The project is a website called 'Just Math It' and the project framework is Flask.
+
+The project title is Educational games for GCSE maths. My name is Zigen Li and my kcl student number is K21026232. I am a student from MSc Advanced Computing. The project supervisor is Dr Ian Kenny. The project is a website called 'Just Math It' and the project framework is Flask.
 
 ## Project File Structure
 - **static**
-    
+  
     ***Some of the static files are referenced by [Themeum](http://www.themeum.com/) and  [WrapPixel](https://wrappixel.com/).***
     
     - **CSS**: stores CSS files
@@ -54,20 +55,20 @@ Or you can sign up a new account for testing.
 
 ## Configuring the Local Environment
 
-If you would like to run the project locally. There are several steps you need to take:
+If you would like to run the project *<u>locally</u>*. There are several steps you need to take:
 
 - **Before you do the following things, open your terminal and cd to the project file directory**
 
 1. Creating a virtual environment
 
    ```python
-   python3 -m venv myprojectenv
+   python3 -m venv venv
    ```
 
 2. Activating virtual environment
 
    ```python
-   source myprojectenv/bin/activate
+   source venv/bin/activate
    ```
 
 3. Installing packages using requirements.txt
@@ -75,13 +76,13 @@ If you would like to run the project locally. There are several steps you need t
    ```pyth
    pip install wheel
    pip install flask
-   pip install -r requirements.txt --no-cache-dir
+   pip install -r requirements.txt
    ```
 
 4. Testing
 
    ```pyt
-   python myproject.py
+   env FLASK_APP=myproject.py flask run
    ```
 
 5. Entering the address on the browser
