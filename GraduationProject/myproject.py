@@ -1,5 +1,6 @@
 import base64
 import collections
+from distutils.log import debug
 import itertools
 import os
 import random, json
@@ -849,19 +850,19 @@ def question_collection():
     return render_template('question_collection.html', user=user, filename=filename, question_list=question_list)
 
 
-# def query(input, app_id, params=(), **kwargs):
-#     data = dict(
-#         input=input,
-#         appid=app_id,
-#     )
-#     data = itertools.chain(params, data.items(), kwargs.items())
-#     query = urllib.parse.urlencode(tuple(data))
-#     url = 'https://api.wolframalpha.com/v2/query?' + query + '&podstate=Step-by-step%20solution'
-#     resp = urllib.request.urlopen(url)
-#     assert resp.headers.get_content_type() == 'text/xml'
-#     assert resp.headers.get_param('charset') == 'utf-8'
-#     doc = xmltodict.parse(resp, postprocessor=wolframalpha.Document.make)
-#     return doc['queryresult']
+def query(input, app_id, params=(), **kwargs):
+    data = dict(
+        input=input,
+        appid=app_id,
+    )
+    data = itertools.chain(params, data.items(), kwargs.items())
+    query = urllib.parse.urlencode(tuple(data))
+    url = 'https://api.wolframalpha.com/v2/query?' + query + '&podstate=Step-by-step%20solution'
+    resp = urllib.request.urlopen(url)
+    assert resp.headers.get_content_type() == 'text/xml'
+    assert resp.headers.get_param('charset') == 'utf-8'
+    doc = xmltodict.parse(resp, postprocessor=wolframalpha.Document.make)
+    return doc['queryresult']
 
 
 @app.route('/quiz/<skill_>')
