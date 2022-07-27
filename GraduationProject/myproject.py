@@ -71,9 +71,9 @@ def index():
 
 app.config["MAIL_SERVER"] = 'smtp.qq.com'
 app.config["MAIL_PORT"] = 465
-app.config["MAIL_USERNAME"] = ''
-app.config['MAIL_PASSWORD'] = 'fuck u'
-app.config['MAIL_DEFAULT_SENDER'] = ''
+app.config["MAIL_USERNAME"] = '1575631865@qq.com'
+app.config['MAIL_PASSWORD'] = 'lxfosopsqgfegbe'
+app.config['MAIL_DEFAULT_SENDER'] = 'JustMathIt'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 

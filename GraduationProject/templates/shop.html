@@ -158,21 +158,50 @@
                       footer: '<a href="">Do some quizes to win the coins</a>'
                     })
                 }else{
+                    const swalWithBootstrapButtons = Swal.mixin({
+                      customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                      },
+                      buttonsStyling: false
+                    })
+
+                    swalWithBootstrapButtons.fire({
+                      title: 'Are you sure to buy it?',
+                      text: "You won't be able to revert this!",
+                      icon: 'warning',
+                      showCancelButton: true,
+                      confirmButtonText: 'Yes, I\'ll buy it!',
+                      cancelButtonText: 'No!',
+                      reverseButtons: true
+                    }).then((result) => {
+                      if (result.isConfirmed) {
                         $.ajax({
-                        url: 'shop_buy/'+price,
-                        type: 'POST',
-                        data: {
-                            num: num,
-                            name: '1',
-                            type: 'capsule'
-                        },
-                        success: function (response) {
-                            window.location.reload();
-                        },
-                        error: function (response) {
-                            alert("You do not have enough coins!")
-                        }
-                    });
+                            url: 'shop_buy/'+price,
+                            type: 'POST',
+                            data: {
+                                num: num,
+                                name: '1',
+                                type: 'capsule'
+                            },
+                            success: function (response) {
+                                window.location.reload();
+                            },
+                            error: function (response) {
+                                alert("You do not have enough coins!")
+                            }
+                        });
+                      } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                      ) {
+                        swalWithBootstrapButtons.fire(
+                          'Cancelled',
+                          ':)',
+                          'error'
+                        )
+                      }
+                    })
                 }
             }
             if(name===2){
@@ -185,21 +214,50 @@
                       footer: '<a href="">Do some quizes to win the coins</a>'
                     })
                 }else{
+                    const swalWithBootstrapButtons = Swal.mixin({
+                      customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                      },
+                      buttonsStyling: false
+                    })
+
+                    swalWithBootstrapButtons.fire({
+                      title: 'Are you sure to buy it?',
+                      text: "You won't be able to revert this!",
+                      icon: 'warning',
+                      showCancelButton: true,
+                      confirmButtonText: 'Yes, I\'ll buy it!',
+                      cancelButtonText: 'No!',
+                      reverseButtons: true
+                    }).then((result) => {
+                      if (result.isConfirmed) {
                         $.ajax({
-                        url: 'shop_buy/'+price,
-                        type: 'POST',
-                        data: {
-                            num: num,
-                            name: '2',
-                            type: 'capsule'
-                        },
-                        success: function (response) {
-                            window.location.reload();
-                        },
-                        error: function (response) {
-                            alert("You do not have enough coins!")
-                        }
-                    });
+                            url: 'shop_buy/'+price,
+                            type: 'POST',
+                            data: {
+                                num: num,
+                                name: '2',
+                                type: 'capsule'
+                            },
+                            success: function (response) {
+                                window.location.reload();
+                            },
+                            error: function (response) {
+                                alert("You do not have enough coins!")
+                            }
+                        });
+                      } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                      ) {
+                        swalWithBootstrapButtons.fire(
+                          'Cancelled',
+                          ':)',
+                          'error'
+                        )
+                      }
+                    })
                 }
             }
         }
@@ -213,20 +271,49 @@
                   footer: '<a href="">Do some quizes to win the coins</a>'
                 })
             }else {
-                $.ajax({
-                    url: '{{ url_for('shop_buy', price=100) }}',
-                    type: 'POST',
-                    data: {
-                        name: id.id,
-                        type: 'avatar'
-                    },
-                    success: function (response) {
-                        window.location.reload();
-                    },
-                    error: function (response) {
-                        alert("You do not have enough coins!")
-                    }
-                });
+                const swalWithBootstrapButtons = Swal.mixin({
+                  customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                  },
+                  buttonsStyling: false
+                })
+
+                swalWithBootstrapButtons.fire({
+                  title: 'Are you sure to buy it?',
+                  text: "You won't be able to revert this!",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: 'Yes, I\'ll buy it!',
+                  cancelButtonText: 'No!',
+                  reverseButtons: true
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{ url_for('shop_buy', price=100) }}',
+                        type: 'POST',
+                        data: {
+                            name: id.id,
+                            type: 'avatar'
+                        },
+                        success: function (response) {
+                            window.location.reload();
+                        },
+                        error: function (response) {
+                            alert("You do not have enough coins!")
+                        }
+                    });
+                  } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                  ) {
+                    swalWithBootstrapButtons.fire(
+                      'Cancelled',
+                      ':)',
+                      'error'
+                    )
+                  }
+                })
             }
         }
 
@@ -239,20 +326,49 @@
                   footer: '<a href="">Do some quizes to win the coins</a>'
                 })
             }else {
-                $.ajax({
-                    url: '{{ url_for('shop_buy', price=50) }}',
-                    type: 'POST',
-                    data: {
-                        name: id.id,
-                        type: 'badge'
-                    },
-                    success: function (response) {
-                        window.location.reload();
-                    },
-                    error: function (response) {
-                        alert("You do not have enough coins!")
-                    }
-                });
+                const swalWithBootstrapButtons = Swal.mixin({
+                  customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                  },
+                  buttonsStyling: false
+                })
+
+                swalWithBootstrapButtons.fire({
+                  title: 'Are you sure to buy it?',
+                  text: "You won't be able to revert this!",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonText: 'Yes, I\'ll buy it!',
+                  cancelButtonText: 'No!',
+                  reverseButtons: true
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{ url_for('shop_buy', price=50) }}',
+                        type: 'POST',
+                        data: {
+                            name: id.id,
+                            type: 'badge'
+                        },
+                        success: function (response) {
+                            window.location.reload();
+                        },
+                        error: function (response) {
+                            alert("You do not have enough coins!")
+                        }
+                    });
+                  } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                  ) {
+                    swalWithBootstrapButtons.fire(
+                      'Cancelled',
+                      ':)',
+                      'error'
+                    )
+                  }
+                })
             }
         }
     </script>

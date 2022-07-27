@@ -1,3 +1,4 @@
+# Referenced by lukew3/mathgenerator: https://github.com/lukew3/mathgenerator
 from .funcs import *
 from .__init__ import getGenList
 
