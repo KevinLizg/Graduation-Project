@@ -42,16 +42,16 @@ This website has two kinds of actors:
 1. **Teacher** 
 2. **Student**
 
-Here, I provide two accounts for this website, one is teacher account, another is student accounts.
+Here, I provide two accounts for this website, one is teacher account, another is student account.
 
-- Teacher's account: 
+- For teacher's account: 
   - email: 1306057972@qq.com
   - password: 123123
-- Student's account:
+- For student's account:
   - email: 1575631865@qq.com
   - password: 123123
 
-Or you can sign up a new account for testing.
+**<u>Or you can sign up a new account for testing.</u>**
 
 ## Configuring the Local Environment
 
